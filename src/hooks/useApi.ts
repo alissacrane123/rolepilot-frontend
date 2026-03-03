@@ -3,6 +3,7 @@ import {
   getBoard,
   getApplication,
   getApplications,
+  getMeetings,
   getUpcomingMeetings,
   getProfile,
   createApplication,
@@ -19,6 +20,7 @@ export const queryKeys = {
   board: ["board"] as const,
   application: (id: string) => ["application", id] as const,
   applications: ["applications"] as const,
+  meetings: (applicationId: string) => ["meetings", applicationId] as const,
   upcomingMeetings: ["meetings", "upcoming"] as const,
   profile: ["profile"] as const,
 };
@@ -56,6 +58,17 @@ export function useApplicationsQuery() {
       const res = await getApplications();
       return res.data ?? [];
     },
+  });
+}
+
+export function useMeetingsQuery(applicationId: string | undefined) {
+  return useQuery({
+    queryKey: queryKeys.meetings(applicationId!),
+    queryFn: async () => {
+      const res = await getMeetings(applicationId!);
+      return res.data ?? [];
+    },
+    enabled: !!applicationId,
   });
 }
 
@@ -173,6 +186,7 @@ export function useUpdateMeetingMutation() {
     }) => updateMeeting(meetingId, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.upcomingMeetings });
+      qc.invalidateQueries({ queryKey: ["meetings"] });
     },
   });
 }
@@ -183,6 +197,7 @@ export function useDeleteMeetingMutation() {
     mutationFn: (meetingId: string) => deleteMeeting(meetingId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.upcomingMeetings });
+      qc.invalidateQueries({ queryKey: ["meetings"] });
     },
   });
 }
