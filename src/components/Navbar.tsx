@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { LogoIcon } from "@/components/icons";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -13,18 +14,7 @@ export default function Navbar() {
       <div className=" px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="flex items-center">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <circle
-                  cx="9"
-                  cy="9"
-                  r="8"
-                  stroke="#6366f1"
-                  strokeWidth="1.5"
-                />
-                <circle cx="9" cy="9" r="3" fill="#6366f1" />
-              </svg>
-            </div>
+            <LogoIcon />
             <span className="text-base font-bold text-zinc-100 tracking-tight group-hover:text-indigo-400 transition-colors">
               RolePilot
             </span>
