@@ -5,17 +5,14 @@ import {
   type Meeting,
   type JobApplication,
 } from "@/lib/api";
+import type { MeetingWithApp } from "./calendar-utils";
 import InterviewListView from "./InterviewListView";
 import InterviewCalendarView from "./InterviewCalendarView";
 import MeetingDetailModal from "./MeetingDetailModal";
 import { CalendarViewIcon, ListViewIcon } from "@/components/icons";
+import EmptyState from "../EmpyState";
 
 type InterviewView = "calendar" | "list";
-
-interface MeetingWithApp extends Meeting {
-  _companyName?: string;
-  _roleTitle?: string;
-}
 
 function enrichMeetings(
   meetings: Meeting[],
@@ -73,6 +70,15 @@ export default function InterviewsSection() {
     );
   };
 
+  if (loading) {
+    return (
+      <EmptyState
+        title="Loading interviews..."
+        description="Please wait while we load your interviews."
+      />
+    );
+  }
+
   return (
     <div className="space-y-5">
       {/* Section header */}
@@ -108,27 +114,17 @@ export default function InterviewsSection() {
       </div>
 
       {/* Content */}
-      {!loading && (
-        <>
-          {view === "calendar" && (
-            <InterviewCalendarView
-              meetings={meetings}
-              onMeetingClick={handleMeetingClick}
-            />
-          )}
-          {view === "list" && (
-            <InterviewListView
-              meetings={meetings}
-              onMeetingClick={handleMeetingClick}
-            />
-          )}
-        </>
+      {view === "calendar" && (
+        <InterviewCalendarView
+          meetings={meetings}
+          onMeetingClick={handleMeetingClick}
+        />
       )}
-
-      {loading && (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-white/30 text-sm">Loading interviews...</div>
-        </div>
+      {view === "list" && (
+        <InterviewListView
+          meetings={meetings}
+          onMeetingClick={handleMeetingClick}
+        />
       )}
 
       {/* Meeting detail modal */}

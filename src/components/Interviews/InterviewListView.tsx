@@ -1,10 +1,6 @@
 import type { Meeting } from "@/lib/api";
+import type { MeetingWithApp } from "./calendar-utils";
 import InterviewCard from "./InterviewCard";
-
-interface MeetingWithApp extends Meeting {
-  _companyName?: string;
-  _roleTitle?: string;
-}
 
 function groupByDate(meetings: MeetingWithApp[]) {
   const groups: Record<string, MeetingWithApp[]> = {};
