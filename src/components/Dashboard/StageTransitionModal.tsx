@@ -12,6 +12,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import TimePicker from "@/components/ui/time-picker";
 
 export interface StageTransition {
   app: JobApplication;
@@ -23,7 +24,7 @@ interface TransitionField {
   key: string;
   label: string;
   placeholder: string;
-  type: "text" | "textarea" | "date";
+  type: "text" | "textarea" | "date" | "time";
 }
 
 /**
@@ -34,30 +35,93 @@ function getFieldsForStage(toStage: string): TransitionField[] {
   switch (toStage) {
     case "phone_screen":
       return [
-        { key: "scheduled_date", label: "Scheduled Date", placeholder: "", type: "date" },
-        { key: "interviewer", label: "Interviewer / Recruiter", placeholder: "Jane Smith", type: "text" },
+        {
+          key: "scheduled_date",
+          label: "Scheduled Date",
+          placeholder: "",
+          type: "date",
+        },
+        {
+          key: "scheduled_time",
+          label: "Scheduled Time",
+          placeholder: "",
+          type: "time",
+        },
+        {
+          key: "interviewer",
+          label: "Interviewer / Recruiter",
+          placeholder: "Jane Smith",
+          type: "text",
+        },
       ];
     case "technical_interview":
       return [
-        { key: "scheduled_date", label: "Interview Date", placeholder: "", type: "date" },
-        { key: "interview_type", label: "Interview Type", placeholder: "Live coding, system design, etc.", type: "text" },
+        {
+          key: "scheduled_date",
+          label: "Interview Date",
+          placeholder: "",
+          type: "date",
+        },
+        {
+          key: "scheduled_time",
+          label: "Interview Time",
+          placeholder: "",
+          type: "time",
+        },
+        {
+          key: "interview_type",
+          label: "Interview Type",
+          placeholder: "Live coding, system design, etc.",
+          type: "text",
+        },
       ];
     case "onsite_final":
       return [
-        { key: "scheduled_date", label: "Onsite Date", placeholder: "", type: "date" },
+        {
+          key: "scheduled_date",
+          label: "Onsite Date",
+          placeholder: "",
+          type: "date",
+        },
+        {
+          key: "scheduled_time",
+          label: "Onsite Time",
+          placeholder: "",
+          type: "time",
+        },
       ];
     case "offer":
       return [
-        { key: "offer_amount", label: "Offer Amount", placeholder: "$180,000", type: "text" },
-        { key: "deadline", label: "Decision Deadline", placeholder: "", type: "date" },
+        {
+          key: "offer_amount",
+          label: "Offer Amount",
+          placeholder: "$180,000",
+          type: "text",
+        },
+        {
+          key: "deadline",
+          label: "Decision Deadline",
+          placeholder: "",
+          type: "date",
+        },
       ];
     case "rejected":
       return [
-        { key: "rejection_reason", label: "Reason (if known)", placeholder: "Position filled, not a fit, etc.", type: "text" },
+        {
+          key: "rejection_reason",
+          label: "Reason (if known)",
+          placeholder: "Position filled, not a fit, etc.",
+          type: "text",
+        },
       ];
     case "withdrawn":
       return [
-        { key: "withdrawal_reason", label: "Reason", placeholder: "Accepted another offer, lost interest, etc.", type: "text" },
+        {
+          key: "withdrawal_reason",
+          label: "Reason",
+          placeholder: "Accepted another offer, lost interest, etc.",
+          type: "text",
+        },
       ];
     default:
       return [];
@@ -66,7 +130,10 @@ function getFieldsForStage(toStage: string): TransitionField[] {
 
 function needsConfirmation(toStage: string): boolean {
   const extraFields = getFieldsForStage(toStage);
-  return extraFields.length > 0 || ["rejected", "withdrawn", "accepted"].includes(toStage);
+  return (
+    extraFields.length > 0 ||
+    ["rejected", "withdrawn", "accepted"].includes(toStage)
+  );
 }
 
 export { needsConfirmation };
@@ -97,6 +164,30 @@ export default function StageTransitionModal({
     setLoading(true);
     setError("");
 
+    const scheduledDate = extraValues["scheduled_date"];
+    const scheduledTime = extraValues["scheduled_time"];
+    const interviewer = extraValues["interviewer"];
+    const interviewType = extraValues["interview_type"];
+
+    let scheduledAt: string | undefined;
+    if (scheduledDate) {
+      const dateTime = new Date(
+        `${scheduledDate}T${scheduledTime || "00:00:00"}`,
+      );
+      scheduledAt = dateTime.toISOString();
+    }
+
+    console.log({ scheduledAt });
+    const meeting = scheduledAt
+      ? {
+          scheduled_at: scheduledAt,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          location_type: "video" as const,
+          ...(interviewer && { contact_name: interviewer }),
+          ...(interviewType && { meeting_type: interviewType }),
+        }
+      : undefined;
+
     const allNotes = [
       notes,
       ...extraFields
@@ -107,7 +198,7 @@ export default function StageTransitionModal({
       .join("\n");
 
     try {
-      await updateStage(app.id, toStage, allNotes);
+      await updateStage(app.id, toStage, allNotes, meeting);
       onConfirm();
     } catch (err: any) {
       setError(err.message);
@@ -138,6 +229,11 @@ export default function StageTransitionModal({
                   onChange={(e) => setExtra(field.key, e.target.value)}
                   placeholder={field.placeholder}
                   className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
+                />
+              ) : field.type === "time" ? (
+                <TimePicker
+                  value={extraValues[field.key] || ""}
+                  onChange={(val) => setExtra(field.key, val)}
                 />
               ) : (
                 <Input

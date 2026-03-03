@@ -84,7 +84,7 @@ export interface Meeting {
   scheduled_at?: string;
   duration_minutes?: number;
   timezone?: string;
-  location_type: string;
+  location_type?: string;
   location_details?: string;
   meeting_type?: string;
   contact_name?: string;
@@ -100,7 +100,7 @@ export interface CreateMeetingData {
   scheduled_at?: string;
   duration_minutes?: number;
   timezone?: string;
-  location_type: string;
+  location_type?: string;
   location_details?: string;
   meeting_type?: string;
   contact_name?: string;
