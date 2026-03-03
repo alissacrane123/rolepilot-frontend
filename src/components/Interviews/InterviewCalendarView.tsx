@@ -12,9 +12,11 @@ import CalendarGrid from "./CalendarGrid";
 export default function InterviewCalendarView({
   meetings,
   onMeetingClick,
+  onMeetingEditClick,
 }: {
   meetings: MeetingWithApp[];
   onMeetingClick?: (meeting: Meeting) => void;
+  onMeetingEditClick?: (meeting: Meeting) => void;
 }) {
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
@@ -78,6 +80,7 @@ export default function InterviewCalendarView({
         today={today}
         meetingsByDay={meetingsByDay}
         onMeetingClick={(m) => onMeetingClick?.(m)}
+        onMeetingEditClick={(m) => onMeetingEditClick?.(m)}
       />
     </div>
   );

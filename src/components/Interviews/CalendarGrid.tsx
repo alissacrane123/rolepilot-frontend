@@ -9,6 +9,7 @@ export default function CalendarGrid({
   today,
   meetingsByDay,
   onMeetingClick,
+  onMeetingEditClick,
 }: {
   cells: (number | null)[];
   viewYear: number;
@@ -16,6 +17,7 @@ export default function CalendarGrid({
   today: Date;
   meetingsByDay: Map<number, MeetingWithApp[]>;
   onMeetingClick: (meeting: MeetingWithApp) => void;
+  onMeetingEditClick: (meeting: MeetingWithApp) => void;
 }) {
   return (
     <div className="rounded-xl border border-white/[0.06] overflow-hidden">
@@ -41,6 +43,7 @@ export default function CalendarGrid({
             isWeekend={idx % 7 === 0 || idx % 7 === 6}
             meetings={day ? meetingsByDay.get(day) || [] : []}
             onMeetingClick={onMeetingClick}
+            onMeetingEditClick={onMeetingEditClick}
           />
         ))}
       </div>

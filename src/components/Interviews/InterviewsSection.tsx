@@ -118,6 +118,7 @@ export default function InterviewsSection() {
         <InterviewCalendarView
           meetings={meetings}
           onMeetingClick={handleMeetingClick}
+          onMeetingEditClick={handleMeetingClick}
         />
       )}
       {view === "list" && (
