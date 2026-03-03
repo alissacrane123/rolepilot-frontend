@@ -81,7 +81,7 @@ export default function ApplicationPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-3 text-[13px] font-medium border-b-2 transition-all duration-150 ${
+              className={`cursor-pointer px-4 py-3 text-[13px] font-medium border-b-2 transition-all duration-150 ${
                 activeTab === tab.key
                   ? "text-white border-indigo-500"
                   : "text-white/35 border-transparent hover:text-white/50"
