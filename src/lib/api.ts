@@ -76,6 +76,38 @@ export interface APIResponse<T> {
   message?: string;
 }
 
+export interface Meeting {
+  id: string;
+  application_id: string;
+  user_id: string;
+  stage: string;
+  scheduled_at?: string;
+  duration_minutes?: number;
+  timezone?: string;
+  location_type: string;
+  location_details?: string;
+  meeting_type?: string;
+  contact_name?: string;
+  contact_title?: string;
+  prep_notes?: string;
+  post_notes?: string;
+  outcome?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateMeetingData {
+  scheduled_at?: string;
+  duration_minutes?: number;
+  timezone?: string;
+  location_type: string;
+  location_details?: string;
+  meeting_type?: string;
+  contact_name?: string;
+  contact_title?: string;
+  prep_notes?: string;
+}
+
 // ============================================
 // HTTP HELPERS
 // ============================================
@@ -221,10 +253,15 @@ export async function getApplication(id: string) {
   return request<JobApplication>(`/applications/${id}`);
 }
 
-export async function updateStage(id: string, to_stage: string, notes: string) {
+export async function updateStage(
+  id: string,
+  to_stage: string,
+  notes: string,
+  meeting?: CreateMeetingData,
+) {
   return request<JobApplication>(`/applications/${id}/stage`, {
     method: "PATCH",
-    body: JSON.stringify({ to_stage, notes }),
+    body: JSON.stringify({ to_stage, notes, meeting }),
   });
 }
 
@@ -233,8 +270,64 @@ export async function getStageHistory(id: string) {
 }
 
 // ============================================
-// STAGE HELPERS
+// MEETING
 // ============================================
+
+export async function createMeeting(
+  applicationId: string,
+  data: CreateMeetingData,
+) {
+  return request<Meeting>(`/applications/${applicationId}/meetings`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getMeetings(applicationId: string) {
+  return request<Meeting[]>(`/applications/${applicationId}/meetings`);
+}
+
+export async function getUpcomingMeetings() {
+  return request<Meeting[]>("/meetings/upcoming");
+}
+
+export async function updateMeeting(
+  meetingId: string,
+  data: Partial<CreateMeetingData> & { post_notes?: string; outcome?: string },
+) {
+  return request<Meeting>(`/meetings/${meetingId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteMeeting(meetingId: string) {
+  return request<void>(`/meetings/${meetingId}`, {
+    method: "DELETE",
+  });
+}
+
+// ============================================
+// HELPERS
+// ============================================
+
+export const MEETING_TYPES = [
+  { value: "phone_screen", label: "Phone Screen" },
+  { value: "technical", label: "Technical" },
+  { value: "system_design", label: "System Design" },
+  { value: "behavioral", label: "Behavioral" },
+  { value: "hiring_manager", label: "Hiring Manager" },
+  { value: "culture_fit", label: "Culture Fit" },
+  { value: "take_home", label: "Take Home" },
+  { value: "panel", label: "Panel" },
+  { value: "other", label: "Other" },
+] as const;
+
+export const LOCATION_TYPES = [
+  { value: "video", label: "Video Call" },
+  { value: "phone", label: "Phone" },
+  { value: "onsite", label: "Onsite" },
+] as const;
 
 export const STAGES = [
   { key: "applied", label: "Applied", emoji: "📨", color: "#6366f1" },

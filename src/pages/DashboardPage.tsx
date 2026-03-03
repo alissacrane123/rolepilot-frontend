@@ -11,6 +11,8 @@ import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
 import PipelineBar from "@/components/Dashboard/PipelineBar";
 import StageSection from "@/components/Dashboard/StageSection";
 import ListView from "@/components/Dashboard/ListView";
+import StageTransitionModal from "@/components/Dashboard/StageTransitionModal";
+import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
 
 type ViewMode = "board" | "list";
 
@@ -21,6 +23,7 @@ const ALWAYS_VISIBLE_STAGES = [
   "technical_interview",
   "onsite_final",
   "offer",
+  "rejected",
 ];
 
 function ViewToggle({
@@ -39,24 +42,8 @@ function ViewToggle({
         }`}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect
-            x="1"
-            y="1"
-            width="5"
-            height="14"
-            rx="1.5"
-            stroke="currentColor"
-            strokeWidth="1.2"
-          />
-          <rect
-            x="10"
-            y="1"
-            width="5"
-            height="14"
-            rx="1.5"
-            stroke="currentColor"
-            strokeWidth="1.2"
-          />
+          <rect x="1" y="1" width="5" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
+          <rect x="10" y="1" width="5" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
         </svg>
       </button>
       <button
@@ -66,33 +53,9 @@ function ViewToggle({
         }`}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <line
-            x1="1"
-            y1="3"
-            x2="15"
-            y2="3"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="1"
-            y1="8"
-            x2="15"
-            y2="8"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="1"
-            y1="13"
-            x2="15"
-            y2="13"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
+          <line x1="1" y1="3" x2="15" y2="3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="1" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
         </svg>
       </button>
     </div>
@@ -122,6 +85,19 @@ export default function DashboardPage() {
     const interval = setInterval(fetchBoard, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const {
+    dragState,
+    pendingTransition,
+    handleDragStart,
+    handleDragEnd,
+    handleColumnDragEnter,
+    handleColumnDragLeave,
+    handleColumnDragOver,
+    handleColumnDrop,
+    handleTransitionConfirm,
+    handleTransitionCancel,
+  } = useStageDragAndDrop(board, fetchBoard);
 
   const handleCardClick = (id: string) => {
     navigate(`/applications/${id}`);
@@ -198,11 +174,16 @@ export default function DashboardPage() {
                   <StageSection
                     key={stage.key}
                     stageKey={stage.key}
-                    apps={
-                      (board[stage.key as keyof BoardView] ||
-                        []) as JobApplication[]
-                    }
+                    apps={(board[stage.key as keyof BoardView] || []) as JobApplication[]}
                     onCardClick={handleCardClick}
+                    isOver={dragState.overStageKey === stage.key}
+                    draggingAppId={dragState.dragging?.appId ?? null}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onDragEnter={handleColumnDragEnter}
+                    onDragLeave={handleColumnDragLeave}
+                    onDragOver={handleColumnDragOver}
+                    onDrop={handleColumnDrop}
                     style={{ animationDelay: `${i * 80}ms` }}
                   />
                 ))}
@@ -218,6 +199,14 @@ export default function DashboardPage() {
             )}
           </div>
         </>
+      )}
+
+      {pendingTransition && (
+        <StageTransitionModal
+          transition={pendingTransition}
+          onConfirm={handleTransitionConfirm}
+          onCancel={handleTransitionCancel}
+        />
       )}
     </Content>
   );
