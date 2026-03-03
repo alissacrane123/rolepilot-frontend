@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { STAGE_MAP } from "@/lib/api";
 import { useApplicationQuery, queryKeys } from "@/hooks/useApi";
-import { Badge } from "@/components/ui/badge";
 import PageContainer from "@/components/PageContainer";
 import Content from "@/components/Content";
 import ApplicationHeader from "@/components/Application/ApplicationHeader";
+import ApplicationHero from "@/components/Application/ApplicationHero";
 import SummaryCards from "@/components/Application/SummaryCards";
 import SkillsSection from "@/components/Application/SkillsSection";
 import AIAnalysis from "@/components/Application/AIAnalysis";
@@ -49,70 +48,11 @@ export default function ApplicationPage() {
     );
   }
 
-  const stage = STAGE_MAP[app.current_stage];
-
   return (
     <PageContainer>
-      <ApplicationHeader app={app} onMoved={handleMoved} />
-
       <Content>
-        {/* Title Section */}
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Badge
-              variant="outline"
-              className="border-indigo-500/50 text-indigo-400"
-            >
-              {stage?.emoji} {stage?.label}
-            </Badge>
-            {app.processing_status === "processing" && (
-              <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/30 animate-pulse">
-                AI Analyzing...
-              </Badge>
-            )}
-            {app.match_score != null && app.match_score > 0 && (
-              <Badge
-                variant="outline"
-                className={`${
-                  app.match_score >= 75
-                    ? "border-emerald-500/50 text-emerald-400"
-                    : app.match_score >= 50
-                      ? "border-amber-500/50 text-amber-400"
-                      : "border-zinc-600 text-zinc-400"
-                }`}
-              >
-                {app.match_score}% match
-              </Badge>
-            )}
-          </div>
-          <h1 className="text-2xl font-bold text-zinc-100">
-            {app.role_title || "Untitled Role"}
-          </h1>
-          <p className="text-lg text-zinc-400">
-            {app.company_name || "Unknown Company"}
-          </p>
-          <div className="flex items-center gap-4 mt-2 text-sm text-zinc-500">
-            {app.salary_range && <span>{app.salary_range}</span>}
-            {app.location && <span>{app.location}</span>}
-            {app.remote_policy && app.remote_policy !== "not_specified" && (
-              <Badge
-                variant="secondary"
-                className="bg-zinc-800 text-zinc-300 text-xs"
-              >
-                {app.remote_policy}
-              </Badge>
-            )}
-            {app.experience_level && (
-              <Badge
-                variant="secondary"
-                className="bg-zinc-800 text-zinc-300 text-xs"
-              >
-                {app.experience_level}
-              </Badge>
-            )}
-          </div>
-        </div>
-
+        <ApplicationHeader />
+        <ApplicationHero app={app} onMoved={handleMoved} />
         <SummaryCards app={app} />
         <SkillsSection app={app} />
         <AIAnalysis app={app} />
