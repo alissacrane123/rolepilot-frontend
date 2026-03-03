@@ -9,7 +9,7 @@ export default function Content({
   className?: string;
 }) {
   return (
-    <div className={cn("max-w-5xl mx-auto p-6 space-y-6 w-full", className)}>
+    <div className={cn("max-w-6xl mx-auto p-6 space-y-6 w-full", className)}>
       {children}
     </div>
   );

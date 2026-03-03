@@ -13,7 +13,18 @@ export default function Navbar() {
       <div className=" px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <span className="text-xl">🎯</span>
+            <div className="flex items-center">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle
+                  cx="9"
+                  cy="9"
+                  r="8"
+                  stroke="#6366f1"
+                  strokeWidth="1.5"
+                />
+                <circle cx="9" cy="9" r="3" fill="#6366f1" />
+              </svg>
+            </div>
             <span className="text-base font-bold text-zinc-100 tracking-tight group-hover:text-indigo-400 transition-colors">
               RolePilot
             </span>
@@ -27,7 +38,7 @@ export default function Navbar() {
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
               }`}
             >
-              Board
+              Dashboard
             </Link>
             <Link
               to="/profile"

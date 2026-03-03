@@ -1,35 +1,4 @@
 import type { JobApplication } from "@/lib/api";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-
-// function MatchScore({
-//   matchScore,
-//   processingStatus,
-// }: {
-//   matchScore: number;
-//   processingStatus: string;
-// }) {
-//   const fontColor =
-//     matchScore && matchScore >= 75
-//       ? "text-emerald-400"
-//       : matchScore && matchScore >= 50
-//         ? "text-amber-400"
-//         : "text-zinc-500";
-//   return (
-//     <div className="shrink-0 w-12 ml-auto">
-//       {matchScore != null && matchScore > 0 ? (
-//         <div className={`text-sm font-bold flex items-center gap-1 ${fontColor}`}>
-//           <div>{matchScore}</div>
-//           <div className="text-xs font-normal text-nowrap">%</div>
-//         </div>
-//       ) : processingStatus === "processing" ? (
-//         <div className="w-3 h-3 rounded-full bg-indigo-400 animate-pulse mx-auto" />
-//       ) : (
-//         <div className="text-xs text-zinc-600">—</div>
-//       )}
-//     </div>
-//   );
-// }
 
 export default function ApplicationCard({
   app,
@@ -38,57 +7,62 @@ export default function ApplicationCard({
   app: JobApplication;
   onClick: () => void;
 }) {
+  const initial = (app.company_name || "?")[0].toUpperCase();
+
   return (
-    <Card
-      className="max-w-xs p-3 bg-zinc-900/60 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900 cursor-pointer transition-all group"
+    <div
       onClick={onClick}
+      className="rounded-[10px] p-3.5 bg-white/[0.03] border border-white/[0.06] cursor-pointer transition-all duration-200 hover:bg-white/[0.055] hover:border-indigo-500/25 hover:-translate-y-px"
     >
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col min-w-0 gap-4">
-          <p className="text-xs font-bold text-indigo-400 truncate">
+      <div className="flex items-center gap-2.5 mb-2.5">
+        <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
+          <span className="text-[13px] font-bold text-indigo-400">
+            {initial}
+          </span>
+        </div>
+        <div className="flex flex-col flex-1 min-w-0">
+          <span className="text-xs font-semibold text-white/80 truncate tracking-tight">
             {app.company_name || "Unknown Company"}
-          </p>
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-zinc-100 truncate  transition-colors">
-              {app.role_title || "Untitled Role"}
-            </p>
-            {app.processing_status === "processing" && (
-              <span className="text-xs text-indigo-400">analyzing...</span>
-            )}
-          </div>
+          </span>
+          <span className="text-[11px] text-white/25">
+            {app.applied_at
+              ? new Date(app.applied_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : ""}
+          </span>
         </div>
-
-        <div className="hidden sm:flex flex-col gap-3 shrink-0">
-          <div className="flex gap-2">
-            {app.remote_policy && app.remote_policy !== "not_specified" && (
-              <Badge
-                variant="outline"
-                className="text-xs border-zinc-700 text-zinc-400"
-              >
-                {app.remote_policy}
-              </Badge>
-            )}
-            {app.experience_level && (
-              <Badge
-                variant="outline"
-                className="text-xs border-zinc-700 text-zinc-400"
-              >
-                {app.experience_level}
-              </Badge>
-            )}
-          </div>
-          {app.salary_range && (
-            <span className="text-xs text-zinc-500 font-mono">
-              {app.salary_range}
-            </span>
-          )}
-        </div>
-
-        {/* <MatchScore
-          matchScore={app.match_score || 0}
-          processingStatus={app.processing_status}
-        /> */}
       </div>
-    </Card>
+
+      <h3 className="text-[13px] font-medium text-white/90 leading-snug mb-2 tracking-tight">
+        {app.role_title || "Untitled Role"}
+        {app.processing_status === "processing" && (
+          <span className="ml-1.5 text-[11px] text-indigo-400 animate-pulse">
+            analyzing...
+          </span>
+        )}
+      </h3>
+
+      <div className="flex flex-wrap gap-1 mb-2.5">
+        {app.remote_policy && app.remote_policy !== "not_specified" && (
+          <span className="text-[10px] font-medium text-white/40 bg-white/[0.04] px-2 py-0.5 rounded uppercase tracking-wide">
+            {app.remote_policy}
+          </span>
+        )}
+        {app.experience_level && (
+          <span className="text-[10px] font-medium text-white/40 bg-white/[0.04] px-2 py-0.5 rounded uppercase tracking-wide">
+            {app.experience_level}
+          </span>
+        )}
+      </div>
+
+      {app.salary_range && (
+        <div className="text-[11px] font-medium text-white/35 font-mono">
+          {app.salary_range}
+        </div>
+      )}
+    </div>
   );
 }

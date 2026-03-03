@@ -94,7 +94,7 @@ export function clearToken() {
 
 async function request<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<APIResponse<T>> {
   const token = getToken();
   const headers: Record<string, string> = {
@@ -128,7 +128,11 @@ async function request<T>(
 // AUTH
 // ============================================
 
-export async function register(email: string, password: string, full_name: string) {
+export async function register(
+  email: string,
+  password: string,
+  full_name: string,
+) {
   const res = await request<{ token: string; user: User }>("/auth/register", {
     method: "POST",
     body: JSON.stringify({ email, password, full_name }),
@@ -233,17 +237,32 @@ export async function getStageHistory(id: string) {
 // ============================================
 
 export const STAGES = [
-  { key: "applied", label: "Applied", emoji: "📨" },
-  { key: "recruiter_response", label: "Recruiter Response", emoji: "📞" },
-  { key: "phone_screen", label: "Phone Screen", emoji: "🎧" },
-  { key: "technical_interview", label: "Technical Interview", emoji: "💻" },
-  { key: "onsite_final", label: "Onsite / Final", emoji: "🏢" },
-  { key: "offer", label: "Offer", emoji: "🎉" },
-  { key: "accepted", label: "Accepted", emoji: "✅" },
-  { key: "rejected", label: "Rejected", emoji: "❌" },
-  { key: "withdrawn", label: "Withdrawn", emoji: "🚪" },
+  { key: "applied", label: "Applied", emoji: "📨", color: "#6366f1" },
+  {
+    key: "recruiter_response",
+    label: "Recruiter Response",
+    emoji: "📞",
+    color: "#8b5cf6",
+  },
+  { key: "phone_screen", label: "Phone Screen", emoji: "🎧", color: "#a78bfa" },
+  {
+    key: "technical_interview",
+    label: "Technical Interview",
+    emoji: "💻",
+    color: "#c4b5fd",
+  },
+  {
+    key: "onsite_final",
+    label: "Onsite / Final",
+    emoji: "🏢",
+    color: "#ddd6fe",
+  },
+  { key: "offer", label: "Offer", emoji: "🎉", color: "#34d399" },
+  { key: "accepted", label: "Accepted", emoji: "✅", color: "#22c55e" },
+  { key: "rejected", label: "Rejected", emoji: "❌", color: "#ef4444" },
+  { key: "withdrawn", label: "Withdrawn", emoji: "🚪", color: "#71717a" },
 ] as const;
 
 export const STAGE_MAP = Object.fromEntries(
-  STAGES.map((s) => [s.key, s])
+  STAGES.map((s) => [s.key, s]),
 ) as Record<string, (typeof STAGES)[number]>;
