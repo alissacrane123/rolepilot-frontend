@@ -12,55 +12,12 @@ import PipelineBar from "@/components/Dashboard/PipelineBar";
 import StageSection from "@/components/Dashboard/StageSection";
 import ListView from "@/components/Dashboard/ListView";
 import StageTransitionModal from "@/components/Dashboard/StageTransitionModal";
+import InterviewsSection from "@/components/Interviews/InterviewsSection";
 import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
-
-type ViewMode = "board" | "list";
-
-const ALWAYS_VISIBLE_STAGES = [
-  "applied",
-  "recruiter_response",
-  "phone_screen",
-  "technical_interview",
-  "onsite_final",
-  "offer",
-  "rejected",
-];
-
-function ViewToggle({
-  view,
-  onChange,
-}: {
-  view: ViewMode;
-  onChange: (v: ViewMode) => void;
-}) {
-  return (
-    <div className="flex bg-white/[0.04] rounded-lg p-0.5 border border-white/[0.06]">
-      <button
-        onClick={() => onChange("board")}
-        className={`flex items-center px-2.5 py-1.5 rounded-md transition-all duration-150 ${
-          view === "board" ? "text-white bg-white/[0.08]" : "text-white/30"
-        }`}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect x="1" y="1" width="5" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
-          <rect x="10" y="1" width="5" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
-        </svg>
-      </button>
-      <button
-        onClick={() => onChange("list")}
-        className={`flex items-center px-2.5 py-1.5 rounded-md transition-all duration-150 ${
-          view === "list" ? "text-white bg-white/[0.08]" : "text-white/30"
-        }`}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <line x1="1" y1="3" x2="15" y2="3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-          <line x1="1" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        </svg>
-      </button>
-    </div>
-  );
-}
+import type { ViewMode } from "@/lib/constants";
+import ViewToggle from "@/components/Dashboard/ViewToggle";
+import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
+import EmptyState from "@/components/EmpyState";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -145,17 +102,11 @@ export default function DashboardPage() {
 
       {/* Empty state */}
       {totalApps === 0 && (
-        <div className="text-center py-20">
-          <div className="text-4xl mb-4">📋</div>
-          <h2 className="text-lg font-semibold text-white/70 mb-2">
-            No applications yet
-          </h2>
-          <p className="text-sm text-white/35 mb-6 max-w-md mx-auto">
-            Start tracking your job search by adding your first application.
-            Paste the job description for AI-powered analysis.
-          </p>
-          <NewApplicationDialog onCreated={fetchBoard} />
-        </div>
+        <EmptyState
+          title="No applications yet"
+          description="Start tracking your job search by adding your first application. Paste the job description for AI-powered analysis."
+          cta={<NewApplicationDialog onCreated={fetchBoard} />}
+        />
       )}
 
       {/* Pipeline bar + content */}
@@ -174,7 +125,10 @@ export default function DashboardPage() {
                   <StageSection
                     key={stage.key}
                     stageKey={stage.key}
-                    apps={(board[stage.key as keyof BoardView] || []) as JobApplication[]}
+                    apps={
+                      (board[stage.key as keyof BoardView] ||
+                        []) as JobApplication[]
+                    }
                     onCardClick={handleCardClick}
                     isOver={dragState.overStageKey === stage.key}
                     draggingAppId={dragState.dragging?.appId ?? null}
@@ -200,6 +154,11 @@ export default function DashboardPage() {
           </div>
         </>
       )}
+
+      {/* Interviews section */}
+      <div className="mt-12 pt-10 border-t border-white/[0.06]">
+        <InterviewsSection />
+      </div>
 
       {pendingTransition && (
         <StageTransitionModal
