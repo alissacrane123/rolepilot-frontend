@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createApplication } from "@/lib/api";
+import { useCreateApplicationMutation } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,16 +22,13 @@ export default function NewApplicationDialog({
   const [roleTitle, setRoleTitle] = useState("");
   const [jobUrl, setJobUrl] = useState("");
   const [postingText, setPostingText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const mutation = useCreateApplicationMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
 
     try {
-      await createApplication({
+      await mutation.mutateAsync({
         company_name: companyName || undefined,
         role_title: roleTitle || undefined,
         job_url: jobUrl || undefined,
@@ -43,10 +40,8 @@ export default function NewApplicationDialog({
       setJobUrl("");
       setPostingText("");
       onCreated();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch {
+      // error handled by mutation.error
     }
   };
 
@@ -105,17 +100,17 @@ export default function NewApplicationDialog({
               className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[120px]"
             />
           </div>
-          {error && (
+          {mutation.error && (
             <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {error}
+              {(mutation.error as Error).message}
             </p>
           )}
           <Button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-            disabled={loading}
+            disabled={mutation.isPending}
           >
-            {loading ? "Creating..." : "Add Application"}
+            {mutation.isPending ? "Creating..." : "Add Application"}
           </Button>
         </form>
       </DialogContent>

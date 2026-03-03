@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  getApplication,
-  type JobApplication,
-  STAGE_MAP,
-} from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
+import { STAGE_MAP } from "@/lib/api";
+import { useApplicationQuery, queryKeys } from "@/hooks/useApi";
 import { Badge } from "@/components/ui/badge";
 import PageContainer from "@/components/PageContainer";
 import Content from "@/components/Content";
@@ -16,31 +14,24 @@ import StageHistory from "@/components/Application/StageHistory";
 
 export default function ApplicationPage() {
   const { id } = useParams<{ id: string }>();
-  const [app, setApp] = useState<JobApplication | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchApp = async () => {
-    if (!id) return;
-    try {
-      const res = await getApplication(id);
-      if (res.data) setApp(res.data);
-    } catch (err) {
-      console.error("Failed to fetch application:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const queryClient = useQueryClient();
+  const { data: app, isLoading: loading } = useApplicationQuery(id);
 
   useEffect(() => {
-    fetchApp();
-  }, [id]);
-
-  useEffect(() => {
-    if (app?.processing_status === "processing") {
-      const interval = setInterval(fetchApp, 3000);
+    if (app?.processing_status === "processing" && id) {
+      const interval = setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.application(id) });
+      }, 3000);
       return () => clearInterval(interval);
     }
-  }, [app?.processing_status]);
+  }, [app?.processing_status, id, queryClient]);
+
+  const handleMoved = () => {
+    if (id) {
+      queryClient.invalidateQueries({ queryKey: queryKeys.application(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.board });
+    }
+  };
 
   if (loading) {
     return (
@@ -62,7 +53,7 @@ export default function ApplicationPage() {
 
   return (
     <PageContainer>
-      <ApplicationHeader app={app} onMoved={fetchApp} />
+      <ApplicationHeader app={app} onMoved={handleMoved} />
 
       <Content>
         {/* Title Section */}

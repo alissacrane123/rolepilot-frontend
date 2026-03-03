@@ -15,19 +15,50 @@ export default function ApplicationHeader({
   const navigate = useNavigate();
 
   return (
-    <NavHeader>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => navigate("/")}
-        className="text-zinc-400 hover:text-zinc-100 px-0"
-      >
-        <div className="flex items-center gap-2">
-          <ArrowLeftIcon className="w-4 h-4 mr-2" />
-          Applications
-        </div>
-      </Button>
-      <MoveStageDialog app={app} onMoved={onMoved} />
-    </NavHeader>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center ">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/")}
+          className="text-zinc-400 hover:text-zinc-100 px-0"
+        >
+          <div className="flex items-center gap-2">
+            <ArrowLeftIcon className="w-4 h-4 mr-2" />
+            Applications
+          </div>
+        </Button>
+        <MoveStageDialog app={app} onMoved={onMoved} />
+      </div>
+
+      <div></div>
+    </div>
   );
 }
+
+// export default function ApplicationHeader({
+//   app,
+//   onMoved,
+// }: {
+//   app: JobApplication;
+//   onMoved: () => void;
+// }) {
+//   const navigate = useNavigate();
+
+//   return (
+//     <NavHeader>
+//       <Button
+//         variant="ghost"
+//         size="sm"
+//         onClick={() => navigate("/")}
+//         className="text-zinc-400 hover:text-zinc-100 px-0"
+//       >
+//         <div className="flex items-center gap-2">
+//           <ArrowLeftIcon className="w-4 h-4 mr-2" />
+//           Applications
+//         </div>
+//       </Button>
+//       <MoveStageDialog app={app} onMoved={onMoved} />
+//     </NavHeader>
+//   );
+// }

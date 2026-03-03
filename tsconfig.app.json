@@ -15,6 +15,7 @@
     "moduleDetection": "force",
     "emitDeclarationOnly": true,
     "declaration": true,
+    "declarationDir": "./dist-types",
     "jsx": "react-jsx",
     "composite": true,
 

@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  getBoard,
   type BoardView,
   type JobApplication,
   STAGES,
 } from "@/lib/api";
+import { useBoardQuery, queryKeys } from "@/hooks/useApi";
 import Content from "@/components/Content";
 import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
 import PipelineBar from "@/components/Dashboard/PipelineBar";
@@ -21,27 +22,14 @@ import EmptyState from "@/components/EmpyState";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const [board, setBoard] = useState<BoardView | null>(null);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const { data: board, isLoading: loading } = useBoardQuery();
   const [view, setView] = useState<ViewMode>("board");
   const [activeStage, setActiveStage] = useState<string | null>(null);
 
-  const fetchBoard = async () => {
-    try {
-      const res = await getBoard();
-      if (res.data) setBoard(res.data);
-    } catch (err) {
-      console.error("Failed to fetch board:", err);
-    } finally {
-      setLoading(false);
-    }
+  const invalidateBoard = () => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.board });
   };
-
-  useEffect(() => {
-    fetchBoard();
-    const interval = setInterval(fetchBoard, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   const {
     dragState,
@@ -54,7 +42,7 @@ export default function DashboardPage() {
     handleColumnDrop,
     handleTransitionConfirm,
     handleTransitionCancel,
-  } = useStageDragAndDrop(board, fetchBoard);
+  } = useStageDragAndDrop(board ?? null, invalidateBoard);
 
   const handleCardClick = (id: string) => {
     navigate(`/applications/${id}`);
@@ -96,7 +84,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2.5">
           <ViewToggle view={view} onChange={setView} />
-          <NewApplicationDialog onCreated={fetchBoard} />
+          <NewApplicationDialog onCreated={invalidateBoard} />
         </div>
       </div>
 
@@ -105,7 +93,7 @@ export default function DashboardPage() {
         <EmptyState
           title="No applications yet"
           description="Start tracking your job search by adding your first application. Paste the job description for AI-powered analysis."
-          cta={<NewApplicationDialog onCreated={fetchBoard} />}
+          cta={<NewApplicationDialog onCreated={invalidateBoard} />}
         />
       )}
 

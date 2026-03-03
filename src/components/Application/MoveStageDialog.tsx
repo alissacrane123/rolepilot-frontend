@@ -1,9 +1,6 @@
 import { useState } from "react";
-import {
-  updateStage,
-  type JobApplication,
-  STAGES,
-} from "@/lib/api";
+import { type JobApplication, STAGES } from "@/lib/api";
+import { useUpdateStageMutation } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -34,8 +31,7 @@ export default function MoveStageDialog({
   const [open, setOpen] = useState(false);
   const [toStage, setToStage] = useState("");
   const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const mutation = useUpdateStageMutation();
 
   if (TERMINAL_STAGES.includes(app.current_stage)) return null;
 
@@ -44,19 +40,19 @@ export default function MoveStageDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!toStage) return;
-    setLoading(true);
-    setError("");
 
     try {
-      await updateStage(app.id, toStage, notes);
+      await mutation.mutateAsync({
+        id: app.id,
+        toStage,
+        notes,
+      });
       setOpen(false);
       setToStage("");
       setNotes("");
       onMoved();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch {
+      // error handled by mutation.error
     }
   };
 
@@ -100,17 +96,17 @@ export default function MoveStageDialog({
               className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
             />
           </div>
-          {error && (
+          {mutation.error && (
             <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {error}
+              {(mutation.error as Error).message}
             </p>
           )}
           <Button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-            disabled={loading || !toStage}
+            disabled={mutation.isPending || !toStage}
           >
-            {loading ? "Updating..." : "Update Stage"}
+            {mutation.isPending ? "Updating..." : "Update Stage"}
           </Button>
         </form>
       </DialogContent>

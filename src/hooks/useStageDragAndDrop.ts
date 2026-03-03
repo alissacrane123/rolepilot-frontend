@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import type { JobApplication, BoardView } from "@/lib/api";
-import { updateStage } from "@/lib/api";
+import { useUpdateStageMutation } from "@/hooks/useApi";
 import type { StageTransition } from "@/components/Dashboard/StageTransitionModal";
 import { needsConfirmation } from "@/components/Dashboard/StageTransitionModal";
 
@@ -26,6 +26,7 @@ export default function useStageDragAndDrop(
     useState<StageTransition | null>(null);
 
   const dragCounterRef = useRef<Record<string, number>>({});
+  const stageMutation = useUpdateStageMutation();
 
   const findApp = useCallback(
     (appId: string): JobApplication | null => {
@@ -43,7 +44,6 @@ export default function useStageDragAndDrop(
     (e: React.DragEvent, appId: string, fromStage: string) => {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("application/json", JSON.stringify({ appId, fromStage }));
-      // Small delay so the browser captures the element for the ghost image
       requestAnimationFrame(() => {
         setDragState({ dragging: { appId, fromStage }, overStageKey: null });
       });
@@ -98,14 +98,18 @@ export default function useStageDragAndDrop(
         setPendingTransition({ app, fromStage: payload.fromStage, toStage });
       } else {
         try {
-          await updateStage(app.id, toStage, "");
+          await stageMutation.mutateAsync({
+            id: app.id,
+            toStage,
+            notes: "",
+          });
           onBoardUpdated();
         } catch (err) {
           console.error("Failed to update stage:", err);
         }
       }
     },
-    [findApp, onBoardUpdated],
+    [findApp, onBoardUpdated, stageMutation],
   );
 
   const handleTransitionConfirm = useCallback(() => {

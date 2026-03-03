@@ -1,7 +1,11 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { updateProfile, uploadResume, uploadResumeText } from "@/lib/api";
+import {
+  useUpdateProfileMutation,
+  useUploadResumeMutation,
+  useUploadResumeTextMutation,
+} from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -146,7 +150,6 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Form state initialized from user
   const [fullName, setFullName] = useState(user?.full_name || "");
   const [skills, setSkills] = useState<string[]>(user?.skills || []);
   const [experienceYears, setExperienceYears] = useState<string>(
@@ -163,25 +166,27 @@ export default function ProfilePage() {
     user?.preferred_locations || []
   );
 
-  // Resume state
   const [resumeText, setResumeText] = useState(user?.resume_text || "");
   const [resumeTab, setResumeTab] = useState<"file" | "text">(
     user?.resume_text ? "text" : "file"
   );
 
-  // UI state
-  const [saving, setSaving] = useState(false);
-  const [uploadingResume, setUploadingResume] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const updateProfileMutation = useUpdateProfileMutation();
+  const uploadResumeMutation = useUploadResumeMutation();
+  const uploadResumeTextMutation = useUploadResumeTextMutation();
+
+  const saving = updateProfileMutation.isPending;
+  const uploadingResume = uploadResumeMutation.isPending || uploadResumeTextMutation.isPending;
+
   const handleSaveProfile = async () => {
-    setSaving(true);
     setError("");
     setMessage("");
 
     try {
-      await updateProfile({
+      await updateProfileMutation.mutateAsync({
         full_name: fullName,
         skills,
         experience_years: experienceYears ? parseInt(experienceYears) : undefined,
@@ -195,21 +200,17 @@ export default function ProfilePage() {
       setTimeout(() => setMessage(""), 3000);
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setSaving(false);
     }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    setUploadingResume(true);
     setError("");
     setMessage("");
 
     try {
-      const res = await uploadResume(file);
+      const res = await uploadResumeMutation.mutateAsync(file);
       if (res.data?.resume_text) {
         setResumeText(res.data.resume_text);
       }
@@ -219,26 +220,22 @@ export default function ProfilePage() {
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setUploadingResume(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleSaveResumeText = async () => {
     if (!resumeText.trim()) return;
-    setUploadingResume(true);
     setError("");
     setMessage("");
 
     try {
-      await uploadResumeText(resumeText);
+      await uploadResumeTextMutation.mutateAsync(resumeText);
       await refreshUser();
       setMessage("Resume text saved!");
       setTimeout(() => setMessage(""), 3000);
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setUploadingResume(false);
     }
   };
 

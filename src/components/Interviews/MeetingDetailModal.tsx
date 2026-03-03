@@ -1,11 +1,10 @@
 import { useState, useMemo } from "react";
 import {
-  updateMeeting,
-  deleteMeeting,
   type Meeting,
   MEETING_TYPES,
   LOCATION_TYPES,
 } from "@/lib/api";
+import { useUpdateMeetingMutation, useDeleteMeetingMutation } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -78,19 +77,16 @@ export default function MeetingDetailModal({
   companyName,
   roleTitle,
   onClose,
-  onUpdated,
 }: {
   meeting: Meeting;
   companyName?: string;
   roleTitle?: string;
   onClose: () => void;
-  onUpdated: () => void;
 }) {
   const initial = useMemo(() => buildInitialValues(meeting), [meeting]);
   const [values, setValues] = useState<MeetingFormValues>(initial);
-  const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState("");
+  const updateMutation = useUpdateMeetingMutation();
+  const deleteMutation = useDeleteMeetingMutation();
 
   const set = (key: keyof MeetingFormValues, val: string) =>
     setValues((prev) => ({ ...prev, [key]: val }));
@@ -102,9 +98,6 @@ export default function MeetingDetailModal({
   }, [values, initial]);
 
   const handleSave = async () => {
-    setSaving(true);
-    setError("");
-
     let scheduled_at: string | undefined;
     if (values.date) {
       const localDateTime = values.time
@@ -114,40 +107,40 @@ export default function MeetingDetailModal({
     }
 
     try {
-      await updateMeeting(meeting.id, {
-        scheduled_at,
-        duration_minutes: values.duration_minutes ? parseInt(values.duration_minutes, 10) : undefined,
-        meeting_type: values.meeting_type || undefined,
-        location_type: values.location_type || undefined,
-        location_details: values.location_details || undefined,
-        contact_name: values.contact_name || undefined,
-        contact_title: values.contact_title || undefined,
-        prep_notes: values.prep_notes || undefined,
-        post_notes: values.post_notes || undefined,
-        outcome: values.outcome || undefined,
+      await updateMutation.mutateAsync({
+        meetingId: meeting.id,
+        data: {
+          scheduled_at,
+          duration_minutes: values.duration_minutes ? parseInt(values.duration_minutes, 10) : undefined,
+          meeting_type: values.meeting_type || undefined,
+          location_type: values.location_type || undefined,
+          location_details: values.location_details || undefined,
+          contact_name: values.contact_name || undefined,
+          contact_title: values.contact_title || undefined,
+          prep_notes: values.prep_notes || undefined,
+          post_notes: values.post_notes || undefined,
+          outcome: values.outcome || undefined,
+        },
       });
-      onUpdated();
       onClose();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setSaving(false);
+    } catch {
+      // error handled by mutation.error
     }
   };
 
   const handleDelete = async () => {
     if (!confirm("Delete this meeting?")) return;
-    setDeleting(true);
     try {
-      await deleteMeeting(meeting.id);
-      onUpdated();
+      await deleteMutation.mutateAsync(meeting.id);
       onClose();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setDeleting(false);
+    } catch {
+      // error handled by mutation.error
     }
   };
+
+  const error = updateMutation.error || deleteMutation.error;
+  const saving = updateMutation.isPending;
+  const deleting = deleteMutation.isPending;
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
@@ -294,7 +287,7 @@ export default function MeetingDetailModal({
 
           {error && (
             <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {error}
+              {(error as Error).message}
             </p>
           )}
 

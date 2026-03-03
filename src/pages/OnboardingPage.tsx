@@ -1,7 +1,11 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { updateProfile, uploadResume, uploadResumeText } from "@/lib/api";
+import {
+  useUpdateProfileMutation,
+  useUploadResumeMutation,
+  useUploadResumeTextMutation,
+} from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -82,67 +86,60 @@ export default function OnboardingPage() {
 
   const [step, setStep] = useState(1);
 
-  // Step 1: Resume
   const [resumeTab, setResumeTab] = useState<"file" | "text">("file");
   const [resumeText, setResumeText] = useState("");
   const [resumeUploaded, setResumeUploaded] = useState(false);
-  const [uploadingResume, setUploadingResume] = useState(false);
 
-  // Step 2: Profile
   const [skills, setSkills] = useState<string[]>([]);
   const [experienceYears, setExperienceYears] = useState("");
   const [targetRole, setTargetRole] = useState("");
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
 
-  // UI
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const uploadResumeMutation = useUploadResumeMutation();
+  const uploadResumeTextMutation = useUploadResumeTextMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
+
+  const uploadingResume = uploadResumeMutation.isPending || uploadResumeTextMutation.isPending;
+  const saving = updateProfileMutation.isPending;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    setUploadingResume(true);
     setError("");
 
     try {
-      const res = await uploadResume(file);
+      const res = await uploadResumeMutation.mutateAsync(file);
       if (res.data?.resume_text) {
         setResumeText(res.data.resume_text);
       }
       setResumeUploaded(true);
-      // await refreshUser();
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setUploadingResume(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleSaveResumeText = async () => {
     if (!resumeText.trim()) return;
-    setUploadingResume(true);
     setError("");
 
     try {
-      await uploadResumeText(resumeText);
+      await uploadResumeTextMutation.mutateAsync(resumeText);
       setResumeUploaded(true);
-      // await refreshUser();
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setUploadingResume(false);
     }
   };
 
   const handleFinish = async () => {
-    setSaving(true);
     setError("");
 
     try {
-      await updateProfile({
+      await updateProfileMutation.mutateAsync({
         skills: skills.length > 0 ? skills : undefined,
         experience_years: experienceYears ? parseInt(experienceYears) : undefined,
         target_role: targetRole || undefined,
@@ -153,8 +150,6 @@ export default function OnboardingPage() {
       navigate("/");
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setSaving(false);
     }
   };
 

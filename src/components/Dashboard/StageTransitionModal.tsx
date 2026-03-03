@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { updateStage, STAGE_MAP } from "@/lib/api";
+import { STAGE_MAP } from "@/lib/api";
 import type { JobApplication } from "@/lib/api";
+import { useUpdateStageMutation } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -153,16 +154,13 @@ export default function StageTransitionModal({
 
   const [notes, setNotes] = useState("");
   const [extraValues, setExtraValues] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const mutation = useUpdateStageMutation();
 
   const setExtra = (key: string, value: string) =>
     setExtraValues((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
     const scheduledDate = extraValues["scheduled_date"];
     const scheduledTime = extraValues["scheduled_time"];
@@ -177,7 +175,6 @@ export default function StageTransitionModal({
       scheduledAt = dateTime.toISOString();
     }
 
-    console.log({ scheduledAt });
     const meeting = scheduledAt
       ? {
           scheduled_at: scheduledAt,
@@ -198,12 +195,15 @@ export default function StageTransitionModal({
       .join("\n");
 
     try {
-      await updateStage(app.id, toStage, allNotes, meeting);
+      await mutation.mutateAsync({
+        id: app.id,
+        toStage,
+        notes: allNotes,
+        meeting,
+      });
       onConfirm();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch {
+      // error handled by mutation.error
     }
   };
 
@@ -257,9 +257,9 @@ export default function StageTransitionModal({
             />
           </div>
 
-          {error && (
+          {mutation.error && (
             <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {error}
+              {(mutation.error as Error).message}
             </p>
           )}
 
@@ -269,16 +269,16 @@ export default function StageTransitionModal({
               variant="ghost"
               className="flex-1 text-zinc-400 hover:text-zinc-100"
               onClick={onCancel}
-              disabled={loading}
+              disabled={mutation.isPending}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
-              disabled={loading}
+              disabled={mutation.isPending}
             >
-              {loading ? "Moving..." : "Confirm Move"}
+              {mutation.isPending ? "Moving..." : "Confirm Move"}
             </Button>
           </div>
         </form>

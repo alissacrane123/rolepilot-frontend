@@ -1,10 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  getUpcomingMeetings,
-  getApplications,
-  type Meeting,
-  type JobApplication,
-} from "@/lib/api";
+import { useState, useMemo } from "react";
+import { type Meeting, type JobApplication } from "@/lib/api";
+import { useUpcomingMeetingsQuery, useApplicationsQuery } from "@/hooks/useApi";
 import type { MeetingWithApp } from "./calendar-utils";
 import InterviewListView from "./InterviewListView";
 import InterviewCalendarView from "./InterviewCalendarView";
@@ -31,33 +27,21 @@ function enrichMeetings(
 
 export default function InterviewsSection() {
   const [view, setView] = useState<InterviewView>("calendar");
-  const [meetings, setMeetings] = useState<MeetingWithApp[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedMeeting, setSelectedMeeting] = useState<MeetingWithApp | null>(
     null,
   );
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [meetingsRes, appsRes] = await Promise.all([
-        getUpcomingMeetings(),
-        getApplications(),
-      ]);
-      const rawMeetings = meetingsRes.data || [];
-      const rawApps = appsRes.data || [];
-      setMeetings(enrichMeetings(rawMeetings, rawApps));
-    } catch (err) {
-      console.error("Failed to fetch interviews:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { data: rawMeetings = [], isLoading: loadingMeetings } =
+    useUpcomingMeetingsQuery();
+  const { data: rawApps = [], isLoading: loadingApps } =
+    useApplicationsQuery();
 
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
-  }, [fetchData]);
+  const loading = loadingMeetings || loadingApps;
+
+  const meetings = useMemo(
+    () => enrichMeetings(rawMeetings, rawApps),
+    [rawMeetings, rawApps],
+  );
 
   const handleMeetingClick = (meeting: Meeting) => {
     const enriched = meetings.find((m) => m.id === meeting.id);
@@ -135,7 +119,6 @@ export default function InterviewsSection() {
           companyName={selectedMeeting._companyName}
           roleTitle={selectedMeeting._roleTitle}
           onClose={() => setSelectedMeeting(null)}
-          onUpdated={fetchData}
         />
       )}
     </div>
