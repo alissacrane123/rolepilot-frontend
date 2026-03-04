@@ -7,6 +7,7 @@ export default function ApplicationCard({
   onDragStart,
   onDragEnd,
   isDragging,
+  index,
 }: {
   app: JobApplication;
   stageKey: string;
@@ -14,16 +15,18 @@ export default function ApplicationCard({
   onDragStart: (e: React.DragEvent, appId: string, stageKey: string) => void;
   onDragEnd: () => void;
   isDragging: boolean;
+  index: number;
 }) {
   const initial = (app.company_name || "?")[0].toUpperCase();
 
   return (
     <div
       draggable
+      style={{ animationDelay: `${index * 60}ms` }}
       onDragStart={(e) => onDragStart(e, app.id, stageKey)}
       onDragEnd={onDragEnd}
       onClick={onClick}
-      className={`rounded-[10px] p-3.5 bg-white/[0.03] border border-white/[0.06] cursor-grab transition-all duration-200 select-none active:cursor-grabbing
+      className={`animate-fade-in-up rounded-[10px] p-3.5 bg-white/[0.03] border border-white/[0.06] cursor-grab transition-all duration-200 select-none active:cursor-grabbing
         ${isDragging ? "opacity-40 scale-[0.97]" : "hover:bg-white/[0.055] hover:border-indigo-500/25 hover:-translate-y-px"}`}
     >
       <div className="flex items-center gap-2.5 mb-2.5">

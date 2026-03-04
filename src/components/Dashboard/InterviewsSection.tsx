@@ -1,12 +1,15 @@
 import { useState, useMemo } from "react";
 import { type Meeting, type JobApplication } from "@/lib/api";
 import { useUpcomingMeetingsQuery, useApplicationsQuery } from "@/hooks/useApi";
-import type { MeetingWithApp } from "./calendar-utils";
-import InterviewListView from "./InterviewListView";
-import InterviewCalendarView from "./InterviewCalendarView";
-import MeetingDetailModal from "./MeetingDetailModal";
+import type { MeetingWithApp } from "@/components/Interviews/calendar-utils";
+import InterviewListView from "@/components/Interviews/InterviewListView";
+import InterviewCalendarView from "@/components/Interviews/InterviewCalendarView";
+import MeetingDetailModal from "@/components/Interviews/MeetingDetailModal";
 import { CalendarViewIcon, ListViewIcon } from "@/components/icons";
-import EmptyState from "../EmpyState";
+import EmptyState from "@/components/EmpyState";
+import { TextTitle1 } from "@/components/ui/text/TextTitle1";
+import { TextBody } from "@/components/ui/text/TextBody";
+import ViewToggle from "@/components/Dashboard/ViewToggle";
 
 type InterviewView = "calendar" | "list";
 
@@ -33,8 +36,7 @@ export default function InterviewsSection() {
 
   const { data: rawMeetings = [], isLoading: loadingMeetings } =
     useUpcomingMeetingsQuery();
-  const { data: rawApps = [], isLoading: loadingApps } =
-    useApplicationsQuery();
+  const { data: rawApps = [], isLoading: loadingApps } = useApplicationsQuery();
 
   const loading = loadingMeetings || loadingApps;
 
@@ -54,6 +56,10 @@ export default function InterviewsSection() {
     );
   };
 
+  const handleViewChange = (view: "start" | "end") => {
+    setView(view === "start" ? "calendar" : "list");
+  };
+
   if (loading) {
     return (
       <EmptyState
@@ -65,36 +71,20 @@ export default function InterviewsSection() {
 
   return (
     <div className="space-y-5">
-      {/* Section header */}
+      {/* Section TextTitle1 */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-white tracking-tight">
-            Interviews
-          </h2>
-          <p className="text-[13px] text-white/35 mt-0.5">
+          <TextTitle1>Interviews</TextTitle1>
+          <TextBody className="mt-0.5">
             {loading ? "Loading..." : `${meetings.length} upcoming`}
-          </p>
+          </TextBody>
         </div>
-        <div className="flex bg-white/[0.04] rounded-lg p-0.5 border border-white/[0.06]">
-          <button
-            onClick={() => setView("calendar")}
-            className={`flex items-center px-2.5 py-1.5 rounded-md transition-all duration-150 ${
-              view === "calendar"
-                ? "text-white bg-white/[0.08]"
-                : "text-white/30"
-            }`}
-          >
-            <CalendarViewIcon />
-          </button>
-          <button
-            onClick={() => setView("list")}
-            className={`flex items-center px-2.5 py-1.5 rounded-md transition-all duration-150 ${
-              view === "list" ? "text-white bg-white/[0.08]" : "text-white/30"
-            }`}
-          >
-            <ListViewIcon />
-          </button>
-        </div>
+        <ViewToggle
+          view={view === "calendar" ? "start" : "end"}
+          onChange={handleViewChange}
+          icon1={<CalendarViewIcon />}
+          icon2={<ListViewIcon />}
+        />
       </div>
 
       {/* Content */}

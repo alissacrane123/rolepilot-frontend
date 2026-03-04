@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  type BoardView,
-  type JobApplication,
-  STAGES,
-} from "@/lib/api";
+import { type BoardView, type JobApplication, STAGES } from "@/lib/api";
 import { useBoardQuery, queryKeys } from "@/hooks/useApi";
 import Content from "@/components/Content";
 import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
@@ -13,12 +9,17 @@ import PipelineBar from "@/components/Dashboard/PipelineBar";
 import StageSection from "@/components/Dashboard/StageSection";
 import ListView from "@/components/Dashboard/ListView";
 import StageTransitionModal from "@/components/Dashboard/StageTransitionModal";
-import InterviewsSection from "@/components/Interviews/InterviewsSection";
+import InterviewsSection from "@/components/Dashboard/InterviewsSection";
 import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
 import type { ViewMode } from "@/lib/constants";
 import ViewToggle from "@/components/Dashboard/ViewToggle";
 import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
 import EmptyState from "@/components/EmpyState";
+import { TextTitle1 } from "@/components/ui/text/TextTitle1";
+import { TextBody } from "@/components/ui/text/TextBody";
+import { HStack, VStack } from "@/components/ui/stacks";
+import GridView from "@/components/Dashboard/GridView";
+import ApplicationsSection from "@/components/Dashboard/ApplicationsSection";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -31,18 +32,8 @@ export default function DashboardPage() {
     queryClient.invalidateQueries({ queryKey: queryKeys.board });
   };
 
-  const {
-    dragState,
-    pendingTransition,
-    handleDragStart,
-    handleDragEnd,
-    handleColumnDragEnter,
-    handleColumnDragLeave,
-    handleColumnDragOver,
-    handleColumnDrop,
-    handleTransitionConfirm,
-    handleTransitionCancel,
-  } = useStageDragAndDrop(board ?? null, invalidateBoard);
+  const { dragState, pendingTransition, ...dragAndDropProps } =
+    useStageDragAndDrop(board ?? null, invalidateBoard);
 
   const handleCardClick = (id: string) => {
     navigate(`/applications/${id}`);
@@ -70,83 +61,31 @@ export default function DashboardPage() {
     return ALWAYS_VISIBLE_STAGES.includes(stage.key) || apps.length > 0;
   });
 
+  const hanldeViewChange = (view: "start" | "end") => {
+    setView(view === "start" ? "board" : "list");
+  };
+
   return (
     <Content>
-      {/* Page header */}
-      <div className="flex items-start justify-between mb-7">
-        <div>
-          <h1 className="text-[26px] font-bold text-white tracking-tight leading-tight">
-            Applications
-          </h1>
-          <p className="text-[13px] text-white/35 mt-1">
-            {totalApps} active · tracking across {STAGES.length} stages
-          </p>
-        </div>
-        <div className="flex items-center gap-2.5">
-          <ViewToggle view={view} onChange={setView} />
-          <NewApplicationDialog onCreated={invalidateBoard} />
-        </div>
-      </div>
+      <ApplicationsSection
+        totalApps={totalApps}
+        view={view}
+        hanldeViewChange={hanldeViewChange}
+        invalidateBoard={invalidateBoard}
+        board={board}
+        activeStage={activeStage}
+        setActiveStage={setActiveStage}
+        handleCardClick={handleCardClick}
+        dragState={dragState}
+        dragAndDropProps={dragAndDropProps}
+        visibleStages={visibleStages}
+      />
 
-      {/* Empty state */}
-      {totalApps === 0 && (
-        <EmptyState
-          title="No applications yet"
-          description="Start tracking your job search by adding your first application. Paste the job description for AI-powered analysis."
-          cta={<NewApplicationDialog onCreated={invalidateBoard} />}
-        />
-      )}
-
-      {/* Pipeline bar + content */}
-      {totalApps > 0 && board && (
-        <>
-          <PipelineBar
-            board={board}
-            activeStage={activeStage}
-            onStageClick={setActiveStage}
-          />
-
-          <div className="mt-7">
-            {view === "board" && (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-3 items-start">
-                {visibleStages.map((stage, i) => (
-                  <StageSection
-                    key={stage.key}
-                    stageKey={stage.key}
-                    apps={
-                      (board[stage.key as keyof BoardView] ||
-                        []) as JobApplication[]
-                    }
-                    onCardClick={handleCardClick}
-                    isOver={dragState.overStageKey === stage.key}
-                    draggingAppId={dragState.dragging?.appId ?? null}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                    onDragEnter={handleColumnDragEnter}
-                    onDragLeave={handleColumnDragLeave}
-                    onDragOver={handleColumnDragOver}
-                    onDrop={handleColumnDrop}
-                    style={{ animationDelay: `${i * 80}ms` }}
-                  />
-                ))}
-              </div>
-            )}
-
-            {view === "list" && (
-              <ListView
-                board={board}
-                activeStage={activeStage}
-                onCardClick={handleCardClick}
-              />
-            )}
-          </div>
-        </>
-      )}
-
+      <div className="mt-20 pb-10 border-t border-white/[0.06]"/>
       {/* Interviews section */}
-      <div className="mt-12 pt-10 border-t border-white/[0.06]">
+      {/* <div className="mt-12 pt-10 border-t border-white/[0.06]"> */}
         <InterviewsSection />
-      </div>
+      {/* </div> */}
 
       {pendingTransition && (
         <StageTransitionModal

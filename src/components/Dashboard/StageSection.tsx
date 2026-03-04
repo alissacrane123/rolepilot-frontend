@@ -1,6 +1,9 @@
 import type { JobApplication } from "@/lib/api";
 import { STAGE_MAP } from "@/lib/api";
 import ApplicationCard from "./ApplicationCard";
+import { HStack } from "@/components/ui/stacks";
+import { TextHeadline } from "@/components/ui/text/TextHeadline";
+import { TextLabel1 } from "@/components/ui/text/TextLabel1";
 
 export default function StageSection({
   stageKey,
@@ -45,18 +48,16 @@ export default function StageSection({
       }`}
       style={style}
     >
-      <div className="flex items-center gap-2 px-4 pt-3.5 pb-2.5 border-b border-white/[0.04]">
+      <HStack className="items-center gap-2 px-4 pt-3.5 pb-2.5 border-b border-white/[0.04]">
         <div
           className="w-1.5 h-1.5 rounded-full shrink-0"
           style={{ background: stage.color }}
         />
-        <span className="text-xs font-semibold text-white/60 uppercase tracking-wider flex-1">
+        <TextHeadline className="text-xs font-semibold text-white/60 uppercase tracking-wider flex-1">
           {stage.label}
-        </span>
-        <span className="text-[11px] font-medium text-white/30 font-mono">
-          {apps.length}
-        </span>
-      </div>
+        </TextHeadline>
+        <TextLabel1 className="font-mono">{apps.length}</TextLabel1>
+      </HStack>
       <div
         className={`p-2 flex flex-col gap-1.5 min-h-[80px] transition-colors duration-200 ${
           isOver ? "bg-indigo-500/[0.02]" : ""
@@ -64,26 +65,24 @@ export default function StageSection({
       >
         {apps.length === 0 && (
           <div className="flex items-center justify-center py-6">
-            <p className={`text-xs ${isOver ? "text-indigo-400/50" : "text-white/15"}`}>
+            <p
+              className={`text-xs ${isOver ? "text-indigo-400/50" : "text-white/15"}`}
+            >
               {isOver ? "Drop here" : "No applications"}
             </p>
           </div>
         )}
         {apps.map((app, i) => (
-          <div
+          <ApplicationCard
+            app={app}
             key={app.id}
-            className="animate-fade-in-up"
-            style={{ animationDelay: `${i * 60}ms` }}
-          >
-            <ApplicationCard
-              app={app}
-              stageKey={stageKey}
-              onClick={() => onCardClick(app.id)}
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              isDragging={draggingAppId === app.id}
-            />
-          </div>
+            index={i}
+            stageKey={stageKey}
+            onClick={() => onCardClick(app.id)}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            isDragging={draggingAppId === app.id}
+          />
         ))}
       </div>
     </div>

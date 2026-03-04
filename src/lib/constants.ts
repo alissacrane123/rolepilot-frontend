@@ -8,6 +8,7 @@ export const ALWAYS_VISIBLE_STAGES = [
   "onsite_final",
   "offer",
   "rejected",
+  "withdrawn",
 ];
 
 export const TERMINAL_STAGES = ["accepted", "rejected", "withdrawn"];

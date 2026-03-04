@@ -1,5 +1,6 @@
 import type { BoardView, JobApplication } from "@/lib/api";
 import { STAGES } from "@/lib/api";
+import { HStack } from "@/components/ui/stacks";
 
 export default function PipelineBar({
   board,
@@ -11,7 +12,7 @@ export default function PipelineBar({
   onStageClick: (key: string | null) => void;
 }) {
   return (
-    <div className="flex gap-1.5 overflow-x-auto pb-1">
+    <HStack className="gap-1.5 overflow-x-auto pb-1">
       {STAGES.map((stage, i) => {
         const apps = (board[stage.key as keyof BoardView] ||
           []) as JobApplication[];
@@ -41,6 +42,6 @@ export default function PipelineBar({
           </button>
         );
       })}
-    </div>
+    </HStack>
   );
 }

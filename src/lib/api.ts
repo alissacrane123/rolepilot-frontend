@@ -351,7 +351,7 @@ export const STAGES = [
     color: "#ddd6fe",
   },
   { key: "offer", label: "Offer", emoji: "🎉", color: "#34d399" },
-  { key: "accepted", label: "Accepted", emoji: "✅", color: "#22c55e" },
+  // { key: "accepted", label: "Accepted", emoji: "✅", color: "#22c55e" },
   { key: "rejected", label: "Rejected", emoji: "❌", color: "#ef4444" },
   { key: "withdrawn", label: "Withdrawn", emoji: "🚪", color: "#71717a" },
 ] as const;

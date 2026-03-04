@@ -1,5 +1,14 @@
 import type { JobApplication, BoardView } from "@/lib/api";
 import { STAGES, STAGE_MAP } from "@/lib/api";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableEmpty,
+} from "@/components/ui/table";
 
 export default function ListView({
   board,
@@ -21,103 +30,91 @@ export default function ListView({
   }
 
   return (
-    <div className="rounded-xl border border-white/[0.06] overflow-hidden">
-      {/* Header */}
-      <div className="flex px-5 py-2.5 bg-white/[0.02] border-b border-white/[0.06]">
-        <span className="flex-[2] text-[11px] font-semibold text-white/30 uppercase tracking-wider">
-          Role
-        </span>
-        <span className="flex-1 text-[11px] font-semibold text-white/30 uppercase tracking-wider">
-          Company
-        </span>
-        <span className="flex-1 text-[11px] font-semibold text-white/30 uppercase tracking-wider">
-          Stage
-        </span>
-        <span className="flex-1 text-[11px] font-semibold text-white/30 uppercase tracking-wider">
-          Salary
-        </span>
-        <span className="flex-1 text-[11px] font-semibold text-white/30 uppercase tracking-wider">
-          Applied
-        </span>
-      </div>
+    <div className="rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.01]">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-white/[0.02] hover:bg-white/[0.02]">
+            <TableHead className="w-[30%]">Role</TableHead>
+            <TableHead className="w-[15%]">Company</TableHead>
+            <TableHead className="w-[15%]">Stage</TableHead>
+            <TableHead className="w-[25%]">Salary</TableHead>
+            <TableHead className="w-[15%]">Applied</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {allApps.length === 0 && (
+            <TableEmpty>No applications to show</TableEmpty>
+          )}
 
-      {/* Rows */}
-      {allApps.map((app, i) => {
-        const stage = STAGE_MAP[app._stageKey];
-        return (
-          <div
-            key={app.id}
-            onClick={() => onCardClick(app.id)}
-            className="flex items-center px-5 py-3.5 border-b border-white/[0.04] cursor-pointer transition-all duration-150 hover:bg-white/[0.025] animate-slide-in"
-            style={{ animationDelay: `${i * 50}ms` }}
-          >
-            {/* Role */}
-            <div className="flex-[2] flex items-center gap-3 min-w-0">
-              <div className="w-7 h-7 rounded-md bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
-                <span className="text-[11px] font-semibold text-indigo-400">
-                  {(app.company_name || "?")[0].toUpperCase()}
-                </span>
-              </div>
-              <div className="min-w-0">
-                <div className="text-[13px] font-medium text-white/90 truncate tracking-tight">
-                  {app.role_title || "Untitled Role"}
-                </div>
-                <div className="flex gap-1 mt-0.5">
-                  {app.remote_policy &&
-                    app.remote_policy !== "not_specified" && (
-                      <span className="text-[10px] text-white/30 uppercase tracking-wide font-medium">
-                        {app.remote_policy}
+          {allApps.map((app, i) => {
+            const stage = STAGE_MAP[app._stageKey];
+            return (
+              <TableRow
+                key={app.id}
+                onClick={() => onCardClick(app.id)}
+                className="cursor-pointer animate-slide-in"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <TableCell>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-7 h-7 rounded-md bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
+                      <span className="text-[11px] font-semibold text-indigo-400">
+                        {(app.company_name || "?")[0].toUpperCase()}
                       </span>
-                    )}
-                  {app.experience_level && (
-                    <span className="text-[10px] text-white/30 uppercase tracking-wide font-medium">
-                      {app.experience_level}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[13px] font-medium text-white/90 truncate tracking-tight">
+                        {app.role_title || "Untitled Role"}
+                      </div>
+                      <div className="flex gap-1 mt-0.5">
+                        {app.remote_policy &&
+                          app.remote_policy !== "not_specified" && (
+                            <span className="text-[10px] text-white/30 uppercase tracking-wide font-medium">
+                              {app.remote_policy}
+                            </span>
+                          )}
+                        {app.experience_level && (
+                          <span className="text-[10px] text-white/30 uppercase tracking-wide font-medium">
+                            {app.experience_level}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
 
-            {/* Company */}
-            <span className="flex-1 text-[13px] text-white/70 font-medium truncate">
-              {app.company_name || "Unknown"}
-            </span>
+                <TableCell className="text-[13px] text-white/70 font-medium truncate">
+                  {app.company_name || "Unknown"}
+                </TableCell>
 
-            {/* Stage */}
-            <span className="flex-1">
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/55">
-                <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: stage?.color }}
-                />
-                {stage?.label}
-              </span>
-            </span>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/55">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: stage?.color }}
+                    />
+                    {stage?.label}
+                  </span>
+                </TableCell>
 
-            {/* Salary */}
-            <span className="flex-1 text-xs text-white/50 font-mono">
-              {app.salary_range || "—"}
-            </span>
+                <TableCell className="text-xs text-white/50 font-mono">
+                  {app.salary_range || "—"}
+                </TableCell>
 
-            {/* Date */}
-            <span className="flex-1 text-[13px] text-white/35">
-              {app.applied_at
-                ? new Date(app.applied_at).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : "—"}
-            </span>
-          </div>
-        );
-      })}
-
-      {allApps.length === 0 && (
-        <div className="flex items-center justify-center py-12">
-          <p className="text-sm text-white/20">No applications to show</p>
-        </div>
-      )}
+                <TableCell className="text-[13px] text-white/35">
+                  {app.applied_at
+                    ? new Date(app.applied_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    : "—"}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }
