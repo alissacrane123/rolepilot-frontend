@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import {
   useUpdateProfileMutation,
@@ -19,11 +18,10 @@ import SkillsInput from "@/components/Profile/SkillsInput";
 import ResumeForm from "@/components/Profile/ResumeForm";
 import InputLabel from "@/components/ui/InputLabel";
 import LocationsInput from "@/components/Profile/LocationsInput";
-
+import Grid from "@/components/ui/Grid";
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [fullName, setFullName] = useState(user?.full_name || "");
@@ -43,9 +41,6 @@ export default function ProfilePage() {
   );
 
   const [resumeText, setResumeText] = useState(user?.resume_text || "");
-  const [resumeTab, setResumeTab] = useState<"file" | "text">(
-    user?.resume_text ? "text" : "file",
-  );
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -151,7 +146,7 @@ export default function ProfilePage() {
               title="Basic Info"
               description="Your contact details and background"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <Grid cols={2}>
                 <InputField
                   label="Full Name"
                   value={fullName}
@@ -169,7 +164,7 @@ export default function ProfilePage() {
                   value={targetRole}
                   onChange={(v) => setTargetRole(v)}
                 />
-              </div>
+              </Grid>
             </ProfileSection>
 
             <ProfileSection
