@@ -1,4 +1,7 @@
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = import.meta.env.VITE_API_BASE;
+if (!API_BASE) {
+  throw new Error("VITE_API_BASE is not set in environment");
+}
 
 // ============================================
 // TYPES
@@ -228,6 +231,12 @@ export async function uploadResumeText(resume_text: string) {
 // ============================================
 // APPLICATIONS
 // ============================================
+
+export async function reanalyzeApplication(id: string) {
+  return request<void>(`/applications/${id}/reanalyze`, {
+    method: "POST",
+  });
+}
 
 export async function createApplication(data: {
   job_url?: string;

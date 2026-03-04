@@ -15,6 +15,7 @@ import {
   deleteMeeting,
   type CreateMeetingData,
   createMeeting,
+  reanalyzeApplication,
 } from "@/lib/api";
 
 export const queryKeys = {
@@ -113,6 +114,19 @@ export function useCreateMeetingMutation() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.upcomingMeetings });
       qc.invalidateQueries({ queryKey: ["meetings"] });
+    },
+  });
+}
+
+export function useReanalyzeApplicationMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => reanalyzeApplication(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.board });
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 }
