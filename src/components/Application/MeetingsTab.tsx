@@ -11,6 +11,7 @@ import {
   ChevronDownIcon,
 } from "@/components/icons";
 import MeetingDetailItem from "@/components/Application/MeetingDetailItem";
+import CreateMeetingModal from "../Meeting/CreateMeetingModal";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -206,6 +207,7 @@ export default function MeetingsTab({
       <EmptyState
         icon={<CalendarIcon className="w-6 h-6 text-white/40" />}
         title="No meetings yet"
+        cta={<CreateMeetingModal applicationId={applicationId} />}
         description="Meetings will appear here when you move this application to an interview stage."
       />
     );
@@ -221,9 +223,12 @@ export default function MeetingsTab({
 
   return (
     <div className="animate-fade-in-up">
-      <p className="text-[13px] text-white/35 mb-5">
-        {meetings.length} meeting{meetings.length !== 1 ? "s" : ""} scheduled
-      </p>
+      <div className="flex items-center justify-between pb-5">
+        <p className="text-[13px] text-white/35 mb-5">
+          {meetings.length} meeting{meetings.length !== 1 ? "s" : ""} scheduled
+        </p>
+        <CreateMeetingModal applicationId={applicationId} />
+      </div>
 
       <div className="flex flex-col">
         {sorted.map((meeting, i) => (

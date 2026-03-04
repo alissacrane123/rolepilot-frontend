@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
-import type { StageModalProps } from "./shared";
-import { useUpdateStageMutation } from "@/hooks/useApi";
 import TimePicker from "@/components/ui/time-picker";
-import TransitionModalShell from "./TransitionModalShell";
-import { PhoneIcon } from "lucide-react";
 import InputField from "@/components/ui/InputField";
 import InputLabel from "@/components/ui/InputLabel";
+
+import { VStack } from "@/components/ui/stacks";
+import type { CreateMeetingData, JobApplication } from "@/lib/api";
+import { Button } from "../ui/button";
 
 type InputField = {
   label: string;
@@ -15,15 +15,33 @@ type InputField = {
   isTextarea?: boolean;
 };
 
-export default function InterviewModal({
-  transition,
+export type CreateMeetingSubmitParams = {
+  meeting: CreateMeetingData;
+  applicationId: string;
+  stage: string;
+};
+
+type CreateMeetingFormProps = {
+  applicationId: string;
+  stage?: string;
+  onConfirm?: () => void;
+  onCancel: () => void;
+  onSubmit: (params: CreateMeetingSubmitParams) => Promise<void>;
+  isPending?: boolean;
+  cta?: string;
+};
+
+export default function CreateMeetingForm({
+  applicationId,
+  stage,
   onConfirm,
   onCancel,
-}: StageModalProps) {
-  const { app, toStage } = transition;
-  const mutation = useUpdateStageMutation();
-
-  const defaultMeetingType = toStage === "phone_screen" ? "phone_screen" : "technical";
+  onSubmit,
+  isPending = false,
+  cta = "Confirm",
+}: CreateMeetingFormProps) {
+  const defaultMeetingType =
+    stage === "phone_screen" ? "phone_screen" : "technical";
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -34,6 +52,7 @@ export default function InterviewModal({
   const [contactTitle, setContactTitle] = useState("");
   const [prepNotes, setPrepNotes] = useState("");
   const [meetingType, setMeetingType] = useState(defaultMeetingType);
+  const [meetingStage, setMeetingStage] = useState(stage || "");
 
   const fields: InputField[] = useMemo(() => {
     return [
@@ -100,22 +119,21 @@ export default function InterviewModal({
       scheduled_at = new Date(`${date}T${time || "00:00"}:00`).toISOString();
     }
 
-    const meeting = scheduled_at
-      ? {
-          scheduled_at,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          location_type: "video" as const,
-          duration_minutes: duration ? parseInt(duration, 10) : undefined,
-          location_details: locationDetails,
-          contact_name: contactName,
-          contact_title: contactTitle,
-          prep_notes: prepNotes,
-        }
-      : undefined;
+    const meeting = {
+      scheduled_at,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      location_type: "video" as const,
+      duration_minutes: duration ? parseInt(duration, 10) : undefined,
+      location_details: locationDetails,
+      contact_name: contactName,
+      contact_title: contactTitle,
+      prep_notes: prepNotes,
+      stage: meetingStage || "",
+    };
 
     try {
-      await mutation.mutateAsync({ id: app.id, toStage, meeting });
-      onConfirm();
+      await onSubmit({ applicationId, stage: meetingStage || "", meeting });
+      onConfirm?.();
     } catch {
       /* error surfaced via mutation.error */
     }
@@ -130,15 +148,15 @@ export default function InterviewModal({
   }, [fields]);
 
   return (
-    <TransitionModalShell
-      toStage={toStage}
-      appLabel={`${app.role_title} at ${app.company_name}`}
-      isPending={mutation.isPending}
-      error={mutation.error as Error | null}
-      onSubmit={handleSubmit}
-      onCancel={onCancel}
-      icon={<PhoneIcon className="w-4 h-4" />}
-    >
+    <VStack className="space-y-4">
+      {!stage && (
+        <InputField
+          label="Meeting Stage"
+          value={meetingStage}
+          onChange={setMeetingStage}
+          placeholder="Technical, phone, etc."
+        />
+      )}
       <div className="grid grid-cols-2 gap-3">
         <InputField
           label="Interview Date"
@@ -174,6 +192,24 @@ export default function InterviewModal({
           />
         ))}
       </div>
-    </TransitionModalShell>
+      <div className="flex gap-3">
+        <Button
+          type="button"
+          variant="secondary"
+          className="flex-1"
+          onClick={onCancel}
+          disabled={isPending}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
+          disabled={isPending}
+        >
+          {cta}
+        </Button>
+      </div>
+    </VStack>
   );
 }

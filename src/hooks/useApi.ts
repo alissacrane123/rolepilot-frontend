@@ -14,6 +14,7 @@ import {
   updateMeeting,
   deleteMeeting,
   type CreateMeetingData,
+  createMeeting,
 } from "@/lib/api";
 
 export const queryKeys = {
@@ -98,6 +99,23 @@ export function useProfileQuery(enabled = true) {
 // ============================================
 // MUTATIONS
 // ============================================
+
+export function useCreateMeetingMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      applicationId,
+      meeting,
+    }: {
+      applicationId: string;
+      meeting: CreateMeetingData;
+    }) => createMeeting(applicationId, meeting),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.upcomingMeetings });
+      qc.invalidateQueries({ queryKey: ["meetings"] });
+    },
+  });
+}
 
 export function useCreateApplicationMutation() {
   const qc = useQueryClient();
