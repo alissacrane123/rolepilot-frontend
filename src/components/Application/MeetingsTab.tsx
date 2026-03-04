@@ -4,6 +4,8 @@ import { useMeetingsQuery } from "@/hooks/useApi";
 import { getMeetingTypeLabel } from "@/components/Interviews/calendar-utils";
 import MeetingDetailModal from "@/components/Interviews/MeetingDetailModal";
 import EmptyState from "@/components/EmpyState";
+import InterviewListView from "../Interviews/InterviewListView";
+import { InterviewSection } from "../Interviews/InterviewSection";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -68,7 +70,8 @@ function MeetingCard({
               {meeting.scheduled_at && (
                 <span className="text-[11px] text-white/35 flex items-center gap-1">
                   {formatTime(meeting.scheduled_at)}
-                  {meeting.duration_minutes && ` · ${meeting.duration_minutes} min`}
+                  {meeting.duration_minutes &&
+                    ` · ${meeting.duration_minutes} min`}
                 </span>
               )}
               {meeting.contact_name && (
@@ -130,25 +133,30 @@ export default function MeetingsTab({
   const sorted = [...meetings].sort((a, b) => {
     if (!a.scheduled_at) return 1;
     if (!b.scheduled_at) return -1;
-    return new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime();
+    return (
+      new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime()
+    );
   });
+
+  const upcomingMeetings = sorted.filter(
+    (meeting) => new Date(meeting.scheduled_at) > new Date(),
+  );
+  const pastMeetings = sorted.filter(
+    (meeting) => new Date(meeting.scheduled_at) < new Date(),
+  );
 
   return (
     <div className="animate-fade-in-up">
-      <p className="text-[13px] text-white/35 mb-5">
-        {meetings.length} meeting{meetings.length !== 1 ? "s" : ""}
-      </p>
-
-      <div className="flex flex-col">
-        {sorted.map((meeting, i) => (
-          <MeetingCard
-            key={meeting.id}
-            meeting={meeting}
-            isLast={i === sorted.length - 1}
-            onClick={() => setSelectedMeeting(meeting)}
-          />
-        ))}
-      </div>
+      <InterviewSection
+        meetings={upcomingMeetings}
+        onMeetingClick={setSelectedMeeting}
+        title="Upcoming Interviews"
+      />
+      <InterviewSection
+        meetings={pastMeetings}
+        onMeetingClick={setSelectedMeeting}
+        title="Past Interviews"
+      />
 
       {selectedMeeting && (
         <MeetingDetailModal
