@@ -1,9 +1,10 @@
 import type { JobApplication } from "@/lib/api";
-import { STAGES, STAGE_MAP } from "@/lib/api";
+import { STAGE_MAP } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import MoveStageDialog from "./MoveStageDialog";
 import { StagePipeline } from "./StageProgressBar";
-
+import { HStack } from "../ui/stacks";
+import { ExternalLinkIcon } from "lucide-react";
 
 function MetaRow({
   items,
@@ -12,7 +13,7 @@ function MetaRow({
   items: (string | undefined | null)[];
   tags: (string | undefined | null)[];
 }) {
-  const visibleItems = items.filter(Boolean) as string[];
+  const visibleItems = items.filter(item => item && item !== "not_specified") as string[];
   const visibleTags = tags.filter(Boolean) as string[];
 
   return (
@@ -108,12 +109,22 @@ export default function ApplicationHero({
               )}
             </div>
 
-            <h1 className="text-[22px] font-bold tracking-tight leading-tight text-white">
-              {app.role_title || "Untitled Role"}
-            </h1>
-            <p className="text-sm text-white/45 mt-0.5">
-              {app.company_name || "Unknown Company"}
-            </p>
+            <a
+              className="flex flex-col"
+              href={app.job_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <HStack className="items-center gap-2 text-white/40 hover:text-indigo-400">
+                <h1 className="text-[22px] font-bold tracking-tight leading-tight text-white hover:text-indigo-400">
+                  {app.role_title || "Untitled Role"}
+                </h1>
+                <ExternalLinkIcon className="w-4 h-4" />
+              </HStack>
+              <p className="text-sm text-white/45 mt-0.5">
+                {app.company_name || "Unknown Company"}
+              </p>
+            </a>
           </div>
         </div>
 
@@ -124,7 +135,9 @@ export default function ApplicationHero({
       <MetaRow
         items={[app.salary_range, app.location, `Applied ${appliedDate}`]}
         tags={[
-          app.remote_policy && app.remote_policy !== "not_specified" ? app.remote_policy : null,
+          app.remote_policy && app.remote_policy !== "not_specified"
+            ? app.remote_policy
+            : null,
           app.experience_level ?? null,
         ]}
       />

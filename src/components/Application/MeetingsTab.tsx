@@ -204,6 +204,7 @@ export default function MeetingsTab({
   if (meetings.length === 0) {
     return (
       <EmptyState
+        icon={<CalendarIcon className="w-6 h-6 text-white/40" />}
         title="No meetings yet"
         description="Meetings will appear here when you move this application to an interview stage."
       />
