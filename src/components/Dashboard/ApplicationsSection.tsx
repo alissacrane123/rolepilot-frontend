@@ -4,10 +4,12 @@ import { TextBody } from "@/components/ui/text/TextBody";
 import ViewToggle from "@/components/Dashboard/ViewToggle";
 import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
 import EmptyState from "@/components/EmpyState";
-import { STAGES, type BoardView, type StageDragState, type Stage } from "@/lib/api";
+import { type BoardView } from "@/lib/api";
 import GridView from "@/components/Dashboard/GridView";
 import ListView from "@/components/Dashboard/ListView";
 import PipelineBar from "@/components/Dashboard/PipelineBar";
+import type { StageDragState } from "@/hooks/useStageDragAndDrop";
+import type { Stage, ViewState } from "@/lib/constants";
 
 export default function ApplicationsSection({
   totalApps,
@@ -24,7 +26,7 @@ export default function ApplicationsSection({
 }: {
   totalApps: number;
   view: "board" | "list";
-  hanldeViewChange: (view: "board" | "list") => void;
+  hanldeViewChange: (view: ViewState) => void;
   invalidateBoard: () => void;
   board: BoardView;
   activeStage: string | null;
@@ -39,9 +41,7 @@ export default function ApplicationsSection({
       <HStack className="items-start justify-between mb-7">
         <VStack>
           <TextTitle1>Applications</TextTitle1>
-          <TextBody className="mt-1">
-            {totalApps} active
-          </TextBody>
+          <TextBody className="mt-1">{totalApps} active</TextBody>
         </VStack>
         <HStack className="items-center gap-2.5">
           <ViewToggle

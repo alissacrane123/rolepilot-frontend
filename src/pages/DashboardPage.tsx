@@ -4,22 +4,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { type BoardView, type JobApplication, STAGES } from "@/lib/api";
 import { useBoardQuery, queryKeys } from "@/hooks/useApi";
 import Content from "@/components/Content";
-import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
-import PipelineBar from "@/components/Dashboard/PipelineBar";
-import StageSection from "@/components/Dashboard/StageSection";
-import ListView from "@/components/Dashboard/ListView";
-import StageTransitionModal from "@/components/Dashboard/StageTransitionModal";
+import { StageTransitionModal } from "@/components/Dashboard/StageTransitionModal";
 import InterviewsSection from "@/components/Dashboard/InterviewsSection";
 import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
 import type { ViewMode } from "@/lib/constants";
-import ViewToggle from "@/components/Dashboard/ViewToggle";
 import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
-import EmptyState from "@/components/EmpyState";
-import { TextTitle1 } from "@/components/ui/text/TextTitle1";
-import { TextBody } from "@/components/ui/text/TextBody";
-import { HStack, VStack } from "@/components/ui/stacks";
-import GridView from "@/components/Dashboard/GridView";
 import ApplicationsSection from "@/components/Dashboard/ApplicationsSection";
+import EmptyState from "@/components/EmpyState";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -47,6 +38,15 @@ export default function DashboardPage() {
     );
   }
 
+  if (!board) {
+    return (
+      <EmptyState
+        title="No applications yet"
+        description="Start tracking your job search by adding your first application. Paste the job description for AI-powered analysis."
+      />
+    );
+  }
+  
   const totalApps = board
     ? Object.values(board).reduce(
         (sum, apps) => sum + (apps as JobApplication[]).length,
@@ -82,7 +82,7 @@ export default function DashboardPage() {
       />
 
       <div className="mt-20 pb-10 border-t border-white/[0.06]" />
-      
+
       <InterviewsSection />
 
       {pendingTransition && (

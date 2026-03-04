@@ -51,13 +51,14 @@ export function useApplicationQuery(id: string | undefined) {
   });
 }
 
-export function useApplicationsQuery() {
+export function useApplicationsQuery(enabled = true) {
   return useQuery({
     queryKey: queryKeys.applications,
     queryFn: async () => {
       const res = await getApplications();
       return res.data ?? [];
     },
+    enabled,
   });
 }
 
@@ -120,14 +121,13 @@ export function useUpdateStageMutation() {
     mutationFn: ({
       id,
       toStage,
-      notes,
       meeting,
     }: {
       id: string;
       toStage: string;
-      notes: string;
+      notes?: string;
       meeting?: CreateMeetingData;
-    }) => updateStage(id, toStage, notes, meeting),
+    }) => updateStage(id, toStage, meeting),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.board });
       qc.invalidateQueries({ queryKey: queryKeys.applications });
@@ -182,7 +182,10 @@ export function useUpdateMeetingMutation() {
       data,
     }: {
       meetingId: string;
-      data: Partial<CreateMeetingData> & { post_notes?: string; outcome?: string };
+      data: Partial<CreateMeetingData> & {
+        post_notes?: string;
+        outcome?: string;
+      };
     }) => updateMeeting(meetingId, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.upcomingMeetings });

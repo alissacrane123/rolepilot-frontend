@@ -69,7 +69,7 @@ export default function TimePicker({
   };
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center gap-1", className)}>
       <Select value={String(parsed.hour12)} onValueChange={handleHourChange}>
         <SelectTrigger className="w-[70px] bg-zinc-800 border-zinc-700 text-zinc-100">
           <SelectValue />
@@ -99,7 +99,7 @@ export default function TimePicker({
       </Select>
 
       <Select value={parsed.period} onValueChange={handlePeriodChange}>
-        <SelectTrigger className="w-[72px] bg-zinc-800 border-zinc-700 text-zinc-100">
+        <SelectTrigger className="w-[72px] bg-zinc-800 border-zinc-700 text-zinc-100 ml-1">
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="bg-zinc-800 border-zinc-700">

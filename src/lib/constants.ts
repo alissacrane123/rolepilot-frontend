@@ -12,3 +12,12 @@ export const ALWAYS_VISIBLE_STAGES = [
 ];
 
 export const TERMINAL_STAGES = ["accepted", "rejected", "withdrawn"];
+
+export type Stage  = {
+  key: string;
+  label: string;
+  emoji: string;
+  color: string;
+}
+
+export type ViewState = "start" | "end";

@@ -1,8 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import type { JobApplication, BoardView } from "@/lib/api";
 import { useUpdateStageMutation } from "@/hooks/useApi";
-import type { StageTransition } from "@/components/Dashboard/StageTransitionModal";
-import { needsConfirmation } from "@/components/Dashboard/StageTransitionModal";
+import { type StageTransition, needsConfirmation } from "@/components/Dashboard/StageTransitionModal";
 
 export interface DragPayload {
   appId: string;

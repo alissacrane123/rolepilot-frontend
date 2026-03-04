@@ -1,5 +1,6 @@
 import { Input } from "./input";
 import InputLabel from "./InputLabel";
+import { Textarea } from "./textarea";
 
 export default function InputField({
   label,
@@ -10,6 +11,7 @@ export default function InputField({
   disabled = false,
   placeholder = "",
   className = "",
+  isTextarea = false,
 }: {
   label?: string;
   value: string;
@@ -19,18 +21,28 @@ export default function InputField({
   disabled?: boolean;
   placeholder?: string;
   className?: string;
+  isTextarea?: boolean;
 }) {
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
       {label && <InputLabel label={label} />}
-      <Input
-        type={type}
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-        className={`font-normal bg-zinc-800/50 border-zinc-700 text-zinc-${disabled ? "500" : "100"} input-field ${mono ? "input-mono" : ""}`}
-        disabled={disabled}
-        placeholder={placeholder}
-      />
+      {isTextarea ? (
+        <Textarea
+          className={`font-normal bg-zinc-800/50 border-zinc-700 text-zinc-${disabled ? "500" : "100"} input-field ${mono ? "input-mono" : ""}`}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          placeholder={placeholder}
+        />
+      ) : (
+        <Input
+          type={type}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          className={`font-normal bg-zinc-800/50 border-zinc-700 text-zinc-${disabled ? "500" : "100"} input-field ${mono ? "input-mono" : ""}`}
+          disabled={disabled}
+          placeholder={placeholder}
+        />
+      )}
     </div>
   );
 }

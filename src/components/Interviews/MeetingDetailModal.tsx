@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import InputLabel from "@/components/ui/InputLabel";
 import TimePicker from "@/components/ui/time-picker";
 
 const INPUT_CLASS = "bg-zinc-800 border-zinc-700 text-zinc-100";
@@ -45,7 +45,7 @@ interface MeetingFormValues {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="space-y-2">
-      <Label className="text-zinc-300">{label}</Label>
+      <InputLabel label={label} />
       {children}
     </div>
   );

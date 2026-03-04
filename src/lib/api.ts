@@ -256,12 +256,11 @@ export async function getApplication(id: string) {
 export async function updateStage(
   id: string,
   to_stage: string,
-  notes: string,
   meeting?: CreateMeetingData,
 ) {
   return request<JobApplication>(`/applications/${id}/stage`, {
     method: "PATCH",
-    body: JSON.stringify({ to_stage, notes, meeting }),
+    body: JSON.stringify({ to_stage, meeting }),
   });
 }
 
@@ -321,13 +320,13 @@ export const MEETING_TYPES = [
   { value: "take_home", label: "Take Home" },
   { value: "panel", label: "Panel" },
   { value: "other", label: "Other" },
-] as const;
+];
 
 export const LOCATION_TYPES = [
   { value: "video", label: "Video Call" },
   { value: "phone", label: "Phone" },
   { value: "onsite", label: "Onsite" },
-] as const;
+];
 
 export const STAGES = [
   { key: "applied", label: "Applied", emoji: "📨", color: "#6366f1" },

@@ -1,6 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { LogoIcon } from "@/components/icons";
 
 export default function Navbar() {
@@ -42,17 +51,33 @@ export default function Navbar() {
             </Link>
           </nav>
         </div>
-        <div className="flex items-center gap-5">
-          <span className="text-sm text-zinc-500">{user.full_name}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={logout}
-            className="text-zinc-500 hover:text-zinc-100 text-sm px-0"
-          >
-            Sign Out
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950">
+              <Avatar className="size-8 cursor-pointer">
+                <AvatarFallback className="bg-indigo-600 text-xs font-medium text-white">
+                  {user.full_name
+                    .split(" ")
+                    .filter(Boolean)
+                    .map((n) => n[0])
+                    .slice(0, 2)
+                    .join("")
+                    .toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel className="font-normal text-xs text-muted-foreground">
+              {user.full_name}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={logout} className="cursor-pointer">
+              <LogOut className="size-4" />
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

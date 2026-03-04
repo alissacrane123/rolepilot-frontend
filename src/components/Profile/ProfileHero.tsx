@@ -1,6 +1,9 @@
 import type { User } from "@/lib/api";
+import { useApplicationsQuery } from "@/hooks/useApi";
 
 export default function ProfileHero({ user }: { user: User | null }) {
+  const { data: applications } = useApplicationsQuery(!!user);
+  const applicationsCount = applications?.length ?? 0;
   if (!user) return null;
   return (
     <div className="flex flex-col items-center p-6 pb-5 rounded-xl border border-white/5 bg-white/[0.012]">
@@ -14,6 +17,10 @@ export default function ProfileHero({ user }: { user: User | null }) {
       </p>
       <p className="text-xs text-white/35 mt-0.5 text-center">
         {user.target_role || "Role"}
+      </p>
+
+      <p className="text-xs text-indigo-400 mt-3 text-center">
+        {applicationsCount} active applications
       </p>
     </div>
   );
