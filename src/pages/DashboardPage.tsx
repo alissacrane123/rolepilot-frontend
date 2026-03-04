@@ -81,17 +81,15 @@ export default function DashboardPage() {
         visibleStages={visibleStages}
       />
 
-      <div className="mt-20 pb-10 border-t border-white/[0.06]"/>
-      {/* Interviews section */}
-      {/* <div className="mt-12 pt-10 border-t border-white/[0.06]"> */}
-        <InterviewsSection />
-      {/* </div> */}
+      <div className="mt-20 pb-10 border-t border-white/[0.06]" />
+      
+      <InterviewsSection />
 
       {pendingTransition && (
         <StageTransitionModal
           transition={pendingTransition}
-          onConfirm={handleTransitionConfirm}
-          onCancel={handleTransitionCancel}
+          onConfirm={dragAndDropProps.handleTransitionConfirm}
+          onCancel={dragAndDropProps.handleTransitionCancel}
         />
       )}
     </Content>
