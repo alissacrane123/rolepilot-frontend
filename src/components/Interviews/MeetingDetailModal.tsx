@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   type Meeting,
   MEETING_TYPES,
@@ -83,6 +84,7 @@ export default function MeetingDetailModal({
   roleTitle?: string;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
   const initial = useMemo(() => buildInitialValues(meeting), [meeting]);
   const [values, setValues] = useState<MeetingFormValues>(initial);
   const updateMutation = useUpdateMeetingMutation();
@@ -147,8 +149,14 @@ export default function MeetingDetailModal({
       <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Meeting Details</DialogTitle>
-          <DialogDescription className="text-zinc-400">
-            {roleTitle || "Interview"} {companyName ? `at ${companyName}` : ""}
+          <DialogDescription
+            className="text-zinc-400 hover:text-indigo-400 cursor-pointer transition-colors w-fit"
+            onClick={() => {
+              onClose();
+              navigate(`/applications/${meeting.application_id}`);
+            }}
+          >
+            {roleTitle || "Interview"} {companyName ? `at ${companyName}` : ""} →
           </DialogDescription>
         </DialogHeader>
 
