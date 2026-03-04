@@ -4,7 +4,7 @@ import InputField from "@/components/ui/InputField";
 import InputLabel from "@/components/ui/InputLabel";
 
 import { VStack } from "@/components/ui/stacks";
-import type { CreateMeetingData, JobApplication } from "@/lib/api";
+import type { CreateMeetingData } from "@/lib/api";
 import { Button } from "../ui/button";
 
 type InputField = {
