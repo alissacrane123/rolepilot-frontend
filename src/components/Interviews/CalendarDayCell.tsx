@@ -13,8 +13,8 @@ export default function CalendarDayCell({
   isToday: boolean;
   isWeekend: boolean;
   meetings: MeetingWithApp[];
-  onMeetingClick: (meeting: MeetingWithApp) => void;
-  onMeetingEditClick: (meeting: MeetingWithApp) => void;
+  onMeetingClick?: (meeting: MeetingWithApp) => void;
+  onMeetingEditClick?: (meeting: MeetingWithApp) => void;
 }) {
   return (
     <div
@@ -36,8 +36,8 @@ export default function CalendarDayCell({
               <CalendarMeetingPill
                 key={m.id}
                 meeting={m}
-                onClick={() => onMeetingClick(m)}
-                onEditClick={() => onMeetingEditClick(m)}
+                onClick={() => onMeetingClick?.(m)}
+                onEditClick={() => onMeetingEditClick?.(m)}
               />
             ))}
             {meetings.length > 3 && (

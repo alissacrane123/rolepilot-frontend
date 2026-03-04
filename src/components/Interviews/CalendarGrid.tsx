@@ -16,8 +16,8 @@ export default function CalendarGrid({
   viewMonth: number;
   today: Date;
   meetingsByDay: Map<number, MeetingWithApp[]>;
-  onMeetingClick: (meeting: MeetingWithApp) => void;
-  onMeetingEditClick: (meeting: MeetingWithApp) => void;
+  onMeetingClick?: (meeting: MeetingWithApp) => void;
+  onMeetingEditClick?: (meeting: MeetingWithApp) => void;
 }) {
   return (
     <div className="rounded-xl border border-white/[0.06] overflow-hidden">

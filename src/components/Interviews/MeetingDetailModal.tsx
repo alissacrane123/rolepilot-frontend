@@ -1,11 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { type Meeting, MEETING_TYPES, LOCATION_TYPES } from "@/lib/api";
 import {
-  type Meeting,
-  MEETING_TYPES,
-  LOCATION_TYPES,
-} from "@/lib/api";
-import { useUpdateMeetingMutation, useDeleteMeetingMutation } from "@/hooks/useApi";
+  useUpdateMeetingMutation,
+  useDeleteMeetingMutation,
+} from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,6 +25,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import TimePicker from "@/components/ui/time-picker";
 
+const INPUT_CLASS = "bg-zinc-800 border-zinc-700 text-zinc-100";
+const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[80px]`;
+
 interface MeetingFormValues {
   date: string;
   time: string;
@@ -40,21 +42,60 @@ interface MeetingFormValues {
   outcome: string;
 }
 
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <Label className="text-zinc-300">{label}</Label>
+      {children}
+    </div>
+  );
+}
+
+function Row({ children }: { children: ReactNode }) {
+  return <div className="grid grid-cols-2 gap-3">{children}</div>;
+}
+
+function SelectField({
+  label,
+  value,
+  onChange,
+  placeholder,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <Field label={label}>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className={INPUT_CLASS}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="bg-zinc-800 border-zinc-700">
+          {options.map((t) => (
+            <SelectItem key={t.value} value={t.value} className="text-zinc-100">
+              {t.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </Field>
+  );
+}
+
 function extractDate(scheduled_at?: string): string {
   if (!scheduled_at) return "";
   const d = new Date(scheduled_at);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function extractTime(scheduled_at?: string): string {
   if (!scheduled_at) return "";
   const d = new Date(scheduled_at);
-  const h = String(d.getHours()).padStart(2, "0");
-  const m = String(d.getMinutes()).padStart(2, "0");
-  return `${h}:${m}`;
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
 function buildInitialValues(meeting: Meeting): MeetingFormValues {
@@ -93,40 +134,43 @@ export default function MeetingDetailModal({
   const set = (key: keyof MeetingFormValues, val: string) =>
     setValues((prev) => ({ ...prev, [key]: val }));
 
-  const isDirty = useMemo(() => {
-    return (Object.keys(initial) as (keyof MeetingFormValues)[]).some(
-      (k) => values[k] !== initial[k],
-    );
-  }, [values, initial]);
+  const isDirty = useMemo(
+    () =>
+      (Object.keys(initial) as (keyof MeetingFormValues)[]).some(
+        (k) => values[k] !== initial[k],
+      ),
+    [values, initial],
+  );
 
   const handleSave = async () => {
     let scheduled_at: string | undefined;
     if (values.date) {
-      const localDateTime = values.time
-        ? `${values.date}T${values.time}:00`
-        : `${values.date}T00:00:00`;
-      scheduled_at = new Date(localDateTime).toISOString();
+      const time = values.time || "00:00";
+      scheduled_at = new Date(`${values.date}T${time}:00`).toISOString();
     }
 
+    const emptyToUndef = (v: string) => v || undefined;
     try {
       await updateMutation.mutateAsync({
         meetingId: meeting.id,
         data: {
           scheduled_at,
-          duration_minutes: values.duration_minutes ? parseInt(values.duration_minutes, 10) : undefined,
-          meeting_type: values.meeting_type || undefined,
-          location_type: values.location_type || undefined,
-          location_details: values.location_details || undefined,
-          contact_name: values.contact_name || undefined,
-          contact_title: values.contact_title || undefined,
-          prep_notes: values.prep_notes || undefined,
-          post_notes: values.post_notes || undefined,
-          outcome: values.outcome || undefined,
+          duration_minutes: values.duration_minutes
+            ? parseInt(values.duration_minutes, 10)
+            : undefined,
+          meeting_type: emptyToUndef(values.meeting_type),
+          location_type: emptyToUndef(values.location_type),
+          location_details: emptyToUndef(values.location_details),
+          contact_name: emptyToUndef(values.contact_name),
+          contact_title: emptyToUndef(values.contact_title),
+          prep_notes: emptyToUndef(values.prep_notes),
+          post_notes: emptyToUndef(values.post_notes),
+          outcome: emptyToUndef(values.outcome),
         },
       });
       onClose();
     } catch {
-      // error handled by mutation.error
+      /* error surfaced via mutation.error */
     }
   };
 
@@ -136,7 +180,7 @@ export default function MeetingDetailModal({
       await deleteMutation.mutateAsync(meeting.id);
       onClose();
     } catch {
-      // error handled by mutation.error
+      /* error surfaced via mutation.error */
     }
   };
 
@@ -156,142 +200,111 @@ export default function MeetingDetailModal({
               navigate(`/applications/${meeting.application_id}`);
             }}
           >
-            {roleTitle || "Interview"} {companyName ? `at ${companyName}` : ""} →
+            {roleTitle || "Interview"} {companyName ? `at ${companyName}` : ""}{" "}
+            →
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Date & Time row */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Date</Label>
+          <Row>
+            <Field label="Date">
               <Input
                 type="date"
                 value={values.date}
                 onChange={(e) => set("date", e.target.value)}
-                className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                className={INPUT_CLASS}
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Time</Label>
+            </Field>
+            <Field label="Time">
               <TimePicker
                 value={values.time}
                 onChange={(val) => set("time", val)}
               />
-            </div>
-          </div>
+            </Field>
+          </Row>
 
-          {/* Duration & Type row */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Duration (min)</Label>
+          <Row>
+            <Field label="Duration (min)">
               <Input
                 type="number"
                 value={values.duration_minutes}
                 onChange={(e) => set("duration_minutes", e.target.value)}
                 placeholder="45"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                className={INPUT_CLASS}
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Interview Type</Label>
-              <Select value={values.meeting_type} onValueChange={(v) => set("meeting_type", v)}>
-                <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
-                  <SelectValue placeholder="Select type..." />
-                </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
-                  {MEETING_TYPES.map((t) => (
-                    <SelectItem key={t.value} value={t.value} className="text-zinc-100">
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+            </Field>
+            <SelectField
+              label="Interview Type"
+              value={values.meeting_type}
+              onChange={(v) => set("meeting_type", v)}
+              placeholder="Select type..."
+              options={MEETING_TYPES}
+            />
+          </Row>
 
-          {/* Location row */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Location Type</Label>
-              <Select value={values.location_type} onValueChange={(v) => set("location_type", v)}>
-                <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
-                  <SelectValue placeholder="Select..." />
-                </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
-                  {LOCATION_TYPES.map((t) => (
-                    <SelectItem key={t.value} value={t.value} className="text-zinc-100">
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Location Details</Label>
+          <Row>
+            <SelectField
+              label="Location Type"
+              value={values.location_type}
+              onChange={(v) => set("location_type", v)}
+              placeholder="Select..."
+              options={LOCATION_TYPES}
+            />
+            <Field label="Location Details">
               <Input
                 value={values.location_details}
                 onChange={(e) => set("location_details", e.target.value)}
                 placeholder="Zoom link, address, etc."
-                className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                className={INPUT_CLASS}
               />
-            </div>
-          </div>
+            </Field>
+          </Row>
 
-          {/* Contact row */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Contact Name</Label>
+          <Row>
+            <Field label="Contact Name">
               <Input
                 value={values.contact_name}
                 onChange={(e) => set("contact_name", e.target.value)}
                 placeholder="Jane Smith"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                className={INPUT_CLASS}
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Contact Title</Label>
+            </Field>
+            <Field label="Contact Title">
               <Input
                 value={values.contact_title}
                 onChange={(e) => set("contact_title", e.target.value)}
                 placeholder="Engineering Manager"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                className={INPUT_CLASS}
               />
-            </div>
-          </div>
+            </Field>
+          </Row>
 
-          {/* Prep notes */}
-          <div className="space-y-2">
-            <Label className="text-zinc-300">Prep Notes</Label>
+          <Field label="Prep Notes">
             <Textarea
               value={values.prep_notes}
               onChange={(e) => set("prep_notes", e.target.value)}
               placeholder="Topics to review, questions to ask..."
-              className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
+              className={TEXTAREA_CLASS}
             />
-          </div>
+          </Field>
 
-          {/* Post notes */}
-          <div className="space-y-2">
-            <Label className="text-zinc-300">Post-Interview Notes</Label>
+          <Field label="Post-Interview Notes">
             <Textarea
               value={values.post_notes}
               onChange={(e) => set("post_notes", e.target.value)}
               placeholder="How it went, follow-ups..."
-              className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
+              className={TEXTAREA_CLASS}
             />
-          </div>
+          </Field>
 
-          {/* Outcome */}
-          <div className="space-y-2">
-            <Label className="text-zinc-300">Outcome</Label>
+          <Field label="Outcome">
             <Input
               value={values.outcome}
               onChange={(e) => set("outcome", e.target.value)}
               placeholder="Passed, next round, etc."
-              className="bg-zinc-800 border-zinc-700 text-zinc-100"
+              className={INPUT_CLASS}
             />
-          </div>
+          </Field>
 
           {error && (
             <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
@@ -299,7 +312,6 @@ export default function MeetingDetailModal({
             </p>
           )}
 
-          {/* Actions */}
           <div className="flex items-center gap-3 pt-2">
             <Button
               variant="ghost"

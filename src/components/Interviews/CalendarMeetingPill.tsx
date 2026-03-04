@@ -1,5 +1,6 @@
 import type { MeetingWithApp } from "./calendar-utils";
-import { getMeetingTypeLabel } from "./calendar-utils";
+import { getMeetingTypeLabel, formatMeetingTime } from "./calendar-utils";
+import { PencilIcon } from "@/components/icons";
 
 export default function CalendarMeetingPill({
   meeting,
@@ -22,23 +23,10 @@ export default function CalendarMeetingPill({
         }}
         className="absolute top-0.5 right-0.5 hidden group-hover/pill:flex items-center justify-center w-4 h-4 rounded bg-white/[0.08] hover:bg-white/[0.15] text-white/50 hover:text-white/80 transition-all"
       >
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path
-            d="M7.5 1.5L8.5 2.5L3.5 7.5L1.5 8.5L2.5 6.5L7.5 1.5Z"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <PencilIcon />
       </span>
       <div className="text-[10px] font-medium text-indigo-300 truncate pr-4">
-        {meeting.scheduled_at
-          ? new Date(meeting.scheduled_at).toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "2-digit",
-            })
-          : ""}{" "}
+        {meeting.scheduled_at ? formatMeetingTime(meeting.scheduled_at) : ""}{" "}
         {meeting.meeting_type && getMeetingTypeLabel(meeting.meeting_type)}
       </div>
       <div className="text-[9px] text-white/35 truncate">

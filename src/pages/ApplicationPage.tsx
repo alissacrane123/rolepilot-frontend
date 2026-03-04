@@ -8,7 +8,7 @@ import {
 } from "@/hooks/useApi";
 import PageContainer from "@/components/PageContainer";
 import Content from "@/components/Content";
-import ApplicationHeader from "@/components/Application/ApplicationHeader";
+import BackButton from "@/components/BackButton";
 import ApplicationHero from "@/components/Application/ApplicationHero";
 import OverviewTab from "@/components/Application/OverviewTab";
 import MeetingsTab from "@/components/Application/MeetingsTab";
@@ -72,7 +72,7 @@ export default function ApplicationPage() {
   return (
     <PageContainer>
       <Content>
-        <ApplicationHeader />
+        <BackButton />
         <ApplicationHero app={app} onMoved={handleMoved} />
 
         {/* Tab bar */}

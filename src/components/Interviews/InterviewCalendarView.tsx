@@ -31,7 +31,6 @@ export default function InterviewCalendarView({
     () => buildCells(startOffset, daysInMonth),
     [startOffset, daysInMonth],
   );
-
   const meetingsByDay = useMemo(
     () => groupMeetingsByDay(meetings, viewYear, viewMonth),
     [meetings, viewYear, viewMonth],
@@ -42,36 +41,22 @@ export default function InterviewCalendarView({
     year: "numeric",
   });
 
-  const goToPrev = () => {
-    if (viewMonth === 0) {
-      setViewYear(viewYear - 1);
-      setViewMonth(11);
-    } else {
-      setViewMonth(viewMonth - 1);
-    }
-  };
-
-  const goToNext = () => {
-    if (viewMonth === 11) {
-      setViewYear(viewYear + 1);
-      setViewMonth(0);
-    } else {
-      setViewMonth(viewMonth + 1);
-    }
-  };
-
-  const goToToday = () => {
-    setViewYear(today.getFullYear());
-    setViewMonth(today.getMonth());
+  const navigateMonth = (delta: number) => {
+    const d = new Date(viewYear, viewMonth + delta);
+    setViewYear(d.getFullYear());
+    setViewMonth(d.getMonth());
   };
 
   return (
     <div className="space-y-4">
       <CalendarNav
         monthLabel={monthLabel}
-        onPrev={goToPrev}
-        onNext={goToNext}
-        onToday={goToToday}
+        onPrev={() => navigateMonth(-1)}
+        onNext={() => navigateMonth(1)}
+        onToday={() => {
+          setViewYear(today.getFullYear());
+          setViewMonth(today.getMonth());
+        }}
       />
       <CalendarGrid
         cells={cells}
@@ -79,8 +64,8 @@ export default function InterviewCalendarView({
         viewMonth={viewMonth}
         today={today}
         meetingsByDay={meetingsByDay}
-        onMeetingClick={(m) => onMeetingClick?.(m)}
-        onMeetingEditClick={(m) => onMeetingEditClick?.(m)}
+        onMeetingClick={onMeetingClick}
+        onMeetingEditClick={onMeetingEditClick}
       />
     </div>
   );

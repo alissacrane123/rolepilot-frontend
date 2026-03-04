@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 
-export default function ApplicationHeader() {
+export default function BackButton() {
   const navigate = useNavigate();
 
   return (
@@ -14,7 +14,7 @@ export default function ApplicationHeader() {
         className="text-white/40 hover:text-white px-0 gap-1.5"
       >
         <ArrowLeftIcon className="w-3.5 h-3.5" />
-        Applications
+        Dashboard
       </Button>
     </div>
   );

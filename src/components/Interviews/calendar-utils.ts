@@ -1,5 +1,5 @@
 import type { Meeting } from "@/lib/api";
-import { MEETING_TYPES } from "@/lib/api";
+import { MEETING_TYPES, LOCATION_TYPES } from "@/lib/api";
 
 export interface MeetingWithApp extends Meeting {
   _companyName?: string;
@@ -26,7 +26,38 @@ export function getMeetingTypeLabel(value: string) {
   return MEETING_TYPES.find((t) => t.value === value)?.label ?? value;
 }
 
-export function buildCells(startOffset: number, daysInMonth: number): (number | null)[] {
+export function getLocationLabel(value: string) {
+  return LOCATION_TYPES.find((t) => t.value === value)?.label ?? value;
+}
+
+export function formatMeetingTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+export function formatMeetingDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export function getRelativeLabel(dateStr: string): string | null {
+  const d = new Date(dateStr).toDateString();
+  const now = new Date();
+  if (d === now.toDateString()) return "Today";
+  now.setDate(now.getDate() + 1);
+  if (d === now.toDateString()) return "Tomorrow";
+  return null;
+}
+
+export function buildCells(
+  startOffset: number,
+  daysInMonth: number,
+): (number | null)[] {
   const cells: (number | null)[] = [];
   for (let i = 0; i < startOffset; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
