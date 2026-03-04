@@ -1,6 +1,7 @@
 export type ViewMode = "board" | "list";
 
 export const ALWAYS_VISIBLE_STAGES = [
+  "saved",
   "applied",
   "recruiter_response",
   "phone_screen",
@@ -8,7 +9,7 @@ export const ALWAYS_VISIBLE_STAGES = [
   "onsite_final",
   "offer",
   "rejected",
-  "withdrawn",
+  // "withdrawn",
 ];
 
 export const TERMINAL_STAGES = ["accepted", "rejected", "withdrawn"];

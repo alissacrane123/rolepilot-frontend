@@ -329,6 +329,7 @@ export const LOCATION_TYPES = [
 ];
 
 export const STAGES = [
+  { key: "saved", label: "Saved", emoji: "💾", color: "#6366f1" },
   { key: "applied", label: "Applied", emoji: "📨", color: "#6366f1" },
   {
     key: "recruiter_response",

@@ -37,7 +37,7 @@ export function useBoardQuery() {
       const res = await getBoard();
       return res.data!;
     },
-    refetchInterval: 5000,
+    // refetchInterval: 5000,
   });
 }
 
@@ -81,7 +81,7 @@ export function useUpcomingMeetingsQuery() {
       const res = await getUpcomingMeetings();
       return res.data ?? [];
     },
-    refetchInterval: 30000,
+    
   });
 }
 
