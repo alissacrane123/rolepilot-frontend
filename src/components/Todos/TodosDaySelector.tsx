@@ -23,17 +23,17 @@ export default function TodosDaySelector({
           <button
             key={date}
             onClick={() => setSelectedDate(date)}
-            className={`flex-1 min-w-[60px] flex flex-col items-center gap-1 py-2.5 rounded-[10px] border transition-all duration-200 ${isActive ? "border-indigo-500/30 bg-white/[0.04]" : "border-transparent hover:bg-white/[0.02]"}`}
+            className={`cursor-pointer flex-1 min-w-[60px] flex flex-col items-center gap-1 py-2.5 rounded-[10px] border transition-all duration-200 ${isActive ? "border-indigo-500/30 bg-white/[0.04]" : "border-transparent hover:bg-white/[0.02]"}`}
           >
             <span
-              className={`text-[10px] font-semibold tracking-widest ${isActive ? "text-indigo-400" : "text-white/20"}`}
+              className={`text-[10px] font-semibold tracking-widest ${isActive ? "text-indigo-400" : isToday ? "text-white" : "text-white/50"}`}
             >
               {d
                 .toLocaleDateString("en-US", { weekday: "short" })
                 .toUpperCase()}
             </span>
             <span
-              className={`text-lg font-bold tracking-tight ${isActive ? "text-white" : isToday ? "text-white/70" : "text-white/25"}`}
+              className={`text-lg font-bold tracking-tight ${isActive ? "text-indigo-400" : isToday ? "text-white" : "text-white/50"}`}
             >
               {d.getDate()}
             </span>

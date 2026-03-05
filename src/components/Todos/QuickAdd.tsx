@@ -20,7 +20,7 @@ export default function QuickAdd({
         onChange={(e) => setVal(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && submit()}
         placeholder="Add a task..."
-        className="flex-1  border border-white/[0.06] rounded-md px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-indigo-500/40 transition-colors placeholder:text-white/20"
+        className="flex-1  border border-white/[0.15] rounded-md px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-indigo-500/40 transition-colors placeholder:text-white/35"
       />
       <button
         onClick={submit}

@@ -15,7 +15,7 @@ export default function TodosViewToggle({
     <div className="cursor-pointer flex bg-white/[0.04] rounded-lg p-0.5 border border-white/[0.06] text-xs">
       <button
         onClick={() => onChange("Day")}
-        className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-200 ${
+        className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-200 hover:text-white ${
           view === "Day" ? "text-white bg-white/[0.08]" : "text-white/30"
         }`}
       >
@@ -23,7 +23,7 @@ export default function TodosViewToggle({
       </button>
       <button
         onClick={() => onChange("Groups")}
-        className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-200 ${
+        className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-200 hover:text-white ${
           view === "Groups" ? "text-white bg-white/[0.08]" : "text-white/30"
         }`}
       >
@@ -31,7 +31,7 @@ export default function TodosViewToggle({
       </button>
       <button
         onClick={() => onChange("All")}
-        className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-200 ${
+        className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-200 hover:text-white ${
           view === "All" ? "text-white bg-white/[0.08]" : "text-white/30"
         }`}
       >

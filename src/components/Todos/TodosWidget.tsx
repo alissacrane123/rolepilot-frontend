@@ -91,21 +91,21 @@ export default function TasksSection() {
       )}
 
       {/* list */}
-      <div className="bg-white/[0.02] border border-white/[0.06] bg-white/[0.015] rounded-[10px] py-2.5 mb-6 min-h-[156px]">
+      <div className="bg-white/[0.02] border border-white/[0.15] bg-white/[0.015] rounded-[10px] py-2.5 mb-6 min-h-[156px]">
         <div
-          className={`px-2.5 pb-3 ${pending.length || done.length ? "border-b border-white/[0.06] bg-transparent " : ""}`}
+          className={`px-2.5 pb-3 ${pending.length || done.length ? "border-b border-white/[0.15] bg-transparent " : ""}`}
         >
           <QuickAdd onAdd={addTodo} />
         </div>
 
         {loading && (
-          <p className="py-8 text-center text-white/20 text-xs">
+          <p className="py-8 text-center text-white/35 text-xs">
             Loading...
           </p>
         )}
 
         {!loading && pending.length === 0 && done.length === 0 && (
-          <p className="py-8 text-center text-white/20 text-xs">
+          <p className="py-8 text-center text-white/35 text-xs">
             No tasks · hit enter to add one
           </p>
         )}
