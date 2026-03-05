@@ -7,11 +7,31 @@ import {
   useDeleteTodoMutation,
   useUpdateTodoMutation,
 } from "@/hooks/mutations/todos";
+import useResizablePanel from "@/hooks/useResizablePanel";
+import ResizeHandle from "@/components/ui/ResizeHandle";
 import TaskRow, { PRIORITY_COLORS } from "./TaskRow";
 import DetailModal from "@/components/Todos/DetailModal";
 
+const SIDEBAR_DEFAULT = 300;
+const SIDEBAR_MIN = 220;
+const SIDEBAR_MAX = 480;
+const COLLAPSE_THRESHOLD = 140;
+const COLLAPSED_WIDTH = 44;
+
 export default function TasksSidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const {
+    width,
+    collapsed,
+    isDragging,
+    handlePointerDown,
+    setCollapsed,
+  } = useResizablePanel({
+    defaultWidth: SIDEBAR_DEFAULT,
+    minWidth: SIDEBAR_MIN,
+    maxWidth: SIDEBAR_MAX,
+    collapseThreshold: COLLAPSE_THRESHOLD,
+  });
+
   const [newTask, setNewTask] = useState("");
   const [completedOpen, setCompletedOpen] = useState(true);
   const [selected, setSelected] = useState<Todo | null>(null);
@@ -41,14 +61,20 @@ export default function TasksSidebar() {
   };
   const handleDelete = (id: string) => deleteMutation.mutate(id);
 
+  const sidebarWidth = collapsed ? COLLAPSED_WIDTH : width;
+
   return (
     <div
-      className="border-r border-[#1e1e2e] bg-[#0d0d14] flex flex-col shrink-0 relative overflow-hidden transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
-      style={{
-        width: collapsed ? 44 : 300,
-        minWidth: collapsed ? 44 : 300,
-      }}
+      className={`border-r border-[#1e1e2e] bg-[#0d0d14] flex flex-col shrink-0 relative overflow-hidden ${
+        isDragging ? "" : "transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+      }`}
+      style={{ width: sidebarWidth, minWidth: sidebarWidth }}
     >
+      <ResizeHandle
+        onPointerDown={handlePointerDown}
+        isDragging={isDragging}
+        disabled={collapsed}
+      />
       {/* Header */}
       <div
         className={`flex items-center justify-between border-b border-[#1e1e2e] shrink-0 h-[52px] ${
@@ -66,7 +92,7 @@ export default function TasksSidebar() {
           </div>
         )}
         <button
-          onClick={() => setCollapsed((v) => !v)}
+          onClick={() => setCollapsed(!collapsed)}
           className={`bg-white/[0.04] border border-[#1e1e2e] rounded-md text-slate-500 cursor-pointer p-1 px-1.5 flex items-center justify-center transition-all duration-150 shrink-0 hover:text-slate-400 hover:bg-white/[0.08] ${
             collapsed ? "ml-0" : "ml-auto"
           }`}
