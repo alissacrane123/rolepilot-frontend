@@ -1,4 +1,4 @@
-import { createTodo, deleteTodo, toggleTodo, updateTodoGroup, updateTodo, type CreateTodoData } from "@/lib/api/todos";
+import { createTodo, createTodoGroup, deleteTodo, toggleTodo, updateTodoGroup, updateTodo, type CreateTodoData } from "@/lib/api/todos";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/api/helpers";
 
@@ -46,6 +46,16 @@ export function useDeleteTodoMutation() {
 }
 
 // TODO GROUPS
+
+export function useCreateTodoGroupMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { name: string; color: string }) => createTodoGroup(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.todoGroups });
+    },
+  });
+}
 
 export function useUpdateTodoGroupMutation(groupId: string | undefined) {
   const queryClient = useQueryClient();

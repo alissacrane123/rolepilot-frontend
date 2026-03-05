@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import TrashButton from "../common/TrashButton";
 
 function NoteItem({
   note,
@@ -35,12 +36,10 @@ function NoteItem({
       title={note.title}
       className="group relative h-36 w-36 items-center justify-center text-center items-center"
     >
-      <button
-        className="hidden cursor-pointer group-hover:block absolute top-2 right-2 text-white/40 hover:text-indigo-400"
+      <TrashButton
+        className="hidden group-hover:block absolute top-2 right-2"
         onClick={handleTrashClick}
-      >
-        <Trash2 className="cursor-pointer size-3 text-white/40 hover:text-indigo-400 transition-colors" />
-      </button>
+      />
     </NewCard>
   );
 }

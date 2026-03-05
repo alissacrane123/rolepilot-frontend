@@ -70,6 +70,13 @@ export async function deleteTodo(todoId: string) {
 // TODO GROUP API
 // ============================================
 
+export async function createTodoGroup(data: { name: string; color: string }) {
+  return request<TodoGroup>("/todo-groups", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
 export async function getTodoGroups() {
   return request<TodoGroup[]>("/todo-groups");
 }

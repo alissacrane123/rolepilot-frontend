@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import type { Todo, CreateTodoData } from "@/lib/types/todos";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import type { Todo, CreateTodoData, TodoFilters } from "@/lib/types/todos";
 import { useTodosQuery, useTodoGroupsQuery } from "@/hooks/queries/todos";
 import {
   useCreateTodoMutation,
@@ -11,14 +11,17 @@ import useResizablePanel from "@/hooks/useResizablePanel";
 import ResizeHandle from "@/components/ui/ResizeHandle";
 import TaskRow, { PRIORITY_COLORS } from "./TaskRow";
 import DetailModal from "@/components/Todos/DetailModal";
-import { ChevronRightIcon, ChevronLeftIcon, MenuIcon } from "lucide-react";
+import { ChevronRightIcon, ChevronLeftIcon, SlidersHorizontalIcon, ChevronUpIcon } from "lucide-react";
 import { Button } from "../ui/button";
-
-const SIDEBAR_DEFAULT = 300;
-const SIDEBAR_MIN = 50;
-const SIDEBAR_MAX = 900;
-const COLLAPSE_THRESHOLD = 140;
-const COLLAPSED_WIDTH = 44;
+import {
+  SIDEBAR_DEFAULT,
+  SIDEBAR_MIN,
+  SIDEBAR_MAX,
+  COLLAPSE_THRESHOLD,
+  COLLAPSED_WIDTH,
+  DAY_FILTER_OPTIONS,
+} from "./constants";
+import type { DayFilterId, TaskFilterState } from "./types";
 
 export default function TasksSidebar() {
   const { width, collapsed, isDragging, handlePointerDown, setCollapsed } =
@@ -43,12 +46,38 @@ export default function TasksSidebar() {
     setShowExpanded(true);
   }, [collapsed]);
 
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filterState, setFilterState] = useState<TaskFilterState>({
+    dayFilter: "today",
+    groupId: null,
+  });
+
+  const queryFilters = useMemo((): TodoFilters => {
+    const filters: TodoFilters = {};
+    const today = new Date().toISOString().slice(0, 10);
+
+    if (filterState.dayFilter === "today") {
+      filters.due_date = today;
+    } else if (filterState.dayFilter === "week") {
+      const weekEnd = new Date();
+      weekEnd.setDate(weekEnd.getDate() + 7);
+      filters.due_after = today;
+      filters.due_before = weekEnd.toISOString().slice(0, 10);
+    }
+
+    if (filterState.groupId) {
+      filters.group_id = filterState.groupId;
+    }
+
+    return filters;
+  }, [filterState]);
+
   const [newTask, setNewTask] = useState("");
   const [completedOpen, setCompletedOpen] = useState(true);
   const [selected, setSelected] = useState<Todo | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { data: todos = [] } = useTodosQuery();
+  const { data: todos = [] } = useTodosQuery(queryFilters);
   const { data: groups = [] } = useTodoGroupsQuery();
   const createMutation = useCreateTodoMutation();
   const toggleMutation = useToggleTodoMutation();
@@ -65,12 +94,24 @@ export default function TasksSidebar() {
     setNewTask("");
   };
 
-  const toggleDone = (id: string) => toggleMutation.mutate(id);
-  const removeTask = (id: string) => deleteMutation.mutate(id);
-  const saveTodo = (id: string, data: Partial<CreateTodoData>) => {
+  const toggleDone = (id: string): void => toggleMutation.mutate(id);
+  const removeTask = (id: string): void => deleteMutation.mutate(id);
+  const saveTodo = (id: string, data: Partial<CreateTodoData>): void => {
     updateMutation.mutate({ todoId: id, data });
   };
-  const handleDelete = (id: string) => deleteMutation.mutate(id);
+  const handleDelete = (id: string): void => deleteMutation.mutate(id);
+
+  const handleFilterToggle = useCallback((): void => {
+    setIsFilterOpen((prev) => !prev);
+  }, []);
+
+  const handleDayFilterChange = useCallback((day: DayFilterId): void => {
+    setFilterState((prev) => ({ ...prev, dayFilter: day }));
+  }, []);
+
+  const handleGroupFilterChange = useCallback((groupId: string | null): void => {
+    setFilterState((prev) => ({ ...prev, groupId }));
+  }, []);
 
   const sidebarWidth = collapsed ? COLLAPSED_WIDTH : width;
 
@@ -128,16 +169,85 @@ export default function TasksSidebar() {
           </span>
         <Button
           variant="ghost"
-          size="icon"
-          onClick={() => setCollapsed(!collapsed)}
-          className="ml-0"
+          size="icon-xs"
+          onClick={handleFilterToggle}
+          aria-label="Toggle task filters"
+          className={`ml-auto transition-colors duration-150 text-slate-500 hover:text-slate-300`}
         >
-          <MenuIcon
-            width="14"
-            height="14"
-            className="text-slate-500"
-          />
+          {isFilterOpen ? <ChevronUpIcon width="13" height="13" /> :<SlidersHorizontalIcon width="13" height="13" />}
         </Button>
+        </div>
+      </div>
+
+      {/* Filter panel */}
+      <div
+        className={`overflow-hidden shrink-0 transition-all duration-200 ease-in-out border-b border-[#1e1e2e] ${
+          isFilterOpen && !collapsed
+            ? "max-h-[200px] opacity-100"
+            : "max-h-0 opacity-0 border-b-0"
+        }`}
+      >
+        <div className="px-4 py-3 flex flex-col gap-2.5">
+          {/* Day filter */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+              Time Range
+            </span>
+            <div className="flex gap-1">
+              {DAY_FILTER_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => handleDayFilterChange(opt.id)}
+                  aria-label={`Filter by ${opt.label}`}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 border cursor-pointer ${
+                    filterState.dayFilter === opt.id
+                      ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+                      : "bg-white/[0.03] text-slate-500 border-[#1e1e2e] hover:text-slate-300 hover:border-slate-700"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Group filter */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+              Group
+            </span>
+            <div className="flex gap-1 flex-wrap">
+              <button
+                onClick={() => handleGroupFilterChange(null)}
+                aria-label="Show all groups"
+                className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 border cursor-pointer ${
+                  !filterState.groupId
+                    ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+                    : "bg-white/[0.03] text-slate-500 border-[#1e1e2e] hover:text-slate-300 hover:border-slate-700"
+                }`}
+              >
+                All
+              </button>
+              {groups.map((group) => (
+                <button
+                  key={group.id}
+                  onClick={() => handleGroupFilterChange(group.id)}
+                  aria-label={`Filter by group ${group.name}`}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 border cursor-pointer flex items-center gap-1.5 ${
+                    filterState.groupId === group.id
+                      ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+                      : "bg-white/[0.03] text-slate-500 border-[#1e1e2e] hover:text-slate-300 hover:border-slate-700"
+                  }`}
+                >
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ background: group.color }}
+                  />
+                  {group.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

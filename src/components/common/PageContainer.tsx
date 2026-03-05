@@ -9,7 +9,7 @@ export default function PageContainer({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-screen bg-zinc-950 w-full flex flex-col", className)}>
+    <div className={cn("min-h-screen flex flex-col pb-72", className)}>
       {children}
     </div>
   );

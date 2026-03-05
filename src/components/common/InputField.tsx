@@ -12,6 +12,7 @@ export default function InputField({
   placeholder = "",
   className = "",
   isTextarea = false,
+  children,
 }: {
   label?: string;
   value: string;
@@ -22,6 +23,7 @@ export default function InputField({
   placeholder?: string;
   className?: string;
   isTextarea?: boolean;
+  children?: React.ReactNode;
 }) {
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
@@ -43,6 +45,7 @@ export default function InputField({
           placeholder={placeholder}
         />
       )}
+      {children}
     </div>
   );
 }
