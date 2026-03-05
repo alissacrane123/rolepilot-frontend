@@ -296,7 +296,7 @@ export default function MeetingDetailModal({
             />
           </Field>
 
-          <ErrorMessage message={(error as Error).message} />
+          <ErrorMessage message={(error as Error)?.message} />
 
           <div className="flex items-center gap-3 pt-2">
             <Button

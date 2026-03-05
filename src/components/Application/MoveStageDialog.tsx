@@ -95,7 +95,7 @@ export default function MoveStageDialog({
               className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
             />
           </div>
-          <ErrorMessage message={(mutation.error as Error).message} />
+          <ErrorMessage message={(mutation.error as Error)?.message} />
           <Button
             type="submit"
             variant="primary"
