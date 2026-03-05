@@ -50,9 +50,9 @@ export default function NoteEditorView({
   if (!note) return <Spinner />;
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-8rem)]">
+    <div className="flex flex-col w-full">
       {/* Top bar */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-10">
         <button
           onClick={handleBack}
           className="flex items-center text-sm text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
