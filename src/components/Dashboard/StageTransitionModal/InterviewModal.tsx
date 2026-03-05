@@ -7,13 +7,13 @@ import { PhoneIcon } from "lucide-react";
 import InputField from "@/components/ui/InputField";
 import InputLabel from "@/components/ui/InputLabel";
 
-type InputField = {
+interface FormField {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   isTextarea?: boolean;
-};
+}
 
 export default function InterviewModal({
   transition,
@@ -23,7 +23,8 @@ export default function InterviewModal({
   const { app, toStage } = transition;
   const mutation = useUpdateStageMutation();
 
-  const defaultMeetingType = toStage === "phone_screen" ? "phone_screen" : "technical";
+  const defaultMeetingType =
+    toStage === "phone_screen" ? "phone_screen" : "technical";
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -35,7 +36,7 @@ export default function InterviewModal({
   const [prepNotes, setPrepNotes] = useState("");
   const [meetingType, setMeetingType] = useState(defaultMeetingType);
 
-  const fields: InputField[] = useMemo(() => {
+  const fields: FormField[] = useMemo(() => {
     return [
       {
         label: "Duration (minutes)",

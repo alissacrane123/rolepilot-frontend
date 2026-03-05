@@ -6,7 +6,7 @@ import InterviewListView from "@/components/Interviews/InterviewListView";
 import InterviewCalendarView from "@/components/Interviews/InterviewCalendarView";
 import MeetingDetailModal from "@/components/Interviews/MeetingDetailModal";
 import { CalendarViewIcon, ListViewIcon } from "@/components/icons";
-import EmptyState from "@/components/EmpyState";
+import EmptyState from "@/components/EmptyState";
 import { TextTitle1 } from "@/components/ui/text/TextTitle1";
 import { TextBody } from "@/components/ui/text/TextBody";
 import ViewToggle from "@/components/Dashboard/ViewToggle";

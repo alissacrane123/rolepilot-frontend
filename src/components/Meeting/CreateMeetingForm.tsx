@@ -7,13 +7,13 @@ import { VStack } from "@/components/ui/stacks";
 import type { CreateMeetingData } from "@/lib/api";
 import { Button } from "../ui/button";
 
-type InputField = {
+interface FormField {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   isTextarea?: boolean;
-};
+}
 
 export type CreateMeetingSubmitParams = {
   meeting: CreateMeetingData;
@@ -54,7 +54,7 @@ export default function CreateMeetingForm({
   const [meetingType, setMeetingType] = useState(defaultMeetingType);
   const [meetingStage, setMeetingStage] = useState(stage || "");
 
-  const fields: InputField[] = useMemo(() => {
+  const fields: FormField[] = useMemo(() => {
     return [
       {
         label: "Duration (minutes)",
@@ -204,7 +204,8 @@ export default function CreateMeetingForm({
         </Button>
         <Button
           onClick={handleSubmit}
-          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
+          variant="primary"
+          className="flex-1"
           disabled={isPending}
         >
           {cta}

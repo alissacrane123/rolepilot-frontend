@@ -1,5 +1,6 @@
 import type { JobApplication, BoardView } from "@/lib/api";
 import { STAGES, STAGE_MAP } from "@/lib/api";
+import { formatDate } from "@/lib/dateUtils";
 import {
   Table,
   TableHeader,
@@ -102,13 +103,7 @@ export default function ListView({
                 </TableCell>
 
                 <TableCell className="text-[13px] text-white/35">
-                  {app.applied_at
-                    ? new Date(app.applied_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "—"}
+                  {app.applied_at ? formatDate(app.applied_at) : "—"}
                 </TableCell>
               </TableRow>
             );

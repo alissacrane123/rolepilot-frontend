@@ -1,4 +1,5 @@
 import type { CoverLetter } from "@/lib/api";
+import { formatDateTime } from "@/lib/dateUtils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -32,13 +33,13 @@ export default function CoverLetterItem({
     const pageHeight = doc.internal.pageSize.getHeight();
     const maxWidth = pageWidth - margin * 2;
     const lineHeight = 0.22;
-  
+
     doc.setFont("helvetica");
     doc.setFontSize(11);
-  
+
     const paragraphs = letter.content.split("\n");
     let y = margin;
-  
+
     for (const paragraph of paragraphs) {
       if (paragraph.trim() === "") {
         y += lineHeight;
@@ -54,7 +55,7 @@ export default function CoverLetterItem({
         y += lineHeight;
       }
     }
-  
+
     const filename = `cover-letter-${(companyName || "company").toLowerCase().replace(/\s+/g, "-")}-v${letter.version}.pdf`;
     doc.save(filename);
   };
@@ -81,12 +82,7 @@ export default function CoverLetterItem({
             {letter.tone}
           </Badge>
           <span className="text-xs text-zinc-600">
-            {new Date(letter.created_at).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
-            })}
+            {formatDateTime(letter.created_at)}
           </span>
         </div>
         <div className="flex items-center gap-1">

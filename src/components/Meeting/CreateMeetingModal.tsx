@@ -1,4 +1,3 @@
-import type { JobApplication } from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -35,9 +34,7 @@ export default function CreateMeetingModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-          Create Meeting
-        </Button>
+        <Button variant="primary">Create Meeting</Button>
       </DialogTrigger>
       <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 ">
         <DialogHeader className="mb-4">

@@ -9,6 +9,7 @@ import {
 import PageContainer from "@/components/PageContainer";
 import Content from "@/components/Content";
 import BackButton from "@/components/BackButton";
+import LoadingScreen from "@/components/LoadingScreen";
 import ApplicationHero from "@/components/Application/ApplicationHero";
 import OverviewTab from "@/components/Application/OverviewTab";
 import MeetingsTab from "@/components/Application/MeetingsTab";
@@ -50,21 +51,8 @@ export default function ApplicationPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-400">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!app) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-400">Application not found</div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingScreen />;
+  if (!app) return <LoadingScreen message="Application not found" />;
 
   function tabLabel(tab: Tab) {
     if (tab === "meetings" && meetings.length > 0) {
@@ -112,7 +100,9 @@ export default function ApplicationPage() {
             />
           )}
           {activeTab === "analysis" && <AIAnalysis app={app} />}
-          {activeTab === "cover-letters" && <CoverLettersTab app={app} companyName={app.company_name} />}
+          {activeTab === "cover-letters" && (
+            <CoverLettersTab app={app} companyName={app.company_name} />
+          )}
           {activeTab === "notes" && <NotesTab applicationId={app.id} />}
         </div>
       </Content>

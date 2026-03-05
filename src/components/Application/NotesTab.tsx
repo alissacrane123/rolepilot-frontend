@@ -27,12 +27,9 @@ export default function NotesTab({ applicationId }: { applicationId: string }) {
     }
   }, [createNoteMutation, applicationId]);
 
-  const handleNoteClick = useCallback(
-    (note: Note) => {
-      setActiveNote(note);
-    },
-    [applicationId],
-  );
+  const handleNoteClick = useCallback((note: Note) => {
+    setActiveNote(note);
+  }, []);
 
   // Empty state
   if (loading || notes.length === 0) {
@@ -50,7 +47,7 @@ export default function NotesTab({ applicationId }: { applicationId: string }) {
         </p>
         <Button
           onClick={handleCreate}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white"
+          variant="primary"
           disabled={createNoteMutation.isPending}
         >
           {createNoteMutation.isPending ? "Creating..." : "Add a Note"}

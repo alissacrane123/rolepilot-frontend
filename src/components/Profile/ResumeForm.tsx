@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import TabToggle from "@/components/TabToggle";
 import { useRef, useState } from "react";
 
 export default function ResumeForm({
@@ -18,32 +19,16 @@ export default function ResumeForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [resumeTab, setResumeTab] = useState<"file" | "text">("file");
 
-
   return (
     <div className="space-y-4">
-      {/* Tab toggle */}
-      <div className="flex gap-1 bg-zinc-800 rounded-md p-1">
-        <button
-          onClick={() => setResumeTab("file")}
-          className={`flex-1 text-sm py-1.5 rounded transition-colors ${
-            resumeTab === "file"
-              ? "bg-zinc-700 text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-300"
-          }`}
-        >
-          Upload File
-        </button>
-        <button
-          onClick={() => setResumeTab("text")}
-          className={`flex-1 text-sm py-1.5 rounded transition-colors ${
-            resumeTab === "text"
-              ? "bg-zinc-700 text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-300"
-          }`}
-        >
-          Paste Text
-        </button>
-      </div>
+      <TabToggle
+        value={resumeTab}
+        onChange={setResumeTab}
+        options={[
+          { value: "file", label: "Upload File" },
+          { value: "text", label: "Paste Text" },
+        ]}
+      />
 
       {resumeTab === "file" ? (
         <div>

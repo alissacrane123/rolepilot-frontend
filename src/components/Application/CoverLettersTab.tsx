@@ -1,9 +1,7 @@
 import type { JobApplication } from "@/lib/api";
 import { useState } from "react";
-import { type CoverLetter, COVER_LETTER_TONES } from "@/lib/api";
+import { COVER_LETTER_TONES } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -15,6 +13,7 @@ import {
   useGenerateCoverLetterMutation,
   useGetCoverLettersQuery,
 } from "@/hooks/useApi";
+import ErrorMessage from "@/components/ErrorMessage";
 import CoverLetterItem from "./CoverLetterItem";
 
 export default function CoverLettersTab({
@@ -23,7 +22,6 @@ export default function CoverLettersTab({
 }: {
   app: JobApplication;
   companyName?: string;
-  roleTitle?: string;
 }) {
   const applicationId = app.id;
   const [tone, setTone] = useState("professional");
@@ -80,16 +78,16 @@ export default function CoverLettersTab({
           </Select>
           <Button
             onClick={handleGenerate}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            variant="primary"
             disabled={generating}
           >
             {generating ? "Generating..." : "Generate Cover Letter"}
           </Button>
         </div>
         {error && (
-          <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2 mt-4">
-            {error}
-          </p>
+          <div className="mt-4">
+            <ErrorMessage message={error} />
+          </div>
         )}
       </div>
     );
@@ -119,7 +117,8 @@ export default function CoverLettersTab({
           <Button
             onClick={handleGenerate}
             size="sm"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8"
+            variant="primary"
+            className="text-xs h-8"
             disabled={generating}
           >
             {generating ? "Generating..." : "+ New Version"}
@@ -127,11 +126,7 @@ export default function CoverLettersTab({
         </div>
       </div>
 
-      {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-          {error}
-        </p>
-      )}
+      <ErrorMessage message={error} />
       {generating && (
         <div className="flex flex-col items-center justify-center py-10">
           <div className="flex items-center gap-3 mb-4">

@@ -1,5 +1,6 @@
 import type { JobApplication } from "@/lib/api";
 import { STAGE_MAP } from "@/lib/api";
+import { formatDateTime } from "@/lib/dateUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function StageHistory({ app }: { app: JobApplication }) {
@@ -28,12 +29,7 @@ export default function StageHistory({ app }: { app: JobApplication }) {
                       {toStage?.emoji} {toStage?.label || h.to_stage}
                     </span>
                     <span className="text-xs text-zinc-500">
-                      {new Date(h.moved_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
+                      {formatDateTime(h.moved_at)}
                     </span>
                   </div>
                   {h.notes && (

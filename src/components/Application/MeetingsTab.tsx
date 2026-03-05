@@ -1,9 +1,10 @@
 import { useState } from "react";
 import type { Meeting } from "@/lib/api";
 import { useMeetingsQuery } from "@/hooks/useApi";
+import { formatDate, formatTime } from "@/lib/dateUtils";
 import { getMeetingTypeLabel } from "@/components/Interviews/calendar-utils";
 import MeetingDetailModal from "@/components/Interviews/MeetingDetailModal";
-import EmptyState from "@/components/EmpyState";
+import EmptyState from "@/components/EmptyState";
 import {
   CalendarIcon,
   ClockIcon,
@@ -12,21 +13,6 @@ import {
 } from "@/components/icons";
 import MeetingDetailItem from "@/components/Application/MeetingDetailItem";
 import CreateMeetingModal from "../Meeting/CreateMeetingModal";
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function formatTime(dateStr: string) {
-  return new Date(dateStr).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
 
 function TimelineMeeting({
   meeting,

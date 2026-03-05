@@ -1,5 +1,6 @@
 import type { JobApplication } from "@/lib/api";
 import { STAGE_MAP } from "@/lib/api";
+import { formatDate } from "@/lib/dateUtils";
 import { Badge } from "@/components/ui/badge";
 import MoveStageDialog from "./MoveStageDialog";
 import { StagePipeline } from "./StageProgressBar";
@@ -13,7 +14,10 @@ function MetaRow({
   items: (string | undefined | null)[];
   tags: (string | undefined | null)[];
 }) {
-  const visibleItems = items.filter(item => item && item !== "not_specified") as string[];
+  const visibleItems = items.filter(
+    (item) => item && item !== "not_specified",
+  ) as string[];
+  
   const visibleTags = tags.filter(Boolean) as string[];
 
   return (
@@ -51,11 +55,7 @@ export default function ApplicationHero({
   const stage = STAGE_MAP[app.current_stage];
   const initial = (app.company_name || "?")[0].toUpperCase();
 
-  const appliedDate = new Date(app.applied_at).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const appliedDate = formatDate(app.applied_at);
 
   return (
     <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.015] p-7 animate-fade-in-up">

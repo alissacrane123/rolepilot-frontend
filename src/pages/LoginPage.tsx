@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export default function LoginPage() {
   const { login, register } = useAuth();
@@ -91,22 +92,19 @@ export default function LoginPage() {
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-                {error}
-              </p>
-            )}
+            <ErrorMessage message={error} />
 
             <Button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+              variant="primary"
+              className="w-full"
               disabled={loading}
             >
               {loading
                 ? "Loading..."
                 : isRegister
-                ? "Create Account"
-                : "Sign In"}
+                  ? "Create Account"
+                  : "Sign In"}
             </Button>
           </form>
 

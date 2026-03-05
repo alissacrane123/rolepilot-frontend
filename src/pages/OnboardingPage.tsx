@@ -11,73 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-
-function SkillsInput({
-  skills,
-  onChange,
-}: {
-  skills: string[];
-  onChange: (skills: string[]) => void;
-}) {
-  const [input, setInput] = useState("");
-
-  const addSkill = () => {
-    const trimmed = input.trim();
-    if (trimmed && !skills.includes(trimmed)) {
-      onChange([...skills, trimmed]);
-      setInput("");
-    }
-  };
-
-  const removeSkill = (skill: string) => {
-    onChange(skills.filter((s) => s !== skill));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addSkill();
-    }
-    if (e.key === "Backspace" && input === "" && skills.length > 0) {
-      removeSkill(skills[skills.length - 1]);
-    }
-  };
-
-  return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap gap-1.5 min-h-[32px]">
-        {skills.map((skill) => (
-          <Badge
-            key={skill}
-            variant="outline"
-            className="bg-indigo-500/10 text-indigo-400 border-indigo-500/30 cursor-pointer hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 transition-colors"
-            onClick={() => removeSkill(skill)}
-          >
-            {skill} ×
-          </Badge>
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a skill and press Enter"
-          className="bg-zinc-800 border-zinc-700 text-zinc-100"
-        />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={addSkill}
-          className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 shrink-0"
-        >
-          Add
-        </Button>
-      </div>
-    </div>
-  );
-}
+import SkillsInput from "@/components/Profile/SkillsInput";
+import ErrorMessage from "@/components/ErrorMessage";
+import TabToggle from "@/components/TabToggle";
 
 export default function OnboardingPage() {
   const { refreshUser } = useAuth();
@@ -102,7 +38,8 @@ export default function OnboardingPage() {
   const uploadResumeTextMutation = useUploadResumeTextMutation();
   const updateProfileMutation = useUpdateProfileMutation();
 
-  const uploadingResume = uploadResumeMutation.isPending || uploadResumeTextMutation.isPending;
+  const uploadingResume =
+    uploadResumeMutation.isPending || uploadResumeTextMutation.isPending;
   const saving = updateProfileMutation.isPending;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +78,9 @@ export default function OnboardingPage() {
     try {
       await updateProfileMutation.mutateAsync({
         skills: skills.length > 0 ? skills : undefined,
-        experience_years: experienceYears ? parseInt(experienceYears) : undefined,
+        experience_years: experienceYears
+          ? parseInt(experienceYears)
+          : undefined,
         target_role: targetRole || undefined,
         target_salary_min: salaryMin ? parseInt(salaryMin) : undefined,
         target_salary_max: salaryMax ? parseInt(salaryMax) : undefined,
@@ -183,29 +122,14 @@ export default function OnboardingPage() {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Tab toggle */}
-              <div className="flex gap-1 bg-zinc-800 rounded-md p-1">
-                <button
-                  onClick={() => setResumeTab("file")}
-                  className={`flex-1 text-sm py-1.5 rounded transition-colors ${
-                    resumeTab === "file"
-                      ? "bg-zinc-700 text-zinc-100"
-                      : "text-zinc-400 hover:text-zinc-300"
-                  }`}
-                >
-                  Upload File
-                </button>
-                <button
-                  onClick={() => setResumeTab("text")}
-                  className={`flex-1 text-sm py-1.5 rounded transition-colors ${
-                    resumeTab === "text"
-                      ? "bg-zinc-700 text-zinc-100"
-                      : "text-zinc-400 hover:text-zinc-300"
-                  }`}
-                >
-                  Paste Text
-                </button>
-              </div>
+              <TabToggle
+                value={resumeTab}
+                onChange={setResumeTab}
+                options={[
+                  { value: "file", label: "Upload File" },
+                  { value: "text", label: "Paste Text" },
+                ]}
+              />
 
               {resumeTab === "file" ? (
                 <div>
@@ -229,8 +153,8 @@ export default function OnboardingPage() {
                     {uploadingResume
                       ? "Uploading..."
                       : resumeUploaded
-                      ? "✓ Resume uploaded — click to replace"
-                      : "Click to upload PDF, TXT, or MD"}
+                        ? "✓ Resume uploaded — click to replace"
+                        : "Click to upload PDF, TXT, or MD"}
                   </Button>
                 </div>
               ) : (
@@ -262,18 +186,15 @@ export default function OnboardingPage() {
                 </div>
               )}
 
-              {error && (
-                <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-                  {error}
-                </p>
-              )}
+              <ErrorMessage message={error} />
 
               <Button
                 onClick={() => {
                   setError("");
                   setStep(2);
                 }}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                variant="primary"
+                className="w-full"
                 disabled={!resumeUploaded}
               >
                 Continue
@@ -353,11 +274,7 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {error && (
-                <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-                  {error}
-                </p>
-              )}
+              <ErrorMessage message={error} />
 
               <div className="flex gap-3">
                 <Button
@@ -369,7 +286,8 @@ export default function OnboardingPage() {
                 </Button>
                 <Button
                   onClick={handleFinish}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
+                  variant="primary"
+                  className="flex-1"
                   disabled={saving}
                 >
                   {saving ? "Saving..." : "Start Tracking Jobs"}

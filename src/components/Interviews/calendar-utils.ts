@@ -30,20 +30,10 @@ export function getLocationLabel(value: string) {
   return LOCATION_TYPES.find((t) => t.value === value)?.label ?? value;
 }
 
-export function formatMeetingTime(dateStr: string) {
-  return new Date(dateStr).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
-export function formatMeetingDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-}
+export {
+  formatTime as formatMeetingTime,
+  formatShortDate as formatMeetingDate,
+} from "@/lib/dateUtils";
 
 export function getRelativeLabel(dateStr: string): string | null {
   const d = new Date(dateStr).toDateString();

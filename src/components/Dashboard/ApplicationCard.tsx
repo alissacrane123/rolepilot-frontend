@@ -1,4 +1,5 @@
 import type { JobApplication } from "@/lib/api";
+import { formatDate } from "@/lib/dateUtils";
 
 export default function ApplicationCard({
   app,
@@ -40,13 +41,7 @@ export default function ApplicationCard({
             {app.company_name || "Unknown Company"}
           </span>
           <span className="text-[11px] text-white/25">
-            {app.applied_at
-              ? new Date(app.applied_at).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : ""}
+            {app.applied_at ? formatDate(app.applied_at) : ""}
           </span>
         </div>
       </div>

@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import InputLabel from "@/components/ui/InputLabel";
 import TimePicker from "@/components/ui/time-picker";
+import ErrorMessage from "@/components/ErrorMessage";
+import { extractDate, extractTime } from "@/lib/dateUtils";
 
 const INPUT_CLASS = "bg-zinc-800 border-zinc-700 text-zinc-100";
 const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[80px]`;
@@ -84,18 +86,6 @@ function SelectField({
       </Select>
     </Field>
   );
-}
-
-function extractDate(scheduled_at?: string): string {
-  if (!scheduled_at) return "";
-  const d = new Date(scheduled_at);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-function extractTime(scheduled_at?: string): string {
-  if (!scheduled_at) return "";
-  const d = new Date(scheduled_at);
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
 function buildInitialValues(meeting: Meeting): MeetingFormValues {
@@ -306,11 +296,7 @@ export default function MeetingDetailModal({
             />
           </Field>
 
-          {error && (
-            <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {(error as Error).message}
-            </p>
-          )}
+          <ErrorMessage message={(error as Error).message} />
 
           <div className="flex items-center gap-3 pt-2">
             <Button
@@ -331,7 +317,8 @@ export default function MeetingDetailModal({
               Cancel
             </Button>
             <Button
-              className="bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-40"
+              variant="primary"
+              className="disabled:opacity-40"
               onClick={handleSave}
               disabled={!isDirty || saving}
             >

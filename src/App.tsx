@@ -6,40 +6,32 @@ import ApplicationPage from "@/pages/ApplicationPage";
 import ProfilePage from "@/pages/ProfilePage";
 import OnboardingPage from "@/pages/OnboardingPage";
 import Layout from "@/components/Layout";
+import LoadingScreen from "@/components/LoadingScreen";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-400">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  // Redirect to onboarding if no resume uploaded yet
-  if (!user.resume_text) {
-    return <Navigate to="/onboarding" />;
-  }
+  if (loading) return <LoadingScreen />;
+  if (!user) return <Navigate to="/login" />;
+  if (!user.resume_text) return <Navigate to="/onboarding" />;
 
   return <>{children}</>;
+}
+
+function OnboardingRoute() {
+  const { user, loading } = useAuth();
+
+  if (loading) return <LoadingScreen />;
+  if (!user) return <Navigate to="/login" />;
+  if (user.resume_text) return <Navigate to="/" />;
+
+  return <OnboardingPage />;
 }
 
 function AppRoutes() {
   const { user, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-400">Loading...</div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingScreen />;
 
   return (
     <Routes>
@@ -47,20 +39,7 @@ function AppRoutes() {
         path="/login"
         element={user ? <Navigate to="/" /> : <LoginPage />}
       />
-      <Route
-        path="/onboarding"
-        element={
-          user ? (
-            user.resume_text ? (
-              <Navigate to="/" />
-            ) : (
-              <OnboardingPage />
-            )
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
+      <Route path="/onboarding" element={<OnboardingRoute />} />
       <Route
         path="/"
         element={
@@ -93,7 +72,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Layout>  
+        <Layout>
           <AppRoutes />
         </Layout>
       </AuthProvider>

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const TERMINAL_STAGES = ["accepted", "rejected", "withdrawn"];
 
@@ -59,9 +60,7 @@ export default function MoveStageDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-          Move Stage
-        </Button>
+        <Button variant="primary">Move Stage</Button>
       </DialogTrigger>
       <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
         <DialogHeader>
@@ -96,14 +95,11 @@ export default function MoveStageDialog({
               className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
             />
           </div>
-          {mutation.error && (
-            <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {(mutation.error as Error).message}
-            </p>
-          )}
+          <ErrorMessage message={(mutation.error as Error).message} />
           <Button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+            variant="primary"
+            className="w-full"
             disabled={mutation.isPending || !toStage}
           >
             {mutation.isPending ? "Updating..." : "Update Stage"}

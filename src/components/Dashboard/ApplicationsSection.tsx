@@ -3,7 +3,7 @@ import { TextTitle1 } from "@/components/ui/text/TextTitle1";
 import { TextBody } from "@/components/ui/text/TextBody";
 import ViewToggle from "@/components/Dashboard/ViewToggle";
 import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
-import EmptyState from "@/components/EmpyState";
+import EmptyState from "@/components/EmptyState";
 import { type BoardView } from "@/lib/api";
 import GridView from "@/components/Dashboard/GridView";
 import ListView from "@/components/Dashboard/ListView";

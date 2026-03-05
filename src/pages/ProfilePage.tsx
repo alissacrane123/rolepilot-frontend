@@ -4,7 +4,6 @@ import {
   useUpdateProfileMutation,
   useUploadResumeMutation,
   useUploadResumeTextMutation,
-  
 } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -124,7 +123,8 @@ export default function ProfilePage() {
             <ProfileHero user={user} />
             <Button
               onClick={handleSaveProfile}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+              variant="primary"
+              className="w-full"
               disabled={saving}
             >
               {saving ? "Saving..." : "Save Profile"}

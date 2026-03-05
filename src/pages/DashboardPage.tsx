@@ -10,7 +10,8 @@ import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
 import type { ViewMode } from "@/lib/constants";
 import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
 import ApplicationsSection from "@/components/Dashboard/ApplicationsSection";
-import EmptyState from "@/components/EmpyState";
+import EmptyState from "@/components/EmptyState";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -31,11 +32,7 @@ export default function DashboardPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <div className="text-white/40">Loading...</div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!board) {
@@ -46,7 +43,7 @@ export default function DashboardPage() {
       />
     );
   }
-  
+
   const totalApps = board
     ? Object.values(board).reduce(
         (sum, apps) => sum + (apps as JobApplication[]).length,

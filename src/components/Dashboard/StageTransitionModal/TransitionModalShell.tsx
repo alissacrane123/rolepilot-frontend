@@ -2,9 +2,13 @@ import type { ReactNode, FormEvent } from "react";
 import { STAGE_MAP } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
-import { PartyPopperIcon } from "lucide-react";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export default function TransitionModalShell({
   toStage,
@@ -43,11 +47,7 @@ export default function TransitionModalShell({
         <form onSubmit={onSubmit} className="space-y-4 mt-4">
           {children}
 
-          {error && (
-            <p className="text-sm text-red-400 bg-red-400/10 rounded-md px-3 py-2">
-              {error.message}
-            </p>
-          )}
+          {error && <ErrorMessage message={error.message} />}
 
           <div className="flex gap-3">
             <Button
@@ -61,7 +61,8 @@ export default function TransitionModalShell({
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
+              variant="primary"
+              className="flex-1"
               disabled={isPending}
             >
               {isPending ? "Moving..." : "Confirm Move"}
