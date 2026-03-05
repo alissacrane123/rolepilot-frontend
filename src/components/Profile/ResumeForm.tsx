@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import TabToggle from "@/components/TabToggle";
+import TabToggle from "@/components/common/TabToggle";
 import { useRef, useState } from "react";
 
 export default function ResumeForm({

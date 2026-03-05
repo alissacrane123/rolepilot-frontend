@@ -7,9 +7,9 @@ import {
 } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import BackButton from "@/components/BackButton";
-import PageContainer from "@/components/PageContainer";
-import Content from "@/components/Content";
+import BackButton from "@/components/common/BackButton";
+import PageContainer from "@/components/common/PageContainer";
+import Content from "@/components/common/Content";
 import ProfileHero from "@/components/Profile/ProfileHero";
 import { HStack, VStack } from "@/components/ui/stacks";
 import ProfileSection from "@/components/Profile/ProfileSection";

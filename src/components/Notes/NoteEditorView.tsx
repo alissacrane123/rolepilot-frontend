@@ -3,7 +3,7 @@ import { useState, useRef, useCallback } from "react";
 import { useUpdateNoteMutation } from "@/hooks/useApi";
 import { useAutoSave } from "@/hooks/useAutoSave.ts";
 import type { Note } from "@/lib/api";
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/common/Spinner";
 import NoteEditor from "@/components/Notes/NoteEditor";
 import { ArrowLeftIcon } from "lucide-react";
 

@@ -6,10 +6,10 @@ import {
   useMeetingsQuery,
   queryKeys,
 } from "@/hooks/useApi";
-import PageContainer from "@/components/PageContainer";
-import Content from "@/components/Content";
-import BackButton from "@/components/BackButton";
-import LoadingScreen from "@/components/LoadingScreen";
+import PageContainer from "@/components/common/PageContainer";
+import Content from "@/components/common/Content";
+import BackButton from "@/components/common/BackButton";
+import LoadingScreen from "@/components/common/LoadingScreen";
 import ApplicationHero from "@/components/Application/ApplicationHero";
 import OverviewTab from "@/components/Application/OverviewTab";
 import MeetingsTab from "@/components/Application/MeetingsTab";

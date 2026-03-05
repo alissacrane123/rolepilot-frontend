@@ -5,8 +5,8 @@ import DashboardPage from "@/pages/DashboardPage";
 import ApplicationPage from "@/pages/ApplicationPage";
 import ProfilePage from "@/pages/ProfilePage";
 import OnboardingPage from "@/pages/OnboardingPage";
-import Layout from "@/components/Layout";
-import LoadingScreen from "@/components/LoadingScreen";
+import Layout from "@/components/common/Layout";
+import LoadingScreen from "@/components/common/LoadingScreen";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();

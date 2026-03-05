@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import InputLabel from "@/components/common/InputLabel";
 import TimePicker from "@/components/ui/time-picker";
-import ErrorMessage from "@/components/ErrorMessage";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import { extractDate, extractTime } from "@/lib/dateUtils";
 
 const INPUT_CLASS = "bg-zinc-800 border-zinc-700 text-zinc-100";

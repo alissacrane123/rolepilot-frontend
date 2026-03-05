@@ -13,7 +13,7 @@ import {
   useGenerateCoverLetterMutation,
   useGetCoverLettersQuery,
 } from "@/hooks/useApi";
-import ErrorMessage from "@/components/ErrorMessage";
+import ErrorMessage from "@/components/common/ErrorMessage";
 import CoverLetterItem from "./CoverLetterItem";
 
 export default function CoverLettersTab({

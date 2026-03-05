@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { type BoardView, type JobApplication, STAGES } from "@/lib/api";
 import { useBoardQuery, queryKeys } from "@/hooks/useApi";
-import Content from "@/components/Content";
+import Content from "@/components/common/Content";
 import { StageTransitionModal } from "@/components/Dashboard/StageTransitionModal";
 import InterviewsSection from "@/components/Dashboard/InterviewsSection";
 import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
 import type { ViewMode } from "@/lib/constants";
 import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
 import ApplicationsSection from "@/components/Dashboard/ApplicationsSection";
-import EmptyState from "@/components/EmptyState";
-import LoadingScreen from "@/components/LoadingScreen";
+import EmptyState from "@/components/common/EmptyState";
+import LoadingScreen from "@/components/common/LoadingScreen";
 
 export default function DashboardPage() {
   const navigate = useNavigate();

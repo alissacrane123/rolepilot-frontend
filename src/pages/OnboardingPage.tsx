@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import SkillsInput from "@/components/Profile/SkillsInput";
-import ErrorMessage from "@/components/ErrorMessage";
-import TabToggle from "@/components/TabToggle";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import TabToggle from "@/components/common/TabToggle";
 
 export default function OnboardingPage() {
   const { refreshUser } = useAuth();

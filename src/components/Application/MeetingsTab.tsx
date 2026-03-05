@@ -4,7 +4,7 @@ import { useMeetingsQuery } from "@/hooks/useApi";
 import { formatDate, formatTime } from "@/lib/dateUtils";
 import { getMeetingTypeLabel } from "@/components/Interviews/calendar-utils";
 import MeetingDetailModal from "@/components/Interviews/MeetingDetailModal";
-import EmptyState from "@/components/EmptyState";
+import EmptyState from "@/components/common/EmptyState";
 import {
   CalendarIcon,
   ClockIcon,
