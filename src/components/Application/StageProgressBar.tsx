@@ -1,5 +1,5 @@
 import { TERMINAL_STAGES } from "@/lib/constants";
-import { STAGES, STAGE_MAP } from "@/lib/api";
+import { STAGES } from "@/lib/api";
 
 export function StagePipeline({ currentStage }: { currentStage: string }) {
   const mainStages = STAGES.filter((s) => !TERMINAL_STAGES.includes(s.key));

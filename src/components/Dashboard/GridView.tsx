@@ -1,27 +1,30 @@
 import type { JobApplication, BoardView } from "@/lib/api";
-import { STAGES } from "@/lib/api";
+import type { Stage } from "@/lib/constants";
+import type { StageDragState } from "@/hooks/useStageDragAndDrop";
 import StageSection from "./StageSection";
 
 export default function GridView({
   visibleStages,
   board,
   onCardClick,
-  draggingAppId,
+  dragState,
   handleDragStart,
   handleDragEnd,
   handleColumnDragEnter,
   handleColumnDragLeave,
   handleColumnDragOver,
   handleColumnDrop,
-  style,
-  dragState
 }: {
   visibleStages: Stage[];
   board: BoardView;
-  handleCardClick: (id: string) => void;
-  isOver: boolean;
-  draggingAppId: string | null;
-  style?: React.CSSProperties;
+  onCardClick: (id: string) => void;
+  dragState: StageDragState;
+  handleDragStart: (e: React.DragEvent, appId: string, fromStage: string) => void;
+  handleDragEnd: () => void;
+  handleColumnDragEnter: (stageKey: string) => void;
+  handleColumnDragLeave: (stageKey: string) => void;
+  handleColumnDragOver: (e: React.DragEvent) => void;
+  handleColumnDrop: (e: React.DragEvent, toStage: string) => void;
 }) {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-3 items-start">

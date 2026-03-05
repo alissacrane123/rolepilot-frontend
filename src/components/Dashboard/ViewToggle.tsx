@@ -1,4 +1,3 @@
-import type { ViewMode } from "@/lib/constants";
 import { BoardViewIcon, ListViewIcon } from "@/components/icons";
 
 export default function ViewToggle({
