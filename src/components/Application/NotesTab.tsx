@@ -4,35 +4,34 @@ import { Button } from "@/components/ui/button";
 import NotesList from "../Notes/NotesList";
 import { useCreateNoteMutation, useGetNotesQuery } from "@/hooks/useApi";
 import NoteEditorView from "../Notes/NoteEditorView";
+import type { NotesTabProps } from "./types";
 
-export default function NotesTab({
+export function NotesTab({
   applicationId,
   initialNoteId,
   onActiveNoteChange,
-}: {
-  applicationId: string;
-  initialNoteId?: string;
-  onActiveNoteChange?: (noteId: string | undefined) => void;
-}) {
-  const { data: notes = [], isLoading: loading } =
-    useGetNotesQuery(applicationId);
+}: NotesTabProps) {
+  const { data: notes = [], isLoading } = useGetNotesQuery(applicationId);
   const createNoteMutation = useCreateNoteMutation(applicationId);
 
   const [activeNote, setActiveNoteState] = useState<Note | null>(null);
-  const [restoredFromHash, setRestoredFromHash] = useState(false);
+  const [hasRestoredFromHash, setHasRestoredFromHash] = useState(false);
 
   useEffect(() => {
-    if (!restoredFromHash && initialNoteId && notes.length > 0) {
+    if (!hasRestoredFromHash && initialNoteId && notes.length > 0) {
       const found = notes.find((n) => n.id === initialNoteId);
       if (found) setActiveNoteState(found);
-      setRestoredFromHash(true);
+      setHasRestoredFromHash(true);
     }
-  }, [notes, initialNoteId, restoredFromHash]);
+  }, [notes, initialNoteId, hasRestoredFromHash]);
 
-  const setActiveNote = useCallback((note: Note | null) => {
-    setActiveNoteState(note);
-    onActiveNoteChange?.(note?.id);
-  }, [onActiveNoteChange]);
+  const setActiveNote = useCallback(
+    (note: Note | null) => {
+      setActiveNoteState(note);
+      onActiveNoteChange?.(note?.id);
+    },
+    [onActiveNoteChange],
+  );
 
   const handleCreate = useCallback(async () => {
     try {
@@ -44,17 +43,25 @@ export default function NotesTab({
       if (data) {
         setActiveNote(data);
       }
-    } catch (err) {
-      console.error("Failed to create note:", err);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Unknown error creating note";
+      throw new Error(message);
     }
-  }, [createNoteMutation, applicationId]);
+  }, [createNoteMutation, applicationId, setActiveNote]);
 
-  const handleNoteClick = useCallback((note: Note) => {
-    setActiveNote(note);
-  }, []);
+  const handleNoteClick = useCallback(
+    (note: Note) => {
+      setActiveNote(note);
+    },
+    [setActiveNote],
+  );
 
-  // Empty state
-  if (loading || notes.length === 0) {
+  const handleBack = useCallback(() => {
+    setActiveNote(null);
+  }, [setActiveNote]);
+
+  if (isLoading || notes.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <div className="w-16 h-16 rounded-2xl bg-white/[0.04] flex items-center justify-center mb-4">
@@ -88,11 +95,10 @@ export default function NotesTab({
         />
       )}
       {activeNote && (
-        <NoteEditorView
-          note={activeNote}
-          handleBack={() => setActiveNote(null)}
-        />
+        <NoteEditorView note={activeNote} handleBack={handleBack} />
       )}
     </div>
   );
 }
+
+export default NotesTab;

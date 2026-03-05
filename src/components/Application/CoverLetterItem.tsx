@@ -1,71 +1,46 @@
-import type { CoverLetter } from "@/lib/api";
 import { formatDateTime } from "@/lib/dateUtils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { VStack } from "../ui/stacks";
 import { CopyCheckIcon, CopyIcon, DownloadIcon } from "lucide-react";
-import jsPDF from "jspdf";
+import { downloadCoverLetterPDF } from "./utils";
+import type { CoverLetterItemProps } from "./types";
 
-export default function CoverLetterItem({
+export function CoverLetterItem({
   letter,
   companyName,
-}: {
-  letter: CoverLetter;
-  companyName: string;
-}) {
-  const [copied, setCopied] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+}: CoverLetterItemProps) {
+  const [isCopied, setIsCopied] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCopy = () => {
     if (!letter) return;
-    setCopied(true);
+    setIsCopied(true);
     navigator.clipboard.writeText(letter.content);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   const handleDownloadPDF = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (!letter) return;
-    const doc = new jsPDF("p", "in", "letter");
-    const margin = 1;
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const maxWidth = pageWidth - margin * 2;
-    const lineHeight = 0.22;
+    downloadCoverLetterPDF({
+      content: letter.content,
+      companyName,
+      version: letter.version,
+    });
+  };
 
-    doc.setFont("helvetica");
-    doc.setFontSize(11);
-
-    const paragraphs = letter.content.split("\n");
-    let y = margin;
-
-    for (const paragraph of paragraphs) {
-      if (paragraph.trim() === "") {
-        y += lineHeight;
-        continue;
-      }
-      const lines = doc.splitTextToSize(paragraph.trim(), maxWidth);
-      for (const line of lines) {
-        if (y > pageHeight - margin) {
-          doc.addPage();
-          y = margin;
-        }
-        doc.text(line, margin, y);
-        y += lineHeight;
-      }
-    }
-
-    const filename = `cover-letter-${(companyName || "company").toLowerCase().replace(/\s+/g, "-")}-v${letter.version}.pdf`;
-    doc.save(filename);
+  const handleToggleExpand = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
     <VStack
-      className={`hover:border-indigo-500/40 cursor-pointer gap-3 h-full rounded-xl border overflow-hidden animate-fade-in-up transition-all duration-200 border-white/[0.15] bg-white/[0.015] p-5`}
+      className="hover:border-indigo-500/40 cursor-pointer gap-3 h-full rounded-xl border overflow-hidden animate-fade-in-up transition-all duration-200 border-white/[0.15] bg-white/[0.015] p-5"
     >
       <div
-        onClick={() => setExpanded(!expanded)}
+        onClick={handleToggleExpand}
         className="flex items-center justify-between border-[#1e1e2e]"
       >
         <div className="flex items-center gap-3">
@@ -90,9 +65,9 @@ export default function CoverLetterItem({
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className={`text-white/40 hover:text-slate-200 hover:bg-white/[0.08] text-xs ${copied ? "text-green-400 hover:text-green-400" : ""}`}
+            className={`text-white/40 hover:text-slate-200 hover:bg-white/[0.08] text-xs ${isCopied ? "text-green-400 hover:text-green-400" : ""}`}
           >
-            {copied ? <CopyCheckIcon /> : <CopyIcon />}
+            {isCopied ? <CopyCheckIcon /> : <CopyIcon />}
           </Button>
           <Button
             variant="ghost"
@@ -106,15 +81,17 @@ export default function CoverLetterItem({
       </div>
 
       <div
-        className={` ${expanded ? "" : "max-h-[150px] overflow-scroll scrollbar-hide"}`}
+        className={isExpanded ? "" : "max-h-[150px] overflow-scroll scrollbar-hide"}
       >
         <div className="text-sm text-slate-300 leading-7 whitespace-pre-wrap max-w-2xl">
           {letter.content}
         </div>
       </div>
-      {!expanded && (
+      {!isExpanded && (
         <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#0a0a0f]/90 to-transparent pointer-events-none" />
       )}
     </VStack>
   );
 }
+
+export default CoverLetterItem;

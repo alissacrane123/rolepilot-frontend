@@ -1,8 +1,8 @@
-import type { JobApplication } from "@/lib/api";
-import SummaryCards from "./SummaryCards";
-import SkillsSection from "./SkillsSection";
+import { SummaryCards } from "./SummaryCards";
+import { SkillsSection } from "./SkillsSection";
+import type { ApplicationProps } from "./types";
 
-export default function OverviewTab({ app }: { app: JobApplication }) {
+export function OverviewTab({ app }: ApplicationProps) {
   return (
     <div className="space-y-5 animate-fade-in-up">
       <SummaryCards app={app} />
@@ -23,3 +23,5 @@ export default function OverviewTab({ app }: { app: JobApplication }) {
     </div>
   );
 }
+
+export default OverviewTab;

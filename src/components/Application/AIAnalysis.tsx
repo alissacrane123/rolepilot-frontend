@@ -1,15 +1,7 @@
-import type { JobApplication } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { ApplicationProps, AnalysisCardProps } from "./types";
 
-function AnalysisCard({
-  title,
-  items,
-  color,
-}: {
-  title: string;
-  items: string[];
-  color: string;
-}) {
+function AnalysisCard({ title, items, color }: AnalysisCardProps) {
   if (!items?.length) return null;
   return (
     <Card className="bg-[#0a0a0f] border-[#1e1e2e]">
@@ -30,7 +22,7 @@ function AnalysisCard({
   );
 }
 
-export default function AIAnalysis({ app }: { app: JobApplication }) {
+export function AIAnalysis({ app }: ApplicationProps) {
   const hasAnalysis =
     app.matching_strengths?.length > 0 ||
     app.potential_gaps?.length > 0 ||
@@ -67,3 +59,5 @@ export default function AIAnalysis({ app }: { app: JobApplication }) {
     </div>
   );
 }
+
+export default AIAnalysis;

@@ -11,11 +11,12 @@ import useResizablePanel from "@/hooks/useResizablePanel";
 import ResizeHandle from "@/components/ui/ResizeHandle";
 import TaskRow, { PRIORITY_COLORS } from "./TaskRow";
 import DetailModal from "@/components/Todos/DetailModal";
-import { ChevronRightIcon, ChevronLeftIcon } from "lucide-react";
+import { ChevronRightIcon, ChevronLeftIcon, MenuIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 const SIDEBAR_DEFAULT = 300;
-const SIDEBAR_MIN = 220;
-const SIDEBAR_MAX = 480;
+const SIDEBAR_MIN = 50;
+const SIDEBAR_MAX = 900;
 const COLLAPSE_THRESHOLD = 140;
 const COLLAPSED_WIDTH = 44;
 
@@ -105,7 +106,6 @@ export default function TasksSidebar() {
       <ResizeHandle
         onPointerDown={handlePointerDown}
         isDragging={isDragging}
-        disabled={collapsed}
       />
       {/* Header */}
       <div
@@ -114,7 +114,7 @@ export default function TasksSidebar() {
         } `}
       >
         <div
-          className={`flex items-center gap-2 transition-all duration-200 whitespace-nowrap overflow-hidden ${
+          className={`flex items-center gap-1 transition-all duration-200 whitespace-nowrap overflow-hidden ${
             collapsed
               ? "opacity-0 max-w-0 -translate-x-2"
               : "opacity-100 max-w-[200px] translate-x-0 delay-100"
@@ -126,6 +126,18 @@ export default function TasksSidebar() {
           <span className="text-[10px] bg-indigo-500/20 text-indigo-400 px-1.5 py-px rounded-[10px] font-semibold">
             {pending.length} pending
           </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setCollapsed(!collapsed)}
+          className="ml-0"
+        >
+          <MenuIcon
+            width="14"
+            height="14"
+            className="text-slate-500"
+          />
+        </Button>
         </div>
       </div>
 

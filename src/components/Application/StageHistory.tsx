@@ -1,9 +1,9 @@
-import type { JobApplication } from "@/lib/api";
 import { STAGE_MAP } from "@/lib/api";
 import { formatDateTime } from "@/lib/dateUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { ApplicationProps } from "./types";
 
-export default function StageHistory({ app }: { app: JobApplication }) {
+export function StageHistory({ app }: ApplicationProps) {
   if (!app.stage_history || app.stage_history.length === 0) return null;
 
   return (
@@ -44,3 +44,5 @@ export default function StageHistory({ app }: { app: JobApplication }) {
     </Card>
   );
 }
+
+export default StageHistory;

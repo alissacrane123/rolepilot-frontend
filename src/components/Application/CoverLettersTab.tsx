@@ -1,52 +1,34 @@
-import type { JobApplication } from "@/lib/api";
 import { useState } from "react";
-import { COVER_LETTER_TONES } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   useGenerateCoverLetterMutation,
   useGetCoverLettersQuery,
 } from "@/hooks/useApi";
 import ErrorMessage from "@/components/common/ErrorMessage";
-import CoverLetterItem from "./CoverLetterItem";
+import { CoverLetterItem } from "./CoverLetterItem";
+import { ToneSelector } from "./ToneSelector";
+import type { CoverLettersTabProps } from "./types";
 
-export default function CoverLettersTab({
-  app,
-  companyName,
-}: {
-  app: JobApplication;
-  companyName?: string;
-}) {
+export function CoverLettersTab({ app, companyName }: CoverLettersTabProps) {
   const applicationId = app.id;
   const [tone, setTone] = useState("professional");
-  const [generating, setGenerating] = useState(false);
-  const [error, setError] = useState("");
 
-  const { data: letters = [], isLoading: loading } =
+  const { data: letters = [], isLoading } =
     useGetCoverLettersQuery(applicationId);
-  const generateCoverLetterMutation =
-    useGenerateCoverLetterMutation(applicationId);
+  const mutation = useGenerateCoverLetterMutation(applicationId);
 
   const handleGenerate = async () => {
-    setGenerating(true);
-    setError("");
     try {
-      await generateCoverLetterMutation.mutateAsync({ tone });
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setGenerating(false);
+      await mutation.mutateAsync({ tone });
+    } catch {
+      // error surfaced via mutation.error
     }
   };
 
-  // Empty state — no letters yet
-  if (!loading && letters.length === 0 && !generating) {
+  const isGenerating = mutation.isPending;
+  const errorMessage = (mutation.error as Error | null)?.message ?? null;
+
+  if (!isLoading && letters.length === 0 && !isGenerating) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-4">
@@ -60,74 +42,47 @@ export default function CoverLettersTab({
           your resume. Generate multiple versions with different tones.
         </p>
         <div className="flex items-center gap-3">
-          <Select value={tone} onValueChange={setTone}>
-            <SelectTrigger className="w-[160px] bg-white/[0.04] border-[#1e1e2e] text-slate-200">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
-              {COVER_LETTER_TONES.map((t) => (
-                <SelectItem
-                  key={t.value}
-                  value={t.value}
-                  className="text-slate-200"
-                >
-                  {t.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <ToneSelector
+            value={tone}
+            onChange={setTone}
+            className="w-[160px]"
+          />
           <Button
             onClick={handleGenerate}
             variant="primary"
-            disabled={generating}
+            disabled={isGenerating}
           >
-            {generating ? "Generating..." : "Generate Cover Letter"}
+            {isGenerating ? "Generating..." : "Generate Cover Letter"}
           </Button>
         </div>
-        {error && (
-          <div className="mt-4">
-            <ErrorMessage message={error} />
-          </div>
-        )}
+        <ErrorMessage message={errorMessage} />
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {/* Top bar: version selector + actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Select value={tone} onValueChange={setTone}>
-            <SelectTrigger className="w-[140px] bg-white/[0.04] border-[#1e1e2e] text-slate-200 h-8 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
-              {COVER_LETTER_TONES.map((t) => (
-                <SelectItem
-                  key={t.value}
-                  value={t.value}
-                  className="text-slate-200"
-                >
-                  {t.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <ToneSelector
+            value={tone}
+            onChange={setTone}
+            className="w-[140px] h-8 text-xs"
+          />
           <Button
             onClick={handleGenerate}
             size="sm"
             variant="primary"
             className="text-xs h-8"
-            disabled={generating}
+            disabled={isGenerating}
           >
-            {generating ? "Generating..." : "+ New Version"}
+            {isGenerating ? "Generating..." : "+ New Version"}
           </Button>
         </div>
       </div>
 
-      <ErrorMessage message={error} />
-      {generating && (
+      <ErrorMessage message={errorMessage} />
+      {isGenerating && (
         <div className="flex flex-col items-center justify-center py-10">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
@@ -146,7 +101,6 @@ export default function CoverLettersTab({
         </div>
       )}
 
-      {/* Cover letter content */}
       {letters?.map((letter) => (
         <CoverLetterItem
           key={letter.id}
@@ -157,3 +111,5 @@ export default function CoverLettersTab({
     </div>
   );
 }
+
+export default CoverLettersTab;

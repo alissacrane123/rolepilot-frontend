@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { type JobApplication, STAGES } from "@/lib/api";
+import { STAGES } from "@/lib/api";
+import { TERMINAL_STAGES } from "@/lib/constants";
 import { useUpdateStageMutation } from "@/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,17 +20,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import ErrorMessage from "@/components/common/ErrorMessage";
+import type { MoveStageDialogProps } from "./types";
 
-const TERMINAL_STAGES = ["accepted", "rejected", "withdrawn"];
-
-export default function MoveStageDialog({
-  app,
-  onMoved,
-}: {
-  app: JobApplication;
-  onMoved: () => void;
-}) {
-  const [open, setOpen] = useState(false);
+export function MoveStageDialog({ app, onMoved }: MoveStageDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [toStage, setToStage] = useState("");
   const [notes, setNotes] = useState("");
   const mutation = useUpdateStageMutation();
@@ -48,7 +42,7 @@ export default function MoveStageDialog({
         toStage,
         notes,
       });
-      setOpen(false);
+      setIsOpen(false);
       setToStage("");
       setNotes("");
       onMoved();
@@ -57,8 +51,12 @@ export default function MoveStageDialog({
     }
   };
 
+  const handleNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNotes(e.target.value);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="primary">Move Stage</Button>
       </DialogTrigger>
@@ -90,7 +88,7 @@ export default function MoveStageDialog({
             <Label className="text-slate-300">Notes</Label>
             <Textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={handleNotesChange}
               placeholder="Add interview notes, feedback, next steps..."
               className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 min-h-[80px]"
             />
@@ -109,3 +107,5 @@ export default function MoveStageDialog({
     </Dialog>
   );
 }
+
+export default MoveStageDialog;

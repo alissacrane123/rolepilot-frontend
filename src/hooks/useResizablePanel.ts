@@ -45,10 +45,11 @@ export default function useResizablePanel({
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      if (collapsed) return;
       e.preventDefault();
       startX.current = e.clientX;
-      startW.current = width;
+      // When collapsed, treat the start width as 0 so any rightward
+      // drag produces a positive width from scratch.
+      startW.current = collapsed ? 0 : width;
       setIsDragging(true);
 
       const onPointerMove = (ev: PointerEvent) => {
@@ -56,14 +57,15 @@ export default function useResizablePanel({
         const next = startW.current + delta;
 
         if (next < collapseThreshold) {
-          widthBeforeCollapse.current = startW.current;
+          if (!collapsed) widthBeforeCollapse.current = width;
           setCollapsedRaw(true);
           onCollapseChange?.(true);
-          setIsDragging(false);
-          cleanup();
           return;
         }
 
+        // Crossed back above the threshold -- uncollapse
+        setCollapsedRaw(false);
+        onCollapseChange?.(false);
         setWidth(Math.min(maxWidth, Math.max(minWidth, next)));
       };
 

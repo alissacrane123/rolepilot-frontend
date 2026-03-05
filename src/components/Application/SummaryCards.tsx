@@ -1,7 +1,7 @@
-import type { JobApplication } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { ApplicationProps } from "./types";
 
-export default function SummaryCards({ app }: { app: JobApplication }) {
+export function SummaryCards({ app }: ApplicationProps) {
   if (!app.company_summary && !app.role_summary) return null;
 
   return (
@@ -37,3 +37,5 @@ export default function SummaryCards({ app }: { app: JobApplication }) {
     </div>
   );
 }
+
+export default SummaryCards;

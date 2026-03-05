@@ -1,8 +1,8 @@
-import type { JobApplication } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import SkillBadges from "./SkillBadges";
+import { SkillBadges } from "./SkillBadges";
+import type { ApplicationProps } from "./types";
 
-export default function SkillsSection({ app }: { app: JobApplication }) {
+export function SkillsSection({ app }: ApplicationProps) {
   const hasAny =
     app.required_skills?.length > 0 ||
     app.nice_to_have_skills?.length > 0 ||
@@ -51,3 +51,5 @@ export default function SkillsSection({ app }: { app: JobApplication }) {
     </div>
   );
 }
+
+export default SkillsSection;

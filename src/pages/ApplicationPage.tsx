@@ -10,13 +10,13 @@ import PageContainer from "@/components/common/PageContainer";
 import Content from "@/components/common/Content";
 import BackButton from "@/components/common/BackButton";
 import LoadingScreen from "@/components/common/LoadingScreen";
-import ApplicationHero from "@/components/Application/ApplicationHero";
-import OverviewTab from "@/components/Application/OverviewTab";
-import MeetingsTab from "@/components/Application/MeetingsTab";
-import AIAnalysis from "@/components/Application/AIAnalysis";
-import StageHistory from "@/components/Application/StageHistory";
-import CoverLettersTab from "@/components/Application/CoverLettersTab";
-import NotesTab from "@/components/Application/NotesTab";
+import { ApplicationHero } from "@/components/Application/ApplicationHero";
+import { OverviewTab } from "@/components/Application/OverviewTab";
+import { MeetingsTab } from "@/components/Application/MeetingsTab";
+import { AIAnalysis } from "@/components/Application/AIAnalysis";
+import { StageHistory } from "@/components/Application/StageHistory";
+import { CoverLettersTab } from "@/components/Application/CoverLettersTab";
+import { NotesTab } from "@/components/Application/NotesTab";
 
 type Tab = "overview" | "meetings" | "analysis" | "cover-letters" | "notes";
 

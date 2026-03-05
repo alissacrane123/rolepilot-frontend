@@ -1,7 +1,8 @@
 import { TERMINAL_STAGES } from "@/lib/constants";
 import { STAGES } from "@/lib/api";
+import type { StagePipelineProps } from "./types";
 
-export function StagePipeline({ currentStage }: { currentStage: string }) {
+export function StagePipeline({ currentStage }: StagePipelineProps) {
   const mainStages = STAGES.filter((s) => !TERMINAL_STAGES.includes(s.key));
   const currentIdx = mainStages.findIndex((s) => s.key === currentStage);
 

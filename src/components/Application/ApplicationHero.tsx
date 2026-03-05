@@ -1,74 +1,30 @@
-import type { JobApplication } from "@/lib/api";
 import { STAGE_MAP } from "@/lib/api";
 import { formatDate } from "@/lib/dateUtils";
 import { Badge } from "@/components/ui/badge";
-import MoveStageDialog from "./MoveStageDialog";
+import { MoveStageDialog } from "./MoveStageDialog";
 import { StagePipeline } from "./StageProgressBar";
+import { MetaRow } from "./MetaRow";
 import { HStack } from "../ui/stacks";
 import { ExternalLinkIcon } from "lucide-react";
+import type { ApplicationHeroProps } from "./types";
 
-function MetaRow({
-  items,
-  tags,
-}: {
-  items: (string | undefined | null)[];
-  tags: (string | undefined | null)[];
-}) {
-  const visibleItems = items.filter(
-    (item) => item && item !== "not_specified",
-  ) as string[];
-  
-  const visibleTags = tags.filter(Boolean) as string[];
-
-  return (
-    <div className="flex items-center flex-wrap gap-2.5 pb-5 border-b border-white/[0.05]">
-      {visibleItems.map((item, i) => (
-        <span key={i} className="contents">
-          {i > 0 && <span className="w-px h-3 bg-white/[0.08]" />}
-          <span className="text-xs text-white/40 font-medium">{item}</span>
-        </span>
-      ))}
-
-      {visibleTags.length > 0 && (
-        <div className="flex gap-1 ml-auto">
-          {visibleTags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] font-medium text-white/40 bg-white/[0.04] px-2 py-0.5 rounded uppercase tracking-wide"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function ApplicationHero({
-  app,
-  onMoved,
-}: {
-  app: JobApplication;
-  onMoved: () => void;
-}) {
+export function ApplicationHero({ app, onMoved }: ApplicationHeroProps) {
   const stage = STAGE_MAP[app.current_stage];
   const initial = (app.company_name || "?")[0].toUpperCase();
-
   const appliedDate = formatDate(app.applied_at);
+  const stageColor = stage?.color ?? "#6366f1";
 
   return (
     <div className="rounded-[14px] border border-white/[0.15] bg-white/[0.015] p-7 animate-fade-in-up">
-      {/* Top row: identity + move stage */}
       <div className="flex justify-between items-start mb-5">
         <div className="flex gap-4 items-start">
           <div
             className="w-12 h-12 rounded-xl bg-white/[0.04] border-[1.5px] flex items-center justify-center shrink-0"
-            style={{ borderColor: `${stage?.color ?? "#6366f1"}33` }}
+            style={{ borderColor: `${stageColor}33` }}
           >
             <span
               className="text-xl font-extrabold"
-              style={{ color: stage?.color ?? "#6366f1" }}
+              style={{ color: stageColor }}
             >
               {initial}
             </span>
@@ -82,7 +38,7 @@ export default function ApplicationHero({
               >
                 <span
                   className="w-[5px] h-[5px] rounded-full"
-                  style={{ background: stage?.color ?? "#6366f1" }}
+                  style={{ background: stageColor }}
                 />
                 {stage?.label ?? app.current_stage}
               </Badge>
@@ -94,18 +50,7 @@ export default function ApplicationHero({
               )}
 
               {app.match_score != null && app.match_score > 0 && (
-                <Badge
-                  variant="outline"
-                  className={`text-[11px] font-semibold font-mono ${
-                    app.match_score >= 75
-                      ? "border-emerald-500/15 bg-emerald-500/[0.08] text-emerald-400"
-                      : app.match_score >= 50
-                        ? "border-amber-500/15 bg-amber-500/[0.08] text-amber-400"
-                        : "border-[#1e1e2e] bg-white/[0.04] text-white/40"
-                  }`}
-                >
-                  {app.match_score}% match
-                </Badge>
+                <MatchScoreBadge score={app.match_score} />
               )}
             </div>
 
@@ -131,7 +76,6 @@ export default function ApplicationHero({
         <MoveStageDialog app={app} onMoved={onMoved} />
       </div>
 
-      {/* Meta row */}
       <MetaRow
         items={[app.salary_range, app.location, `Applied ${appliedDate}`]}
         tags={[
@@ -142,8 +86,27 @@ export default function ApplicationHero({
         ]}
       />
 
-      {/* Stage pipeline */}
       <StagePipeline currentStage={app.current_stage} />
     </div>
   );
 }
+
+function MatchScoreBadge({ score }: { score: number }) {
+  const className =
+    score >= 75
+      ? "border-emerald-500/15 bg-emerald-500/[0.08] text-emerald-400"
+      : score >= 50
+        ? "border-amber-500/15 bg-amber-500/[0.08] text-amber-400"
+        : "border-[#1e1e2e] bg-white/[0.04] text-white/40";
+
+  return (
+    <Badge
+      variant="outline"
+      className={`text-[11px] font-semibold font-mono ${className}`}
+    >
+      {score}% match
+    </Badge>
+  );
+}
+
+export default ApplicationHero;
