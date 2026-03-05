@@ -12,6 +12,7 @@ import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
 import ApplicationsSection from "@/components/Dashboard/ApplicationsSection";
 import EmptyState from "@/components/common/EmptyState";
 import LoadingScreen from "@/components/common/LoadingScreen";
+import TodosWidget from "@/components/Todos/TodosWidget";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ export default function DashboardPage() {
 
   return (
     <Content>
+      <TodosWidget />
       <ApplicationsSection
         totalApps={totalApps}
         view={view}

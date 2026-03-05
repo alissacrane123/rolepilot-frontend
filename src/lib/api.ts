@@ -335,3 +335,15 @@ export async function deleteNote(noteId: string) {
     method: "DELETE",
   });
 }
+
+export const queryKeys = {
+  board: ["board"] as const,
+  application: (id: string) => ["application", id] as const,
+  applications: ["applications"] as const,
+  meetings: (applicationId: string) => ["meetings", applicationId] as const,
+  upcomingMeetings: ["meetings", "upcoming"] as const,
+  profile: ["profile"] as const,
+  coverLetters: (applicationId: string) =>
+    ["cover-letters", applicationId] as const,
+  notes: (applicationId: string) => ["notes", applicationId] as const,
+};
