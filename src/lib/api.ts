@@ -22,7 +22,8 @@ export type {
   Note,
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+import { API_BASE } from "@/config";
+
 if (!API_BASE) {
   throw new Error("VITE_API_BASE is not set in environment");
 }

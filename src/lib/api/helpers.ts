@@ -21,8 +21,8 @@ export type {
   CoverLetter,
   Note,
 };
+import { API_BASE } from "@/config";
 
-const API_BASE = import.meta.env.VITE_API_BASE;
 if (!API_BASE) {
   throw new Error("VITE_API_BASE is not set in environment");
 }
@@ -87,7 +87,7 @@ export const queryKeys = {
   notes: (applicationId: string) => ["notes", applicationId] as const,
   todoGroups: ["todo-groups"] as const,
   todos: (groupId: string) => ["todos", groupId] as const,
-  
+
   todo: (todoId: string) => ["todo", todoId] as const,
   todoReminders: (todoId: string) => ["todo-reminders", todoId] as const,
   todoNotes: (todoId: string) => ["todo-notes", todoId] as const,
