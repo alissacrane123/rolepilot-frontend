@@ -23,22 +23,22 @@ export default function TodosDaySelector({
           <button
             key={date}
             onClick={() => setSelectedDate(date)}
-            className={`flex-1 min-w-[60px] flex flex-col items-center gap-1 py-2.5 rounded-xl border transition-all ${isActive ? "border-indigo-500/30 bg-zinc-900" : "border-transparent hover:bg-white/[0.02]"}`}
+            className={`flex-1 min-w-[60px] flex flex-col items-center gap-1 py-2.5 rounded-[10px] border transition-all duration-200 ${isActive ? "border-indigo-500/30 bg-white/[0.04]" : "border-transparent hover:bg-white/[0.02]"}`}
           >
             <span
-              className={`text-[10px] font-mono font-semibold tracking-widest ${isActive ? "text-indigo-400" : "text-zinc-700"}`}
+              className={`text-[10px] font-semibold tracking-widest ${isActive ? "text-indigo-400" : "text-white/20"}`}
             >
               {d
                 .toLocaleDateString("en-US", { weekday: "short" })
                 .toUpperCase()}
             </span>
             <span
-              className={`text-lg font-bold tracking-tight ${isActive ? "text-zinc-100" : isToday ? "text-zinc-300" : "text-zinc-600"}`}
+              className={`text-lg font-bold tracking-tight ${isActive ? "text-white" : isToday ? "text-white/70" : "text-white/25"}`}
             >
               {d.getDate()}
             </span>
             <span
-              className={`w-1.5 h-1.5 rounded-full ${hasTodos ? (isActive ? "bg-indigo-500" : "bg-zinc-700") : "bg-transparent"}`}
+              className={`w-1.5 h-1.5 rounded-full ${hasTodos ? (isActive ? "bg-indigo-500" : "bg-white/20") : "bg-transparent"}`}
             />
           </button>
         );

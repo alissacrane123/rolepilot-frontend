@@ -22,11 +22,11 @@ export function formatDate(dateStr: string) {
   });
 }
 
-export function getWeekDates() {
+export function getWeekDates(numDays = 7) {
   const dates: string[] = [];
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < numDays; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() + i);
     dates.push(d.toISOString().split("T")[0]);

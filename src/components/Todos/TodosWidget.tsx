@@ -64,7 +64,7 @@ export default function TasksSection() {
   const pending = todos.filter((t) => !t.completed);
   const done = todos.filter((t) => t.completed);
 
-  const weekDates = getWeekDates();
+  const weekDates = getWeekDates(10);
 
   return (
     <div>
@@ -91,21 +91,21 @@ export default function TasksSection() {
       )}
 
       {/* list */}
-      <div className="bg-zinc-950 border border-zinc-900 rounded-2xl p-2.5 mb-6">
+      <div className="bg-white/[0.02] border border-white/[0.06] bg-white/[0.015] rounded-[10px] py-2.5 mb-6 min-h-[156px]">
         <div
-          className={`px-1 pb-2 ${pending.length || done.length ? "border-b border-zinc-900" : ""}`}
+          className={`px-2.5 pb-3 ${pending.length || done.length ? "border-b border-white/[0.06] bg-transparent " : ""}`}
         >
           <QuickAdd onAdd={addTodo} />
         </div>
 
         {loading && (
-          <p className="py-8 text-center text-zinc-800 text-xs font-mono">
+          <p className="py-8 text-center text-white/20 text-xs">
             Loading...
           </p>
         )}
 
         {!loading && pending.length === 0 && done.length === 0 && (
-          <p className="py-8 text-center text-zinc-800 text-xs font-mono">
+          <p className="py-8 text-center text-white/20 text-xs">
             No tasks · hit enter to add one
           </p>
         )}
@@ -124,8 +124,8 @@ export default function TasksSection() {
         )}
 
         {!loading && done.length > 0 && (
-          <div className="border-t border-zinc-900 mt-2 pt-2">
-            <p className="px-3.5 py-1 text-[10px] font-mono text-zinc-800 tracking-widest uppercase">
+          <div className="border-t border-white/[0.06] mt-2 pt-2">
+            <p className="px-3.5 py-1 text-[10px] font-medium text-white/30 uppercase tracking-wider">
               Completed · {done.length}
             </p>
             {done.map((todo) => (

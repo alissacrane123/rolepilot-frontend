@@ -64,7 +64,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <Content>
+    <Content className="flex flex-col gap-20">
       <TodosWidget />
       <ApplicationsSection
         totalApps={totalApps}
