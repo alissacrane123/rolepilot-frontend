@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import InputLabel from "@/components/ui/InputLabel";
+import InputLabel from "@/components/common/InputLabel";
 import TimePicker from "@/components/ui/time-picker";
 import ErrorMessage from "@/components/ErrorMessage";
 import { extractDate, extractTime } from "@/lib/dateUtils";

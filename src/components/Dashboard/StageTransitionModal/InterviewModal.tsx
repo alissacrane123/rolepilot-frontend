@@ -4,8 +4,8 @@ import { useUpdateStageMutation } from "@/hooks/useApi";
 import TimePicker from "@/components/ui/time-picker";
 import TransitionModalShell from "./TransitionModalShell";
 import { PhoneIcon } from "lucide-react";
-import InputField from "@/components/ui/InputField";
-import InputLabel from "@/components/ui/InputLabel";
+import InputField from "@/components/common/InputField";
+import InputLabel from "@/components/common/InputLabel";
 
 interface FormField {
   label: string;

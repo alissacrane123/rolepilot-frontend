@@ -1,6 +1,6 @@
-import { Input } from "./input";
-import InputLabel from "./InputLabel";
-import { Textarea } from "./textarea";
+import { Input } from "../ui/input";
+import InputLabel from "../common/InputLabel";
+import { Textarea } from "../ui/textarea";
 
 export default function InputField({
   label,

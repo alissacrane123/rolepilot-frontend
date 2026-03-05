@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import TimePicker from "@/components/ui/time-picker";
-import InputField from "@/components/ui/InputField";
-import InputLabel from "@/components/ui/InputLabel";
+import InputField from "@/components/common/InputField";
+import InputLabel from "@/components/common/InputLabel";
 
 import { VStack } from "@/components/ui/stacks";
 import type { CreateMeetingData } from "@/lib/api";

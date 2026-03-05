@@ -13,12 +13,12 @@ import Content from "@/components/Content";
 import ProfileHero from "@/components/Profile/ProfileHero";
 import { HStack, VStack } from "@/components/ui/stacks";
 import ProfileSection from "@/components/Profile/ProfileSection";
-import InputField from "@/components/ui/InputField";
+import InputField from "@/components/common/InputField";
 import SkillsInput from "@/components/Profile/SkillsInput";
 import ResumeForm from "@/components/Profile/ResumeForm";
-import InputLabel from "@/components/ui/InputLabel";
+import InputLabel from "@/components/common/InputLabel";
 import LocationsInput from "@/components/Profile/LocationsInput";
-import Grid from "@/components/ui/Grid";
+import Grid from "@/components/common/Grid";
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
