@@ -1,12 +1,9 @@
-import { useState, useRef, useEffect } from "react";
 import type { JobApplication } from "@/lib/api";
 import { STAGE_MAP } from "@/lib/api";
 import ApplicationCard from "./ApplicationCard";
-import { HStack } from "@/components/ui/stacks";
-import { TextHeadline } from "@/components/ui/text/TextHeadline";
-import { TextLabel1 } from "@/components/ui/text/TextLabel1";
+import { useState, useEffect, useRef } from "react";
 
-const COLLAPSED_MAX_HEIGHT = 420;
+const COLLAPSED_MAX_HEIGHT = 350;
 
 export default function StageSection({
   stageKey,
@@ -36,6 +33,7 @@ export default function StageSection({
   style?: React.CSSProperties;
 }) {
   const stage = STAGE_MAP[stageKey];
+
   const [expanded, setExpanded] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const [overflows, setOverflows] = useState(false);
@@ -46,9 +44,8 @@ export default function StageSection({
     setOverflows(el.scrollHeight > COLLAPSED_MAX_HEIGHT);
   }, [apps.length]);
 
-  if (!stage) return null;
-
   const showFade = !expanded && overflows;
+  if (!stage) return null;
 
   return (
     <div
@@ -56,24 +53,31 @@ export default function StageSection({
       onDragLeave={() => onDragLeave(stageKey)}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, stageKey)}
-      className={`h-full rounded-xl border overflow-hidden animate-fade-in-up transition-all duration-200 ${
-        isOver
-          ? "border-indigo-500/40 bg-indigo-500/[0.04] ring-1 ring-indigo-500/20"
-          : "border-white/[0.15] bg-white/[0.015]"
-      }`}
+      className={`w-full border border-[#1e1e2e] flex-col min-w-[240px] flex rounded-xl  overflow-hidden animate-fade-in-up bg-[#0a0a0f]  ${isOver ? "bg-indigo-500/[0.03]" : ""}`}
+      // className={`w-[240px] min-w-[240px] flex flex-col h-full overflow-y-auto animate-fade-in-up bg-[#0a0a0f] ${
+      //   !isLast ? "border-r border-[#1e1e2e]" : ""
+      // } ${isOver ? "bg-indigo-500/[0.03]" : ""}`}
       style={style}
     >
-      <HStack className="items-center gap-2 px-4 pt-3.5 pb-2.5 border-b border-white/[0.04]">
-        <div
-          className="w-1.5 h-1.5 rounded-full shrink-0"
-          style={{ background: stage.color }}
-        />
-        <TextHeadline className="text-xs font-semibold text-white/60 uppercase tracking-wider flex-1">
-          {stage.label}
-        </TextHeadline>
-        <TextLabel1 className="font-mono">{apps.length}</TextLabel1>
-      </HStack>
+      {/* Column header */}
+      <div className="px-3.5 pt-3.5 pb-2.5 sticky top-0 bg-[#0a0a0f] border-b border-[#131320] z-10 shrink-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-[7px]">
+            <span
+              className="w-[7px] h-[7px] rounded-full block shrink-0"
+              style={{ background: stage.color }}
+            />
+            <span className="text-[10px] font-extrabold text-slate-400 tracking-widest uppercase">
+              {stage.label}
+            </span>
+          </div>
+          <span className="text-[10px] text-slate-600 font-bold bg-white/[0.05] px-1.5 py-px rounded-lg">
+            {apps.length}
+          </span>
+        </div>
+      </div>
 
+      {/* Cards */}
       <div className="relative">
         <div
           ref={listRef}
@@ -84,7 +88,9 @@ export default function StageSection({
         >
           {apps.length === 0 && (
             <div className="flex items-center justify-center py-6">
-              <p className={`text-xs ${isOver ? "text-indigo-400/50" : "text-white/15"}`}>
+              <p
+                className={`text-xs ${isOver ? "text-indigo-400/50" : "text-white/15"}`}
+              >
                 {isOver ? "Drop here" : "No applications"}
               </p>
             </div>
@@ -102,12 +108,10 @@ export default function StageSection({
             />
           ))}
         </div>
-
         {showFade && (
           <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-zinc-950/90 to-transparent pointer-events-none" />
         )}
       </div>
-
       {overflows && (
         <button
           onClick={() => setExpanded((v) => !v)}

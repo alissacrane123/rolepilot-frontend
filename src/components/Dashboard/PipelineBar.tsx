@@ -12,7 +12,7 @@ export default function PipelineBar({
   onStageClick: (key: string | null) => void;
 }) {
   return (
-    <HStack className="gap-1.5 overflow-x-auto pb-1">
+    <HStack className="gap-1.5 overflow-x-auto pb-3.5">
       {STAGES.map((stage, i) => {
         const apps = (board[stage.key as keyof BoardView] ||
           []) as JobApplication[];
@@ -22,23 +22,20 @@ export default function PipelineBar({
           <button
             key={stage.key}
             onClick={() => onStageClick(isActive ? null : stage.key)}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg border whitespace-nowrap transition-all duration-200 animate-fade-in-up ${
-              isActive
-                ? "bg-indigo-500/[0.12] border-indigo-500/30"
-                : "bg-white/[0.02] border-white/[0.15] hover:bg-white/[0.04]"
-            }`}
-            style={{ animationDelay: `${i * 60}ms` }}
+            className="flex items-center gap-[5px] px-2.5 py-1 rounded-full border whitespace-nowrap transition-all duration-150 animate-fade-in-up text-[11px] font-semibold tracking-wide cursor-pointer"
+            style={{
+              animationDelay: `${i * 60}ms`,
+              background: isActive ? `${stage.color}22` : "rgba(255,255,255,0.03)",
+              borderColor: isActive ? `${stage.color}55` : "#1e1e2e",
+              color: isActive ? stage.color : "#64748b",
+            }}
           >
-            <div
-              className="w-[7px] h-[7px] rounded-full shrink-0"
+            <span
+              className="w-[5px] h-[5px] rounded-full shrink-0 inline-block"
               style={{ background: stage.color }}
             />
-            <span className="text-xs font-medium text-white/55">
-              {stage.label}
-            </span>
-            <span className="text-[11px] font-semibold text-white/80 font-mono bg-white/[0.06] px-1.5 py-0.5 rounded">
-              {apps.length}
-            </span>
+            {stage.label}
+            <span style={{ opacity: 0.7 }}>{apps.length}</span>
           </button>
         );
       })}

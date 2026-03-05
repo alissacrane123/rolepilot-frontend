@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { type BoardView, type JobApplication, STAGES } from "@/lib/api";
 import { useBoardQuery, queryKeys } from "@/hooks/useApi";
-import Content from "@/components/common/Content";
 import { StageTransitionModal } from "@/components/Dashboard/StageTransitionModal";
 import InterviewsSection from "@/components/Dashboard/InterviewsSection";
 import useStageDragAndDrop from "@/hooks/useStageDragAndDrop";
@@ -12,7 +11,7 @@ import { ALWAYS_VISIBLE_STAGES } from "@/lib/constants";
 import ApplicationsSection from "@/components/Dashboard/ApplicationsSection";
 import EmptyState from "@/components/common/EmptyState";
 import LoadingScreen from "@/components/common/LoadingScreen";
-import TodosWidget from "@/components/Todos/TodosWidget";
+import TasksSidebar from "@/components/Dashboard/TasksSidebar";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -64,25 +63,33 @@ export default function DashboardPage() {
   };
 
   return (
-    <Content className="flex flex-col gap-20">
-      <TodosWidget />
-      <ApplicationsSection
-        totalApps={totalApps}
-        view={view}
-        hanldeViewChange={hanldeViewChange}
-        invalidateBoard={invalidateBoard}
-        board={board}
-        activeStage={activeStage}
-        setActiveStage={setActiveStage}
-        handleCardClick={handleCardClick}
-        dragState={dragState}
-        dragAndDropProps={dragAndDropProps}
-        visibleStages={visibleStages}
-      />
+    <div className="flex h-[calc(100vh-56px)] overflow-hidden">
+      <TasksSidebar />
 
-      <div className="mt-20 pb-10 border-t border-white/[0.15]" />
+      {/* Main scrollable area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto p-6 flex flex-col gap-16">
+            <ApplicationsSection
+              totalApps={totalApps}
+              view={view}
+              hanldeViewChange={hanldeViewChange}
+              invalidateBoard={invalidateBoard}
+              board={board}
+              activeStage={activeStage}
+              setActiveStage={setActiveStage}
+              handleCardClick={handleCardClick}
+              dragState={dragState}
+              dragAndDropProps={dragAndDropProps}
+              visibleStages={visibleStages}
+            />
 
-      <InterviewsSection />
+            <div className="pb-10 border-t border-white/[0.15]" />
+
+            <InterviewsSection />
+          </div>
+        </div>
+      </div>
 
       {pendingTransition && (
         <StageTransitionModal
@@ -91,6 +98,6 @@ export default function DashboardPage() {
           onCancel={dragAndDropProps.handleTransitionCancel}
         />
       )}
-    </Content>
+    </div>
   );
 }

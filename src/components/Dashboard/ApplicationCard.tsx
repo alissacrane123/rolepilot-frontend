@@ -1,4 +1,5 @@
 import type { JobApplication } from "@/lib/api";
+import { STAGE_MAP } from "@/lib/api";
 import { formatDate } from "@/lib/dateUtils";
 
 export default function ApplicationCard({
@@ -19,6 +20,7 @@ export default function ApplicationCard({
   index: number;
 }) {
   const initial = (app.company_name || "?")[0].toUpperCase();
+  const stageColor = STAGE_MAP[stageKey]?.color ?? "#6366f1";
 
   return (
     <div
@@ -27,51 +29,61 @@ export default function ApplicationCard({
       onDragStart={(e) => onDragStart(e, app.id, stageKey)}
       onDragEnd={onDragEnd}
       onClick={onClick}
-      className={`animate-fade-in-up rounded-[10px] p-3.5 bg-white/[0.03] border border-white/[0.15] cursor-grab transition-all duration-200 select-none active:cursor-grabbing
-        ${isDragging ? "opacity-40 scale-[0.97]" : "hover:bg-white/[0.055] hover:border-indigo-500/25 hover:-translate-y-px"}`}
+      className={`animate-fade-in-up rounded-[10px] p-3 bg-[#0f0f1a] border border-[#1a1a2e] cursor-pointer transition-all duration-150 select-none
+        ${isDragging ? "opacity-40 scale-[0.97]" : "hover:bg-[#131320] hover:border-[#2d2d42] hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(0,0,0,0.3)]"}`}
     >
-      <div className="flex items-center gap-2.5 mb-2.5">
-        <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
-          <span className="text-[13px] font-bold text-indigo-400">
-            {initial}
+      {/* Company + date */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-1.5">
+          <div className="w-[22px] h-[22px] rounded-md flex items-center justify-center shrink-0 bg-indigo-600">
+            <span className="text-[10px] font-extrabold text-white">
+              {initial}
+            </span>
+          </div>
+          <span className="text-[11px] font-bold text-slate-300">
+            {app.company_name || "Unknown"}
           </span>
         </div>
-        <div className="flex flex-col flex-1 min-w-0">
-          <span className="text-xs font-semibold text-white/80 truncate tracking-tight">
-            {app.company_name || "Unknown Company"}
-          </span>
-          <span className="text-[11px] text-white/25">
-            {app.applied_at ? formatDate(app.applied_at) : ""}
-          </span>
-        </div>
+        <span className="text-[10px] text-slate-700">
+          {app.applied_at ? formatDate(app.applied_at) : ""}
+        </span>
       </div>
 
-      <h3 className="text-[13px] font-medium text-white/90 leading-snug mb-2 tracking-tight">
+      {/* Role */}
+      <p className="text-xs font-semibold text-slate-200 leading-snug mb-2 tracking-tight">
         {app.role_title || "Untitled Role"}
         {app.processing_status === "processing" && (
           <span className="ml-1.5 text-[11px] text-indigo-400 animate-pulse">
             analyzing...
           </span>
         )}
-      </h3>
+      </p>
 
-      <div className="flex flex-wrap gap-1 mb-2.5">
+      {/* Tags */}
+      <div className={`flex flex-wrap gap-1 ${app.salary_range ? "mb-2" : ""}`}>
         {app.remote_policy && app.remote_policy !== "not_specified" && (
-          <span className="text-[10px] font-medium text-white/40 bg-white/[0.04] px-2 py-0.5 rounded uppercase tracking-wide">
+          <span className="text-[9px] font-bold tracking-wide bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 rounded uppercase">
             {app.remote_policy}
           </span>
         )}
         {app.experience_level && (
-          <span className="text-[10px] font-medium text-white/40 bg-white/[0.04] px-2 py-0.5 rounded uppercase tracking-wide">
+          <span
+            className="text-[9px] font-bold tracking-wide px-1.5 py-0.5 rounded uppercase"
+            style={{
+              background: `${stageColor}18`,
+              color: stageColor,
+            }}
+          >
             {app.experience_level}
           </span>
         )}
       </div>
 
+      {/* Salary */}
       {app.salary_range && (
-        <div className="text-[11px] font-medium text-white/35 font-mono">
+        <p className="text-[10px] font-semibold text-emerald-400 tracking-tight">
           {app.salary_range}
-        </div>
+        </p>
       )}
     </div>
   );

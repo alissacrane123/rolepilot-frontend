@@ -27,7 +27,7 @@ export default function GridView({
   handleColumnDrop: (e: React.DragEvent, toStage: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-3 items-start">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3 items-start">
       {visibleStages.map((stage, i) => (
         <StageSection
           key={stage.key}
