@@ -1,16 +1,38 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { type Note } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import NotesList from "../Notes/NotesList";
 import { useCreateNoteMutation, useGetNotesQuery } from "@/hooks/useApi";
 import NoteEditorView from "../Notes/NoteEditorView";
 
-export default function NotesTab({ applicationId }: { applicationId: string }) {
+export default function NotesTab({
+  applicationId,
+  initialNoteId,
+  onActiveNoteChange,
+}: {
+  applicationId: string;
+  initialNoteId?: string;
+  onActiveNoteChange?: (noteId: string | undefined) => void;
+}) {
   const { data: notes = [], isLoading: loading } =
     useGetNotesQuery(applicationId);
   const createNoteMutation = useCreateNoteMutation(applicationId);
 
-  const [activeNote, setActiveNote] = useState<Note | null>(null);
+  const [activeNote, setActiveNoteState] = useState<Note | null>(null);
+  const [restoredFromHash, setRestoredFromHash] = useState(false);
+
+  useEffect(() => {
+    if (!restoredFromHash && initialNoteId && notes.length > 0) {
+      const found = notes.find((n) => n.id === initialNoteId);
+      if (found) setActiveNoteState(found);
+      setRestoredFromHash(true);
+    }
+  }, [notes, initialNoteId, restoredFromHash]);
+
+  const setActiveNote = useCallback((note: Note | null) => {
+    setActiveNoteState(note);
+    onActiveNoteChange?.(note?.id);
+  }, [onActiveNoteChange]);
 
   const handleCreate = useCallback(async () => {
     try {

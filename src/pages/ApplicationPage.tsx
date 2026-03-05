@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useApplicationQuery,
@@ -33,7 +33,23 @@ export default function ApplicationPage() {
   const queryClient = useQueryClient();
   const { data: app, isLoading: loading } = useApplicationQuery(id);
   const { data: meetings = [] } = useMeetingsQuery(id);
-  const [activeTab, setActiveTab] = useState<Tab>("overview");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const hashRaw = location.hash.replace("#", "");
+  const [hashTab, hashSubId] = hashRaw.split(":");
+  const tabFromHash = TAB_DEFS.find(t => t.key === hashTab)?.key;
+  const [activeTab, setActiveTabState] = useState<Tab>(tabFromHash ?? "overview");
+
+  const setActiveTab = useCallback((tab: Tab) => {
+    setActiveTabState(tab);
+    navigate({ hash: tab === "overview" ? "" : tab }, { replace: true });
+  }, [navigate]);
+
+  const setHash = useCallback((tab: string, subId?: string) => {
+    const hash = subId ? `${tab}:${subId}` : tab === "overview" ? "" : tab;
+    navigate({ hash }, { replace: true });
+  }, [navigate]);
 
   useEffect(() => {
     if (app?.processing_status === "processing" && id) {
@@ -103,7 +119,13 @@ export default function ApplicationPage() {
           {activeTab === "cover-letters" && (
             <CoverLettersTab app={app} companyName={app.company_name} />
           )}
-          {activeTab === "notes" && <NotesTab applicationId={app.id} />}
+          {activeTab === "notes" && (
+            <NotesTab
+              applicationId={app.id}
+              initialNoteId={hashTab === "notes" ? hashSubId : undefined}
+              onActiveNoteChange={(noteId) => setHash("notes", noteId)}
+            />
+          )}
         </div>
       </Content>
     </PageContainer>
