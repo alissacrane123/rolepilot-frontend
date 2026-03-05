@@ -60,13 +60,13 @@ export default function TagInput({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="bg-zinc-800 border-zinc-700 text-zinc-100"
+          className="bg-white/[0.04] border-[#1e1e2e] text-slate-200"
         />
         <Button
           type="button"
           variant="outline"
           onClick={addItem}
-          className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 shrink-0"
+          className="border-[#1e1e2e] text-slate-300 hover:bg-white/[0.08] shrink-0"
         >
           Add
         </Button>

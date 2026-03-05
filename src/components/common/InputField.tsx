@@ -28,7 +28,7 @@ export default function InputField({
       {label && <InputLabel label={label} />}
       {isTextarea ? (
         <Textarea
-          className={`font-normal bg-zinc-800/50 border-zinc-700 text-zinc-${disabled ? "500" : "100"} input-field ${mono ? "input-mono" : ""}`}
+          className={`font-normal bg-white/[0.04] border-[#1e1e2e] ${disabled ? "text-white/35" : "text-slate-200"} input-field ${mono ? "input-mono" : ""}`}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
@@ -38,7 +38,7 @@ export default function InputField({
           type={type}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
-          className={`font-normal bg-zinc-800/50 border-zinc-700 text-zinc-${disabled ? "500" : "100"} input-field ${mono ? "input-mono" : ""}`}
+          className={`font-normal bg-white/[0.04] border-[#1e1e2e] ${disabled ? "text-white/35" : "text-slate-200"} input-field ${mono ? "input-mono" : ""}`}
           disabled={disabled}
           placeholder={placeholder}
         />

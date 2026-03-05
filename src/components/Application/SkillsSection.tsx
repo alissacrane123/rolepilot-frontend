@@ -13,9 +13,9 @@ export default function SkillsSection({ app }: { app: JobApplication }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {app.required_skills?.length > 0 && (
-        <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
+        <Card className="bg-[#0a0a0f] border-[#1e1e2e] overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-sm text-zinc-400">
+            <CardTitle className="text-sm text-white/40">
               Required Skills
             </CardTitle>
           </CardHeader>
@@ -25,9 +25,9 @@ export default function SkillsSection({ app }: { app: JobApplication }) {
         </Card>
       )}
       {app.nice_to_have_skills?.length > 0 && (
-        <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
+        <Card className="bg-[#0a0a0f] border-[#1e1e2e] overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-sm text-zinc-400">
+            <CardTitle className="text-sm text-white/40">
               Nice to Have
             </CardTitle>
           </CardHeader>
@@ -37,9 +37,9 @@ export default function SkillsSection({ app }: { app: JobApplication }) {
         </Card>
       )}
       {app.key_technologies?.length > 0 && (
-        <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
+        <Card className="bg-[#0a0a0f] border-[#1e1e2e] overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-sm text-zinc-400">
+            <CardTitle className="text-sm text-white/40">
               Technologies
             </CardTitle>
           </CardHeader>

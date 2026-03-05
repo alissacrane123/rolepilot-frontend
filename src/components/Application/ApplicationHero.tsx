@@ -101,7 +101,7 @@ export default function ApplicationHero({
                       ? "border-emerald-500/15 bg-emerald-500/[0.08] text-emerald-400"
                       : app.match_score >= 50
                         ? "border-amber-500/15 bg-amber-500/[0.08] text-amber-400"
-                        : "border-zinc-600 bg-white/[0.04] text-zinc-400"
+                        : "border-[#1e1e2e] bg-white/[0.04] text-white/40"
                   }`}
                 >
                   {app.match_score}% match

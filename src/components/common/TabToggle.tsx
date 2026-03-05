@@ -10,15 +10,15 @@ export default function TabToggle<T extends string>({
   options,
 }: TabToggleProps<T>) {
   return (
-    <div className="flex gap-1 bg-zinc-800 rounded-md p-1">
+    <div className="flex gap-1 bg-white/[0.04] rounded-lg p-0.5 border border-[#1e1e2e]">
       {options.map((option) => (
         <button
           key={option.value}
           onClick={() => onChange(option.value)}
-          className={`flex-1 text-sm py-1.5 rounded transition-colors ${
+          className={`flex-1 text-sm py-1.5 rounded transition-all duration-150 ${
             value === option.value
-              ? "bg-zinc-700 text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-300"
+              ? "bg-white/[0.08] text-white"
+              : "text-white/30 hover:text-white"
           }`}
         >
           {option.label}

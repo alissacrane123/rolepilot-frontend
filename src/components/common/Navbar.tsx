@@ -19,12 +19,12 @@ export default function Navbar() {
   if (!user) return null;
 
   return (
-    <header className="border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-[#1e1e2e] bg-[#0a0a0f]/80 backdrop-blur-sm sticky top-0 z-50">
       <div className=" px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2.5 group">
             <LogoIcon />
-            <span className="text-base font-bold text-zinc-100 tracking-tight group-hover:text-indigo-400 transition-colors">
+            <span className="text-base font-bold text-slate-100 tracking-tight group-hover:text-indigo-400 transition-colors">
               RolePilot
             </span>
           </Link>
@@ -33,8 +33,8 @@ export default function Navbar() {
               to="/"
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 location.pathname === "/"
-                  ? "bg-zinc-800 text-zinc-100"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+                  ? "bg-white/[0.08] text-slate-100"
+                  : "text-white/40 hover:text-slate-200 hover:bg-white/[0.08]"
               }`}
             >
               Dashboard
@@ -43,8 +43,8 @@ export default function Navbar() {
               to="/profile"
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 location.pathname === "/profile"
-                  ? "bg-zinc-800 text-zinc-100"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+                  ? "bg-white/[0.08] text-slate-100"
+                  : "text-white/40 hover:text-slate-200 hover:bg-white/[0.08]"
               }`}
             >
               Profile
@@ -53,7 +53,7 @@ export default function Navbar() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950">
+            <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0f]">
               <Avatar className="size-8 cursor-pointer">
                 <AvatarFallback className="bg-indigo-600 text-xs font-medium text-white">
                   {user.full_name

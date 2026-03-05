@@ -35,7 +35,7 @@ export default function DetailModal({ todo, groups, onClose, onSave, onDelete }:
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
-      <div className="relative w-[500px] max-h-[88vh] overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-2xl p-7 shadow-2xl z-10">
+      <div className="relative w-[500px] max-h-[88vh] overflow-y-auto bg-[#0f0f1a] border border-[#1e1e2e] rounded-2xl p-7 shadow-2xl z-10">
 
         {/* header */}
         <div className="flex justify-between items-start mb-5">
@@ -57,12 +57,12 @@ export default function DetailModal({ todo, groups, onClose, onSave, onDelete }:
 
         {/* title */}
         <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Task title"
-          className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-3.5 py-3 text-[15px] font-semibold text-zinc-100 outline-none focus:border-indigo-500/40 transition-colors mb-2.5 placeholder:text-white/20" />
+          className="w-full bg-white/[0.04] border border-[#1e1e2e] rounded-lg px-3.5 py-3 text-[15px] font-semibold text-slate-100 outline-none focus:border-indigo-500/40 transition-colors mb-2.5 placeholder:text-white/20" />
 
         {/* description */}
         <textarea value={description} onChange={e => setDescription(e.target.value)}
           placeholder="Add a description... (optional)" rows={2}
-          className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-indigo-500/40 transition-colors resize-none leading-relaxed mb-5 placeholder:text-white/20" />
+          className="w-full bg-white/[0.04] border border-[#1e1e2e] rounded-lg px-3.5 py-2.5 text-sm text-slate-200 outline-none focus:border-indigo-500/40 transition-colors resize-none leading-relaxed mb-5 placeholder:text-white/20" />
 
         <div className="h-px bg-white/[0.06] mb-5" />
 
@@ -71,12 +71,12 @@ export default function DetailModal({ todo, groups, onClose, onSave, onDelete }:
           <div>
             <SectionLabel>Due Date</SectionLabel>
             <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)}
-              className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm font-mono text-zinc-100 outline-none focus:border-indigo-500/40 transition-colors [color-scheme:dark]" />
+              className="w-full bg-white/[0.04] border border-[#1e1e2e] rounded-lg px-3 py-2.5 text-sm font-mono text-slate-200 outline-none focus:border-indigo-500/40 transition-colors [color-scheme:dark]" />
           </div>
           <div>
             <SectionLabel>Time</SectionLabel>
             <input type="time" value={dueTime} onChange={e => setDueTime(e.target.value)}
-              className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm font-mono text-zinc-100 outline-none focus:border-indigo-500/40 transition-colors [color-scheme:dark]" />
+              className="w-full bg-white/[0.04] border border-[#1e1e2e] rounded-lg px-3 py-2.5 text-sm font-mono text-slate-200 outline-none focus:border-indigo-500/40 transition-colors [color-scheme:dark]" />
           </div>
         </div>
 

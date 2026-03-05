@@ -71,27 +71,27 @@ export default function TimePicker({
   return (
     <div className={cn("flex items-center gap-1", className)}>
       <Select value={String(parsed.hour12)} onValueChange={handleHourChange}>
-        <SelectTrigger className="w-[70px] bg-zinc-800 border-zinc-700 text-zinc-100">
+        <SelectTrigger className="w-[70px] bg-white/[0.04] border-[#1e1e2e] text-slate-200">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="bg-zinc-800 border-zinc-700 max-h-[200px]">
+        <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e] max-h-[200px]">
           {HOURS.map((h) => (
-            <SelectItem key={h} value={String(h)} className="text-zinc-100">
+            <SelectItem key={h} value={String(h)} className="text-slate-200">
               {h}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
 
-      <span className="text-zinc-500 text-sm font-medium">:</span>
+      <span className="text-white/35 text-sm font-medium">:</span>
 
       <Select value={String(parsed.minute)} onValueChange={handleMinuteChange}>
-        <SelectTrigger className="w-[70px] bg-zinc-800 border-zinc-700 text-zinc-100">
+        <SelectTrigger className="w-[70px] bg-white/[0.04] border-[#1e1e2e] text-slate-200">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="bg-zinc-800 border-zinc-700 max-h-[200px]">
+        <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e] max-h-[200px]">
           {MINUTES.map((m) => (
-            <SelectItem key={m} value={String(m)} className="text-zinc-100">
+            <SelectItem key={m} value={String(m)} className="text-slate-200">
               {pad(m)}
             </SelectItem>
           ))}
@@ -99,12 +99,12 @@ export default function TimePicker({
       </Select>
 
       <Select value={parsed.period} onValueChange={handlePeriodChange}>
-        <SelectTrigger className="w-[72px] bg-zinc-800 border-zinc-700 text-zinc-100 ml-1">
+        <SelectTrigger className="w-[72px] bg-white/[0.04] border-[#1e1e2e] text-slate-200 ml-1">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="bg-zinc-800 border-zinc-700">
-          <SelectItem value="AM" className="text-zinc-100">AM</SelectItem>
-          <SelectItem value="PM" className="text-zinc-100">PM</SelectItem>
+        <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
+          <SelectItem value="AM" className="text-slate-200">AM</SelectItem>
+          <SelectItem value="PM" className="text-slate-200">PM</SelectItem>
         </SelectContent>
       </Select>
     </div>

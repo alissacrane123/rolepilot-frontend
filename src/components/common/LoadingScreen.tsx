@@ -5,7 +5,7 @@ export default function LoadingScreen({
 }) {
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-      <div className="text-zinc-400">{message}</div>
+      <div className="text-white/40">{message}</div>
     </div>
   );
 }

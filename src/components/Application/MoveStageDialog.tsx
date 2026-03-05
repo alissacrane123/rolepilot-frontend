@@ -62,23 +62,23 @@ export default function MoveStageDialog({
       <DialogTrigger asChild>
         <Button variant="primary">Move Stage</Button>
       </DialogTrigger>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
+      <DialogContent className="bg-[#0f0f1a] border-[#1e1e2e] text-slate-100">
         <DialogHeader>
           <DialogTitle>Update Application Stage</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label className="text-zinc-300">Move to</Label>
+            <Label className="text-slate-300">Move to</Label>
             <Select value={toStage} onValueChange={setToStage}>
-              <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
+              <SelectTrigger className="bg-white/[0.04] border-[#1e1e2e] text-slate-200">
                 <SelectValue placeholder="Select stage..." />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
+              <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
                 {availableStages.map((s) => (
                   <SelectItem
                     key={s.key}
                     value={s.key}
-                    className="text-zinc-100"
+                    className="text-slate-200"
                   >
                     {s.emoji} {s.label}
                   </SelectItem>
@@ -87,12 +87,12 @@ export default function MoveStageDialog({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label className="text-zinc-300">Notes</Label>
+            <Label className="text-slate-300">Notes</Label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add interview notes, feedback, next steps..."
-              className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]"
+              className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 min-h-[80px]"
             />
           </div>
           <ErrorMessage message={(mutation.error as Error)?.message} />

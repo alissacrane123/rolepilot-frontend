@@ -183,7 +183,7 @@ export default function ProfilePage() {
                 <InputLabel label="Salary Range" />
                 <HStack className="items-center gap-3">
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/35 text-sm">
                       $
                     </span>
                     <Input
@@ -191,12 +191,12 @@ export default function ProfilePage() {
                       value={salaryMin}
                       onChange={(e) => setSalaryMin(e.target.value)}
                       placeholder="180,000"
-                      className="bg-zinc-800 border-zinc-700 text-zinc-100 pl-7"
+                      className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 pl-7"
                     />
                   </div>
-                  <span className="text-zinc-500">to</span>
+                  <span className="text-white/35">to</span>
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/35 text-sm">
                       $
                     </span>
                     <Input
@@ -204,7 +204,7 @@ export default function ProfilePage() {
                       value={salaryMax}
                       onChange={(e) => setSalaryMax(e.target.value)}
                       placeholder="250,000"
-                      className="bg-zinc-800 border-zinc-700 text-zinc-100 pl-7"
+                      className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 pl-7"
                     />
                   </div>
                 </HStack>

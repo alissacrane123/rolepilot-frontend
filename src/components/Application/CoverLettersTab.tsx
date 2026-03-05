@@ -52,24 +52,24 @@ export default function CoverLettersTab({
         <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-4">
           <span className="text-2xl">✍️</span>
         </div>
-        <h3 className="text-lg font-semibold text-zinc-200 mb-2">
+        <h3 className="text-lg font-semibold text-slate-200 mb-2">
           Generate a Cover Letter
         </h3>
-        <p className="text-sm text-zinc-500 text-center max-w-md mb-6">
+        <p className="text-sm text-white/35 text-center max-w-md mb-6">
           AI will craft a tailored cover letter using the job description and
           your resume. Generate multiple versions with different tones.
         </p>
         <div className="flex items-center gap-3">
           <Select value={tone} onValueChange={setTone}>
-            <SelectTrigger className="w-[160px] bg-zinc-800 border-zinc-700 text-zinc-100">
+            <SelectTrigger className="w-[160px] bg-white/[0.04] border-[#1e1e2e] text-slate-200">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-zinc-800 border-zinc-700">
+            <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
               {COVER_LETTER_TONES.map((t) => (
                 <SelectItem
                   key={t.value}
                   value={t.value}
-                  className="text-zinc-100"
+                  className="text-slate-200"
                 >
                   {t.label}
                 </SelectItem>
@@ -99,15 +99,15 @@ export default function CoverLettersTab({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Select value={tone} onValueChange={setTone}>
-            <SelectTrigger className="w-[140px] bg-zinc-800 border-zinc-700 text-zinc-100 h-8 text-xs">
+            <SelectTrigger className="w-[140px] bg-white/[0.04] border-[#1e1e2e] text-slate-200 h-8 text-xs">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-zinc-800 border-zinc-700">
+            <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
               {COVER_LETTER_TONES.map((t) => (
                 <SelectItem
                   key={t.value}
                   value={t.value}
-                  className="text-zinc-100"
+                  className="text-slate-200"
                 >
                   {t.label}
                 </SelectItem>
@@ -140,7 +140,7 @@ export default function CoverLettersTab({
               style={{ animationDelay: "0.4s" }}
             />
           </div>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-white/40">
             Writing your cover letter for {companyName || "this role"}...
           </p>
         </div>

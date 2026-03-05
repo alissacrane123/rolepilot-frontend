@@ -57,13 +57,13 @@ export default function NotesTab({
   if (loading || notes.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-white/[0.04] flex items-center justify-center mb-4">
           <span className="text-2xl">📝</span>
         </div>
-        <h3 className="text-lg font-semibold text-zinc-200 mb-2">
+        <h3 className="text-lg font-semibold text-slate-200 mb-2">
           No notes yet
         </h3>
-        <p className="text-sm text-zinc-500 text-center max-w-md mb-6">
+        <p className="text-sm text-white/35 text-center max-w-md mb-6">
           Keep track of interview prep, recruiter conversations, feedback, and
           anything else about this application.
         </p>

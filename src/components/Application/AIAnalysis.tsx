@@ -12,14 +12,14 @@ function AnalysisCard({
 }) {
   if (!items?.length) return null;
   return (
-    <Card className="bg-zinc-900 border-zinc-800">
+    <Card className="bg-[#0a0a0f] border-[#1e1e2e]">
       <CardHeader className="pb-2">
         <CardTitle className={`text-sm text-${color}-400`}>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <ul className="space-y-1.5">
           {items.map((item, i) => (
-            <li key={i} className="text-sm text-zinc-300 flex gap-2">
+            <li key={i} className="text-sm text-slate-300 flex gap-2">
               <span className={`text-${color}-500 shrink-0`}>•</span>
               {item}
             </li>
@@ -41,7 +41,7 @@ export default function AIAnalysis({ app }: { app: JobApplication }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-zinc-200">AI Analysis</h2>
+      <h2 className="text-lg font-semibold text-slate-200">AI Analysis</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <AnalysisCard
           title="✅ Your Strengths"

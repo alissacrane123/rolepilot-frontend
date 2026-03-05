@@ -116,8 +116,8 @@ export default function NoteEditor({
         onInput={onDirty}
         onKeyDown={handleKeyDown}
         data-placeholder="Start writing..."
-        className="flex-1 w-full text-sm text-zinc-300 bg-transparent outline-none leading-relaxed min-h-[60vh] prose prose-sm prose-invert max-w-none
-          empty:before:content-[attr(data-placeholder)] empty:before:text-zinc-600 empty:before:pointer-events-none"
+        className="flex-1 w-full text-sm text-slate-300 bg-transparent outline-none leading-relaxed min-h-[60vh] prose prose-sm prose-invert max-w-none
+          empty:before:content-[attr(data-placeholder)] empty:before:text-white/20 empty:before:pointer-events-none"
       />
     </>
   );

@@ -27,7 +27,7 @@ import TimePicker from "@/components/ui/time-picker";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { extractDate, extractTime } from "@/lib/dateUtils";
 
-const INPUT_CLASS = "bg-zinc-800 border-zinc-700 text-zinc-100";
+const INPUT_CLASS = "bg-white/[0.04] border-[#1e1e2e] text-slate-200";
 const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[80px]`;
 
 interface MeetingFormValues {
@@ -76,9 +76,9 @@ function SelectField({
         <SelectTrigger className={INPUT_CLASS}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent className="bg-zinc-800 border-zinc-700">
+        <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
           {options.map((t) => (
-            <SelectItem key={t.value} value={t.value} className="text-zinc-100">
+            <SelectItem key={t.value} value={t.value} className="text-slate-200">
               {t.label}
             </SelectItem>
           ))}
@@ -180,11 +180,11 @@ export default function MeetingDetailModal({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="bg-[#0f0f1a] border-[#1e1e2e] text-slate-100 max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Meeting Details</DialogTitle>
           <DialogDescription
-            className="text-zinc-400 hover:text-indigo-400 cursor-pointer transition-colors w-fit"
+            className="text-white/40 hover:text-indigo-400 cursor-pointer transition-colors w-fit"
             onClick={() => {
               onClose();
               navigate(`/applications/${meeting.application_id}`);
@@ -310,7 +310,7 @@ export default function MeetingDetailModal({
             <div className="flex-1" />
             <Button
               variant="ghost"
-              className="text-zinc-400 hover:text-zinc-100"
+              className="text-white/40 hover:text-slate-100"
               onClick={onClose}
               disabled={saving}
             >

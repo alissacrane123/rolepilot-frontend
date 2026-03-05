@@ -42,14 +42,14 @@ export default function ResumeForm({
           <Button
             variant="outline"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 border-dashed h-24"
+            className="w-full border-[#1e1e2e] text-slate-300 hover:bg-white/[0.08] border-dashed h-24"
             disabled={uploadingResume}
           >
             {uploadingResume
               ? "Uploading..."
               : "Click to upload PDF, TXT, or MD"}
           </Button>
-          <p className="text-xs text-zinc-500 mt-2">
+          <p className="text-xs text-white/35 mt-2">
             Text will be automatically extracted from your resume for AI
             analysis.
           </p>
@@ -60,12 +60,12 @@ export default function ResumeForm({
             value={resumeText}
             onChange={(e) => setResumeText(e.target.value)}
             placeholder="Paste your resume text here..."
-            className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[200px] text-sm font-mono"
+            className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 min-h-[200px] text-sm font-mono"
           />
           <Button
             onClick={handleSaveResumeText}
             variant="outline"
-            className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+            className="w-full border-[#1e1e2e] text-slate-300 hover:bg-white/[0.08]"
             disabled={uploadingResume || !resumeText.trim()}
           >
             {uploadingResume ? "Saving..." : "Save Resume Text"}

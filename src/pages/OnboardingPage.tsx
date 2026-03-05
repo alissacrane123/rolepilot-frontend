@@ -99,25 +99,25 @@ export default function OnboardingPage() {
         <div className="flex items-center justify-center gap-2 mb-8">
           <div
             className={`h-1.5 w-16 rounded-full ${
-              step >= 1 ? "bg-indigo-500" : "bg-zinc-800"
+              step >= 1 ? "bg-indigo-500" : "bg-white/[0.04]"
             }`}
           />
           <div
             className={`h-1.5 w-16 rounded-full ${
-              step >= 2 ? "bg-indigo-500" : "bg-zinc-800"
+              step >= 2 ? "bg-indigo-500" : "bg-white/[0.04]"
             }`}
           />
         </div>
 
         {/* Step 1: Resume */}
         {step === 1 && (
-          <Card className="bg-zinc-900 border-zinc-800">
+          <Card className="bg-[#0a0a0f] border-[#1e1e2e]">
             <CardHeader className="text-center">
               <div className="text-3xl mb-2">📄</div>
-              <CardTitle className="text-xl text-zinc-100">
+              <CardTitle className="text-xl text-slate-100">
                 Upload Your Resume
               </CardTitle>
-              <p className="text-sm text-zinc-400 mt-1">
+              <p className="text-sm text-white/40 mt-1">
                 This powers AI job matching and interview prep
               </p>
             </CardHeader>
@@ -146,7 +146,7 @@ export default function OnboardingPage() {
                     className={`w-full border-dashed h-28 transition-colors ${
                       resumeUploaded
                         ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/5"
-                        : "border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                        : "border-[#1e1e2e] text-slate-300 hover:bg-white/[0.08]"
                     }`}
                     disabled={uploadingResume}
                   >
@@ -166,13 +166,13 @@ export default function OnboardingPage() {
                       setResumeUploaded(false);
                     }}
                     placeholder="Paste your resume text here..."
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[180px] text-sm font-mono"
+                    className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 min-h-[180px] text-sm font-mono"
                   />
                   {!resumeUploaded && resumeText.trim() && (
                     <Button
                       onClick={handleSaveResumeText}
                       variant="outline"
-                      className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                      className="w-full border-[#1e1e2e] text-slate-300 hover:bg-white/[0.08]"
                       disabled={uploadingResume}
                     >
                       {uploadingResume ? "Saving..." : "Save Resume Text"}
@@ -205,49 +205,49 @@ export default function OnboardingPage() {
 
         {/* Step 2: Profile Info */}
         {step === 2 && (
-          <Card className="bg-zinc-900 border-zinc-800">
+          <Card className="bg-[#0a0a0f] border-[#1e1e2e]">
             <CardHeader className="text-center">
               <div className="text-3xl mb-2">🎯</div>
-              <CardTitle className="text-xl text-zinc-100">
+              <CardTitle className="text-xl text-slate-100">
                 Tell Us About Your Search
               </CardTitle>
-              <p className="text-sm text-zinc-400 mt-1">
+              <p className="text-sm text-white/40 mt-1">
                 This helps AI tailor analysis to your goals
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label className="text-zinc-300">Years of Experience</Label>
+                  <Label className="text-slate-300">Years of Experience</Label>
                   <Input
                     type="number"
                     value={experienceYears}
                     onChange={(e) => setExperienceYears(e.target.value)}
                     placeholder="5"
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                    className="bg-white/[0.04] border-[#1e1e2e] text-slate-200"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-zinc-300">Target Role</Label>
+                  <Label className="text-slate-300">Target Role</Label>
                   <Input
                     value={targetRole}
                     onChange={(e) => setTargetRole(e.target.value)}
                     placeholder="Senior Engineer"
-                    className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                    className="bg-white/[0.04] border-[#1e1e2e] text-slate-200"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-zinc-300">Skills</Label>
+                <Label className="text-slate-300">Skills</Label>
                 <SkillsInput skills={skills} onChange={setSkills} />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-zinc-300">Salary Range</Label>
+                <Label className="text-slate-300">Salary Range</Label>
                 <div className="flex items-center gap-3">
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/35 text-sm">
                       $
                     </span>
                     <Input
@@ -255,12 +255,12 @@ export default function OnboardingPage() {
                       value={salaryMin}
                       onChange={(e) => setSalaryMin(e.target.value)}
                       placeholder="180,000"
-                      className="bg-zinc-800 border-zinc-700 text-zinc-100 pl-7"
+                      className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 pl-7"
                     />
                   </div>
-                  <span className="text-zinc-500">to</span>
+                  <span className="text-white/35">to</span>
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/35 text-sm">
                       $
                     </span>
                     <Input
@@ -268,7 +268,7 @@ export default function OnboardingPage() {
                       value={salaryMax}
                       onChange={(e) => setSalaryMax(e.target.value)}
                       placeholder="250,000"
-                      className="bg-zinc-800 border-zinc-700 text-zinc-100 pl-7"
+                      className="bg-white/[0.04] border-[#1e1e2e] text-slate-200 pl-7"
                     />
                   </div>
                 </div>
@@ -280,7 +280,7 @@ export default function OnboardingPage() {
                 <Button
                   variant="outline"
                   onClick={() => setStep(1)}
-                  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                  className="border-[#1e1e2e] text-slate-300 hover:bg-white/[0.08]"
                 >
                   Back
                 </Button>

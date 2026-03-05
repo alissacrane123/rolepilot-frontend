@@ -36,10 +36,10 @@ function NoteItem({
       className="group relative h-36 w-36 items-center justify-center text-center items-center"
     >
       <button
-        className="hidden cursor-pointer group-hover:block absolute top-2 right-2 text-zinc-400 hover:text-indigo-400"
+        className="hidden cursor-pointer group-hover:block absolute top-2 right-2 text-white/40 hover:text-indigo-400"
         onClick={handleTrashClick}
       >
-        <Trash2 className="cursor-pointer size-3 text-zinc-400 hover:text-indigo-400 transition-colors" />
+        <Trash2 className="cursor-pointer size-3 text-white/40 hover:text-indigo-400 transition-colors" />
       </button>
     </NewCard>
   );
@@ -94,10 +94,10 @@ export default function NotesList({
           if (!open) setNoteToDelete(null);
         }}
       >
-        <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-sm">
+        <DialogContent className="bg-[#0f0f1a] border-[#1e1e2e] sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-zinc-100">Delete note</DialogTitle>
-            <DialogDescription className="text-zinc-400">
+            <DialogTitle className="text-slate-100">Delete note</DialogTitle>
+            <DialogDescription className="text-white/40">
               Are you sure you want to delete "{noteToDelete?.title}"? This
               action cannot be undone.
             </DialogDescription>

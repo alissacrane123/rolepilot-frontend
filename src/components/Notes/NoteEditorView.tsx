@@ -55,12 +55,12 @@ export default function NoteEditorView({
       <div className="flex items-center justify-between mb-10">
         <button
           onClick={handleBack}
-          className="flex items-center text-sm text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+          className="flex items-center text-sm text-white/35 hover:text-slate-300 transition-colors cursor-pointer"
         >
           <ArrowLeftIcon className="h-4 w-4 mr-1" />
           Back
         </button>
-        <span className="text-xs text-zinc-500">
+        <span className="text-xs text-white/35">
           {saving
             ? "Saving..."
             : lastSaved
@@ -75,7 +75,7 @@ export default function NoteEditorView({
         value={title}
         onChange={handleTitleChange}
         placeholder="Untitled Note"
-        className="text-2xl font-semibold text-zinc-100 bg-transparent border-none outline-none w-full placeholder-zinc-600 mb-4"
+        className="text-2xl font-semibold text-slate-100 bg-transparent border-none outline-none w-full placeholder-white/20 mb-4"
       />
 
       {/* Editor + toolbar */}

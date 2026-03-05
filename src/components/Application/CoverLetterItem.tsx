@@ -66,7 +66,7 @@ export default function CoverLetterItem({
     >
       <div
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center justify-between border-zinc-800"
+        className="flex items-center justify-between border-[#1e1e2e]"
       >
         <div className="flex items-center gap-3">
           <Badge
@@ -77,11 +77,11 @@ export default function CoverLetterItem({
           </Badge>
           <Badge
             variant="outline"
-            className="border-zinc-700 text-zinc-400 text-xs capitalize"
+            className="border-[#1e1e2e] text-white/40 text-xs capitalize"
           >
             {letter.tone}
           </Badge>
-          <span className="text-xs text-zinc-600">
+          <span className="text-xs text-white/25">
             {formatDateTime(letter.created_at)}
           </span>
         </div>
@@ -90,7 +90,7 @@ export default function CoverLetterItem({
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className={`text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 text-xs ${copied ? "text-green-400 hover:text-green-400" : ""}`}
+            className={`text-white/40 hover:text-slate-200 hover:bg-white/[0.08] text-xs ${copied ? "text-green-400 hover:text-green-400" : ""}`}
           >
             {copied ? <CopyCheckIcon /> : <CopyIcon />}
           </Button>
@@ -98,9 +98,7 @@ export default function CoverLetterItem({
             variant="ghost"
             size="sm"
             onClick={handleDownloadPDF}
-            className={
-              "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 text-xs"
-            }
+            className="text-white/40 hover:text-slate-200 hover:bg-white/[0.08] text-xs"
           >
             <DownloadIcon className="size-4" />
           </Button>
@@ -110,12 +108,12 @@ export default function CoverLetterItem({
       <div
         className={` ${expanded ? "" : "max-h-[150px] overflow-scroll scrollbar-hide"}`}
       >
-        <div className="text-sm text-zinc-300 leading-7 whitespace-pre-wrap max-w-2xl">
+        <div className="text-sm text-slate-300 leading-7 whitespace-pre-wrap max-w-2xl">
           {letter.content}
         </div>
       </div>
       {!expanded && (
-        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-zinc-950/90 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#0a0a0f]/90 to-transparent pointer-events-none" />
       )}
     </VStack>
   );

@@ -28,8 +28,8 @@ function ToolbarButton({
       title={title}
       className={`p-1.5 rounded text-sm transition-colors cursor-pointer ${
         active
-          ? "bg-zinc-700 text-zinc-100"
-          : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+          ? "bg-white/[0.08] text-slate-100"
+          : "text-white/40 hover:bg-white/[0.08] hover:text-slate-200"
       }`}
     >
       {children}
@@ -72,7 +72,7 @@ export default function EditorToolbar({
         <span className="underline">U</span>
       </ToolbarButton>
 
-      <div className="w-px h-4 bg-zinc-700 mx-1" />
+      <div className="w-px h-4 bg-white/[0.08] mx-1" />
 
       <ToolbarButton
         onClick={() => onFormat("insertUnorderedList")}

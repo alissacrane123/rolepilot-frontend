@@ -19,18 +19,13 @@ const COLLAPSE_THRESHOLD = 140;
 const COLLAPSED_WIDTH = 44;
 
 export default function TasksSidebar() {
-  const {
-    width,
-    collapsed,
-    isDragging,
-    handlePointerDown,
-    setCollapsed,
-  } = useResizablePanel({
-    defaultWidth: SIDEBAR_DEFAULT,
-    minWidth: SIDEBAR_MIN,
-    maxWidth: SIDEBAR_MAX,
-    collapseThreshold: COLLAPSE_THRESHOLD,
-  });
+  const { width, collapsed, isDragging, handlePointerDown, setCollapsed } =
+    useResizablePanel({
+      defaultWidth: SIDEBAR_DEFAULT,
+      minWidth: SIDEBAR_MIN,
+      maxWidth: SIDEBAR_MAX,
+      collapseThreshold: COLLAPSE_THRESHOLD,
+    });
 
   const [newTask, setNewTask] = useState("");
   const [completedOpen, setCompletedOpen] = useState(true);
@@ -65,11 +60,43 @@ export default function TasksSidebar() {
 
   return (
     <div
-      className={`border-r border-[#1e1e2e] bg-[#0d0d14] flex flex-col shrink-0 relative overflow-hidden ${
-        isDragging ? "" : "transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+      className={`border-r border-[#1e1e2e] bg-[#0d0d14] flex flex-col shrink-0 relative  ${
+        isDragging
+          ? ""
+          : "transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
       }`}
       style={{ width: sidebarWidth, minWidth: sidebarWidth }}
     >
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className={` bg-[#0d0d14] border border-[#1e1e2e] rounded-full text-slate-500 cursor-pointer p-1.5 px-1.5 flex items-center justify-center transition-all duration-150 shrink-0 hover:text-slate-400  ${
+          collapsed ? "ml-0" : "ml-auto"
+        } absolute right-[-14px] top-4 z-22`}
+      >
+        {collapsed ? (
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        ) : (
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        )}
+      </button>
       <ResizeHandle
         onPointerDown={handlePointerDown}
         isDragging={isDragging}
@@ -79,7 +106,7 @@ export default function TasksSidebar() {
       <div
         className={`flex items-center justify-between border-b border-[#1e1e2e] shrink-0 h-[52px] ${
           collapsed ? "px-2.5 py-3.5" : "px-4 py-3.5"
-        }`}
+        } `}
       >
         {!collapsed && (
           <div className="flex items-center gap-2">
@@ -91,22 +118,6 @@ export default function TasksSidebar() {
             </span>
           </div>
         )}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className={`bg-white/[0.04] border border-[#1e1e2e] rounded-md text-slate-500 cursor-pointer p-1 px-1.5 flex items-center justify-center transition-all duration-150 shrink-0 hover:text-slate-400 hover:bg-white/[0.08] ${
-            collapsed ? "ml-0" : "ml-auto"
-          }`}
-        >
-          {collapsed ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          )}
-        </button>
       </div>
 
       {collapsed ? (
