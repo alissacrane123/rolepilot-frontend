@@ -16,6 +16,12 @@ import {
   type CreateMeetingData,
   createMeeting,
   reanalyzeApplication,
+  generateCoverLetter,
+  getCoverLetters,
+  createNote,
+  getNotes,
+  updateNote,
+  deleteNote,
 } from "@/lib/api";
 
 export const queryKeys = {
@@ -25,6 +31,9 @@ export const queryKeys = {
   meetings: (applicationId: string) => ["meetings", applicationId] as const,
   upcomingMeetings: ["meetings", "upcoming"] as const,
   profile: ["profile"] as const,
+  coverLetters: (applicationId: string) =>
+    ["cover-letters", applicationId] as const,
+  notes: (applicationId: string) => ["notes", applicationId] as const,
 };
 
 // ============================================
@@ -82,7 +91,6 @@ export function useUpcomingMeetingsQuery() {
       const res = await getUpcomingMeetings();
       return res.data ?? [];
     },
-    
   });
 }
 
@@ -233,6 +241,71 @@ export function useDeleteMeetingMutation() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.upcomingMeetings });
       qc.invalidateQueries({ queryKey: ["meetings"] });
+    },
+  });
+}
+
+export function useGenerateCoverLetterMutation(applicationId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ tone }: { tone: string }) =>
+      generateCoverLetter(applicationId, tone),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.coverLetters(applicationId) });
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+}
+
+export function useGetCoverLettersQuery(applicationId: string) {
+  return useQuery({
+    queryKey: queryKeys.coverLetters(applicationId),
+    queryFn: async () => {
+      const res = await getCoverLetters(applicationId);
+      return res.data ?? [];
+    },
+    enabled: !!applicationId,
+  });
+}
+
+export function useCreateNoteMutation(applicationId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ applicationId, title, content }: { applicationId: string; title: string; content?: string }) => createNote(applicationId, title, content),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.notes(applicationId) });
+    },
+  });
+}
+
+export function useGetNotesQuery(applicationId: string) {
+  return useQuery({
+    queryKey: queryKeys.notes(applicationId),
+    queryFn: async () => {
+      const res = await getNotes(applicationId);
+      return res.data ?? [];
+    },
+  });
+}
+
+export function useUpdateNoteMutation(applicationId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ noteId, data }: { noteId: string; data: { title?: string; content?: string } }) => updateNote(noteId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.notes(applicationId) });
+    },
+  });
+}
+
+export function useDeleteNoteMutation(applicationId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (noteId: string) => deleteNote(noteId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.notes(applicationId) });
     },
   });
 }

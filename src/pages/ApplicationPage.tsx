@@ -14,13 +14,17 @@ import OverviewTab from "@/components/Application/OverviewTab";
 import MeetingsTab from "@/components/Application/MeetingsTab";
 import AIAnalysis from "@/components/Application/AIAnalysis";
 import StageHistory from "@/components/Application/StageHistory";
+import CoverLettersTab from "@/components/Application/CoverLettersTab";
+import NotesTab from "@/components/Application/NotesTab";
 
-type Tab = "overview" | "meetings" | "analysis";
+type Tab = "overview" | "meetings" | "analysis" | "cover-letters" | "notes";
 
 const TAB_DEFS: { key: Tab; label: string }[] = [
   { key: "overview", label: "Overview" },
   { key: "meetings", label: "Meetings" },
   { key: "analysis", label: "AI Analysis" },
+  { key: "cover-letters", label: "Cover Letters" },
+  { key: "notes", label: "Notes" },
 ];
 
 export default function ApplicationPage() {
@@ -108,6 +112,8 @@ export default function ApplicationPage() {
             />
           )}
           {activeTab === "analysis" && <AIAnalysis app={app} />}
+          {activeTab === "cover-letters" && <CoverLettersTab app={app} companyName={app.company_name} />}
+          {activeTab === "notes" && <NotesTab applicationId={app.id} />}
         </div>
       </Content>
     </PageContainer>

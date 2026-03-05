@@ -368,3 +368,64 @@ export const STAGES = [
 export const STAGE_MAP = Object.fromEntries(
   STAGES.map((s) => [s.key, s]),
 ) as Record<string, (typeof STAGES)[number]>;
+
+
+export interface CoverLetter {
+  id: string;
+  application_id: string;
+  content: string;
+  version: number;
+  tone: string;
+  created_at: string;
+}
+
+export async function generateCoverLetter(applicationId: string, tone: string = "professional") {
+  return request<CoverLetter>(`/applications/${applicationId}/cover-letter`, {
+    method: "POST",
+    body: JSON.stringify({ tone }),
+  });
+}
+
+export async function getCoverLetters(applicationId: string) {
+  return request<CoverLetter[]>(`/applications/${applicationId}/cover-letters`);
+}
+
+export const COVER_LETTER_TONES = [
+  { value: "professional", label: "Professional" },
+  { value: "conversational", label: "Conversational" },
+  { value: "enthusiastic", label: "Enthusiastic" },
+] as const;
+
+export interface Note {
+  id: string;
+  application_id: string;
+  user_id: string;
+  title: string;
+  content?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function createNote(applicationId: string, title: string, content?: string) {
+  return request<Note>(`/applications/${applicationId}/notes`, {
+    method: "POST",
+    body: JSON.stringify({ title, content }),
+  });
+}
+
+export async function getNotes(applicationId: string) {
+  return request<Note[]>(`/applications/${applicationId}/notes`);
+}
+
+export async function updateNote(noteId: string, data: { title?: string; content?: string }) {
+  return request<Note>(`/notes/${noteId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteNote(noteId: string) {
+  return request<void>(`/notes/${noteId}`, {
+    method: "DELETE",
+  });
+}
