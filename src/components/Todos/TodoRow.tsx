@@ -31,8 +31,8 @@ export default function TodoRow({ todo, onToggle, onClick }: { todo: Todo; onTog
           {todo.group_name && <span className="text-[10px] font-mono text-white/25">{todo.group_name}</span>}
           {todo.company_name && <span className="text-[10px] font-mono text-indigo-400/50">{todo.company_name}</span>}
           {todo.due_time && <span className="text-[10px] font-mono text-white/20">{todo.due_time}</span>}
-          {todo.is_recurring && <span className="text-[9px] font-mono text-white/20 border border-white/[0.06] rounded px-1 py-px">↻</span>}
-          {/* {todo.is_reminder && <span className="text-[9px] font-mono text-white/20 border border-white/[0.06] rounded px-1 py-px">⏰</span>} */}
+          {todo.is_recurring && <span className="text-[9px] font-mono text-white/20 border border-white/[0.15] rounded px-1 py-px">↻</span>}
+          {/* {todo.is_reminder && <span className="text-[9px] font-mono text-white/20 border border-white/[0.15] rounded px-1 py-px">⏰</span>} */}
         </div>
       </div>
 

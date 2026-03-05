@@ -13,7 +13,7 @@ export default function ViewToggle({
   icon2?: React.ReactNode;
 }) {
   return (
-    <div className="cursor-pointer flex bg-white/[0.04] rounded-lg p-0.5 border border-white/[0.06]">
+    <div className="cursor-pointer flex bg-white/[0.04] rounded-lg p-0.5 border border-white/[0.15]">
       <button
         onClick={() => onChange("start")}
         className={`cursor-pointer flex items-center px-2.5 py-1.5 rounded-md transition-all duration-100 ${

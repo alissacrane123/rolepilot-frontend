@@ -62,7 +62,7 @@ export default function CoverLetterItem({
 
   return (
     <VStack
-      className={`hover:border-indigo-500/40 cursor-pointer gap-3 h-full rounded-xl border overflow-hidden animate-fade-in-up transition-all duration-200 border-white/[0.06] bg-white/[0.015] p-5`}
+      className={`hover:border-indigo-500/40 cursor-pointer gap-3 h-full rounded-xl border overflow-hidden animate-fade-in-up transition-all duration-200 border-white/[0.15] bg-white/[0.015] p-5`}
     >
       <div
         onClick={() => setExpanded(!expanded)}

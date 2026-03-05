@@ -31,7 +31,7 @@ export default function ListView({
   }
 
   return (
-    <div className="rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.01]">
+    <div className="rounded-xl border border-white/[0.15] overflow-hidden bg-white/[0.01]">
       <Table>
         <TableHeader>
           <TableRow className="bg-white/[0.02] hover:bg-white/[0.02]">

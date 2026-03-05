@@ -24,7 +24,7 @@ export function PillTag({ children, active, onClick, meta }: { children: React.R
           ? `${meta.ring} ${meta.pill_bg} ${meta.pill_text}`
           : active
           ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-300"
-          : "border-white/[0.06] text-white/30 hover:border-white/[0.12] hover:text-white/50"
+          : "border-white/[0.15] text-white/30 hover:border-white/[0.12] hover:text-white/50"
       }`}>
       {children}
     </button>
@@ -38,7 +38,7 @@ export function DayPicker({ selected, onChange }: { selected: string[]; onChange
         const on = selected.includes(d);
         return (
           <button key={d} onClick={() => onChange(on ? selected.filter(x => x !== d) : [...selected, d])}
-            className={`w-9 h-9 rounded-lg text-[11px] font-semibold border transition-all ${on ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-300" : "border-white/[0.06] bg-white/[0.02] text-white/30 hover:border-white/[0.12]"}`}>
+            className={`w-9 h-9 rounded-lg text-[11px] font-semibold border transition-all ${on ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-300" : "border-white/[0.15] bg-white/[0.02] text-white/30 hover:border-white/[0.12]"}`}>
             {d}
           </button>
         );

@@ -17,7 +17,7 @@ export default function NewCard({
   return (
     <div
       className={cn(
-        "flex flex-col w-full text-left rounded-[10px] border border-white/[0.06] bg-white/[0.02]",
+        "flex flex-col w-full text-left rounded-[10px] border border-white/[0.15] bg-white/[0.02]",
         "p-4 hover:bg-white/[0.04] hover:border-indigo-500/20 transition-all",
         "cursor-pointer flex items-center justify-between gap-4",
         className,

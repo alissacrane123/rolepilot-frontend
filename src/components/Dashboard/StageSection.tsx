@@ -59,7 +59,7 @@ export default function StageSection({
       className={`h-full rounded-xl border overflow-hidden animate-fade-in-up transition-all duration-200 ${
         isOver
           ? "border-indigo-500/40 bg-indigo-500/[0.04] ring-1 ring-indigo-500/20"
-          : "border-white/[0.06] bg-white/[0.015]"
+          : "border-white/[0.15] bg-white/[0.015]"
       }`}
       style={style}
     >

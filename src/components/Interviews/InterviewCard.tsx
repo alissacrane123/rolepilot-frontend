@@ -30,7 +30,7 @@ export default function InterviewCard({
         ${
           urgent
             ? "bg-indigo-500/[0.06] border-indigo-500/20 hover:border-indigo-500/35"
-            : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.055] hover:border-indigo-500/25"
+            : "bg-white/[0.03] border-white/[0.15] hover:bg-white/[0.055] hover:border-indigo-500/25"
         }`}
     >
       <div className="flex items-start justify-between gap-3 mb-2">

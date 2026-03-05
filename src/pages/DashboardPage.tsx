@@ -80,7 +80,7 @@ export default function DashboardPage() {
         visibleStages={visibleStages}
       />
 
-      <div className="mt-20 pb-10 border-t border-white/[0.06]" />
+      <div className="mt-20 pb-10 border-t border-white/[0.15]" />
 
       <InterviewsSection />
 

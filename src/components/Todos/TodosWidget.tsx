@@ -124,7 +124,7 @@ export default function TasksSection() {
         )}
 
         {!loading && done.length > 0 && (
-          <div className="border-t border-white/[0.06] mt-2 pt-2">
+          <div className="border-t border-white/[0.15] mt-2 pt-2">
             <p className="px-3.5 py-1 text-[10px] font-medium text-white/30 uppercase tracking-wider">
               Completed · {done.length}
             </p>

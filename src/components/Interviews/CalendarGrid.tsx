@@ -20,8 +20,8 @@ export default function CalendarGrid({
   onMeetingEditClick?: (meeting: MeetingWithApp) => void;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] overflow-hidden">
-      <div className="grid grid-cols-7 border-b border-white/[0.06]">
+    <div className="rounded-xl border border-white/[0.15] overflow-hidden">
+      <div className="grid grid-cols-7 border-b border-white/[0.15]">
         {WEEKDAYS.map((d) => (
           <div
             key={d}

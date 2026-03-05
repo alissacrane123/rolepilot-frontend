@@ -49,7 +49,7 @@ export default function EditorToolbar({
   onInsertCheckbox,
 }: EditorToolbarProps) {
   return (
-    <div className="flex items-center gap-0.5 mb-3 pb-2 border-b border-white/[0.06] flex-wrap">
+    <div className="flex items-center gap-0.5 mb-3 pb-2 border-b border-white/[0.15] flex-wrap">
       <ToolbarButton
         onClick={() => onFormat("bold")}
         active={activeFormats.bold}

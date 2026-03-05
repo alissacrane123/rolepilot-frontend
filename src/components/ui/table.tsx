@@ -21,7 +21,7 @@ function TableHeader({
 }: React.ComponentProps<"thead">) {
   return (
     <thead
-      className={cn("[&_tr]:border-b [&_tr]:border-white/[0.06]", className)}
+      className={cn("[&_tr]:border-b [&_tr]:border-white/[0.15]", className)}
       {...props}
     />
   );

@@ -49,7 +49,7 @@ export default function DetailModal({ todo, groups, onClose, onSave, onDelete }:
               Delete
             </button>
             <button onClick={onClose}
-              className="w-7 h-7 rounded-lg border border-white/[0.06] bg-white/[0.04] text-white/40 hover:text-white/70 transition-colors text-lg leading-none flex items-center justify-center">
+              className="w-7 h-7 rounded-lg border border-white/[0.15] bg-white/[0.04] text-white/40 hover:text-white/70 transition-colors text-lg leading-none flex items-center justify-center">
               ×
             </button>
           </div>

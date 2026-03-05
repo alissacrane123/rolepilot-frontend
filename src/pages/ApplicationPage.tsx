@@ -68,7 +68,7 @@ export default function ApplicationPage() {
         <ApplicationHero app={app} onMoved={handleMoved} />
 
         {/* Tab bar */}
-        <div className="flex gap-0.5 mt-4 border-b border-white/[0.06]">
+        <div className="flex gap-0.5 mt-4 border-b border-white/[0.15]">
           {TAB_DEFS.map((tab) => (
             <button
               key={tab.key}

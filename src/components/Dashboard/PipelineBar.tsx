@@ -25,7 +25,7 @@ export default function PipelineBar({
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg border whitespace-nowrap transition-all duration-200 animate-fade-in-up ${
               isActive
                 ? "bg-indigo-500/[0.12] border-indigo-500/30"
-                : "bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04]"
+                : "bg-white/[0.02] border-white/[0.15] hover:bg-white/[0.04]"
             }`}
             style={{ animationDelay: `${i * 60}ms` }}
           >

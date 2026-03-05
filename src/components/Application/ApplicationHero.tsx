@@ -58,7 +58,7 @@ export default function ApplicationHero({
   const appliedDate = formatDate(app.applied_at);
 
   return (
-    <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.015] p-7 animate-fade-in-up">
+    <div className="rounded-[14px] border border-white/[0.15] bg-white/[0.015] p-7 animate-fade-in-up">
       {/* Top row: identity + move stage */}
       <div className="flex justify-between items-start mb-5">
         <div className="flex gap-4 items-start">

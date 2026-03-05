@@ -53,7 +53,7 @@ function TimelineMeeting({
       <div className="flex-1 min-w-0 mb-2">
         <button
           onClick={onToggle}
-          className="w-full text-left rounded-[10px] border border-white/[0.06] bg-white/[0.02] px-4 py-3 hover:bg-white/[0.04] hover:border-indigo-500/20 transition-all cursor-pointer flex items-center justify-between gap-4"
+          className="w-full text-left rounded-[10px] border border-white/[0.15] bg-white/[0.02] px-4 py-3 hover:bg-white/[0.04] hover:border-indigo-500/20 transition-all cursor-pointer flex items-center justify-between gap-4"
         >
           <div className="min-w-0 flex flex-col gap-2">
             <h3 className="text-sm font-semibold text-white tracking-tight">
@@ -101,7 +101,7 @@ function TimelineMeeting({
 
         {/* Expanded content */}
         {isExpanded && (
-          <div className="border-l border-white/[0.06] ml-[18px] mt-2 mb-4 pl-5 pt-1 space-y-5 animate-fade-in-up">
+          <div className="border-l border-white/[0.15] ml-[18px] mt-2 mb-4 pl-5 pt-1 space-y-5 animate-fade-in-up">
             {/* Notes */}
             <div>
               <div className="flex items-center justify-between mb-2.5">
