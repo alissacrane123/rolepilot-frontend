@@ -1,10 +1,8 @@
 import { useState } from "react";
 import type { StageModalProps } from "./shared";
 import { useUpdateStageMutation } from "@/hooks/useApi";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import TransitionModalShell from "./TransitionModalShell";
+import InputField from "@/components/common/InputField";
 
 const LABELS: Record<string, { reason: string; placeholder: string }> = {
   rejected: { reason: "Reason (if known)", placeholder: "Position filled, not a fit, etc." },
@@ -41,15 +39,20 @@ export default function ReasonModal({ transition, onConfirm, onCancel }: StageMo
       onSubmit={handleSubmit}
       onCancel={onCancel}
     >
-      <div className="space-y-2">
-        <Label className="text-zinc-300">{config.reason}</Label>
-        <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder={config.placeholder} className="bg-zinc-800 border-zinc-700 text-zinc-100" />
-      </div>
+      <InputField
+        label={config.reason}
+        value={reason}
+        onChange={setReason}
+        placeholder={config.placeholder}
+      />
 
-      <div className="space-y-2">
-        <Label className="text-zinc-300">Notes</Label>
-        <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Any additional notes..." className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[80px]" />
-      </div>
+      <InputField
+        label="Notes"
+        isTextarea
+        value={notes}
+        onChange={setNotes}
+        placeholder="Any additional notes..."
+      />
     </TransitionModalShell>
   );
 }

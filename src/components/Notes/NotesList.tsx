@@ -93,15 +93,15 @@ export default function NotesList({
           if (!open) setNoteToDelete(null);
         }}
       >
-        <DialogContent className="bg-[#0f0f1a] border-[#1e1e2e] sm:max-w-sm">
+        <DialogContent className="sm:max-w-sm" showCloseButton>
           <DialogHeader>
-            <DialogTitle className="text-slate-100">Delete note</DialogTitle>
-            <DialogDescription className="text-white/40">
-              Are you sure you want to delete "{noteToDelete?.title}"? This
+            <DialogTitle>Delete note</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &ldquo;{noteToDelete?.title}&rdquo;? This
               action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="gap-2">
+          <DialogFooter>
             <Button variant="secondary" onClick={() => setNoteToDelete(null)}>
               Cancel
             </Button>

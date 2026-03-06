@@ -1,7 +1,7 @@
 import { STAGE_MAP } from "@/lib/api";
 import { formatDate } from "@/lib/dateUtils";
 import { Badge } from "@/components/ui/badge";
-import { MoveStageDialog } from "./MoveStageDialog";
+import { MoveStageModal } from "./MoveStageModal";
 import { StagePipeline } from "./StageProgressBar";
 import { MetaRow } from "./MetaRow";
 import { HStack } from "../ui/stacks";
@@ -73,7 +73,7 @@ export function ApplicationHero({ app, onMoved }: ApplicationHeroProps) {
           </div>
         </div>
 
-        <MoveStageDialog app={app} onMoved={onMoved} />
+        <MoveStageModal app={app} onMoved={onMoved} />
       </div>
 
       <MetaRow

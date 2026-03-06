@@ -1,4 +1,4 @@
-interface IconProps {
+export interface IconProps {
   className?: string;
 }
 
@@ -49,6 +49,42 @@ export function DisclosureChevronIcon({
       className={className}
     >
       <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+export function ChevronDownSmallIcon({
+  className,
+}: IconProps): React.JSX.Element {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      className={className}
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+export function CheckSmallIcon({
+  className,
+}: IconProps): React.JSX.Element {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      className={className}
+    >
+      <polyline points="20 6 9 17 4 12" />
     </svg>
   );
 }

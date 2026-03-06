@@ -12,6 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
+  DialogBody,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -20,15 +22,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import InputLabel from "@/components/common/InputLabel";
 import TimePicker from "@/components/ui/time-picker";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { extractDate, extractTime } from "@/lib/dateUtils";
+import InputField from "../common/InputField";
 
 const INPUT_CLASS = "bg-white/[0.04] border-[#1e1e2e] text-slate-200";
-const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[80px]`;
 
 interface MeetingFormValues {
   date: string;
@@ -78,7 +78,11 @@ function SelectField({
         </SelectTrigger>
         <SelectContent className="bg-[#0f0f1a] border-[#1e1e2e]">
           {options.map((t) => (
-            <SelectItem key={t.value} value={t.value} className="text-slate-200">
+            <SelectItem
+              key={t.value}
+              value={t.value}
+              className="text-slate-200"
+            >
               {t.label}
             </SelectItem>
           ))}
@@ -180,11 +184,10 @@ export default function MeetingDetailModal({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-[#0f0f1a] border-[#1e1e2e] text-slate-100 max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent showCloseButton>
         <DialogHeader>
           <DialogTitle>Meeting Details</DialogTitle>
           <DialogDescription
-            className="text-white/40 hover:text-indigo-400 cursor-pointer transition-colors w-fit"
             onClick={() => {
               onClose();
               navigate(`/applications/${meeting.application_id}`);
@@ -195,16 +198,14 @@ export default function MeetingDetailModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <DialogBody>
           <Row>
-            <Field label="Date">
-              <Input
-                type="date"
-                value={values.date}
-                onChange={(e) => set("date", e.target.value)}
-                className={INPUT_CLASS}
-              />
-            </Field>
+            <InputField
+              label="Date"
+              type="date"
+              value={values.date}
+              onChange={(v) => set("date", v)}
+            />
             <Field label="Time">
               <TimePicker
                 value={values.time}
@@ -214,15 +215,13 @@ export default function MeetingDetailModal({
           </Row>
 
           <Row>
-            <Field label="Duration (min)">
-              <Input
-                type="number"
-                value={values.duration_minutes}
-                onChange={(e) => set("duration_minutes", e.target.value)}
-                placeholder="45"
-                className={INPUT_CLASS}
-              />
-            </Field>
+            <InputField
+              label="Duration (min)"
+              type="number"
+              value={values.duration_minutes}
+              onChange={(v) => set("duration_minutes", v)}
+              placeholder="45"
+            />
             <SelectField
               label="Interview Type"
               value={values.meeting_type}
@@ -240,92 +239,82 @@ export default function MeetingDetailModal({
               placeholder="Select..."
               options={LOCATION_TYPES}
             />
-            <Field label="Location Details">
-              <Input
-                value={values.location_details}
-                onChange={(e) => set("location_details", e.target.value)}
-                placeholder="Zoom link, address, etc."
-                className={INPUT_CLASS}
-              />
-            </Field>
+
+            <InputField
+              label="Location Details"
+              value={values.location_details}
+              onChange={(v) => set("location_details", v)}
+              placeholder="Zoom link, address, etc."
+            />
           </Row>
 
           <Row>
-            <Field label="Contact Name">
-              <Input
-                value={values.contact_name}
-                onChange={(e) => set("contact_name", e.target.value)}
-                placeholder="Jane Smith"
-                className={INPUT_CLASS}
-              />
-            </Field>
-            <Field label="Contact Title">
-              <Input
-                value={values.contact_title}
-                onChange={(e) => set("contact_title", e.target.value)}
-                placeholder="Engineering Manager"
-                className={INPUT_CLASS}
-              />
-            </Field>
+            <InputField
+              label="Contact Name"
+              value={values.contact_name}
+              onChange={(v) => set("contact_name", v)}
+              placeholder="Jane Smith"
+            />
+            <InputField
+              label="Contact Title"
+              value={values.contact_title}
+              onChange={(v) => set("contact_title", v)}
+              placeholder="Engineering Manager"
+            />
           </Row>
 
-          <Field label="Prep Notes">
-            <Textarea
-              value={values.prep_notes}
-              onChange={(e) => set("prep_notes", e.target.value)}
-              placeholder="Topics to review, questions to ask..."
-              className={TEXTAREA_CLASS}
-            />
-          </Field>
+          <InputField
+            label="Prep Notes"
+            isTextarea
+            value={values.prep_notes}
+            onChange={(v) => set("prep_notes", v)}
+            placeholder="Topics to review, questions to ask..."
+          />
 
-          <Field label="Post-Interview Notes">
-            <Textarea
-              value={values.post_notes}
-              onChange={(e) => set("post_notes", e.target.value)}
-              placeholder="How it went, follow-ups..."
-              className={TEXTAREA_CLASS}
-            />
-          </Field>
+          <InputField
+            label="Post-Interview Notes"
+            isTextarea
+            value={values.post_notes}
+            onChange={(v) => set("post_notes", v)}
+            placeholder="How it went, follow-ups..."
+          />
 
-          <Field label="Outcome">
-            <Input
-              value={values.outcome}
-              onChange={(e) => set("outcome", e.target.value)}
-              placeholder="Passed, next round, etc."
-              className={INPUT_CLASS}
-            />
-          </Field>
+          <InputField
+            label="Outcome"
+            value={values.outcome}
+            onChange={(v) => set("outcome", v)}
+            placeholder="Passed, next round, etc."
+          />
 
           <ErrorMessage message={(error as Error)?.message} />
+        </DialogBody>
 
-          <div className="flex items-center gap-3 pt-2">
-            <Button
-              variant="ghost"
-              className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-              onClick={handleDelete}
-              disabled={deleting || saving}
-            >
-              {deleting ? "Deleting..." : "Delete"}
-            </Button>
-            <div className="flex-1" />
-            <Button
-              variant="ghost"
-              className="text-white/40 hover:text-slate-100"
-              onClick={onClose}
-              disabled={saving}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              className="disabled:opacity-40"
-              onClick={handleSave}
-              disabled={!isDirty || saving}
-            >
-              {saving ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </div>
+        <DialogFooter>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={deleting || saving}
+          >
+            {deleting ? "Deleting..." : "Delete"}
+          </Button>
+          <div className="flex-1" />
+          <Button
+            variant="ghost"
+            className="text-white/40 hover:text-slate-100"
+            onClick={onClose}
+            disabled={saving}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            className="disabled:opacity-40"
+            onClick={handleSave}
+            disabled={!isDirty || saving}
+          >
+            {saving ? "Saving..." : "Save Changes"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

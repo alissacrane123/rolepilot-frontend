@@ -2,7 +2,7 @@ import { HStack, VStack } from "@/components/ui/stacks";
 import { TextTitle1 } from "@/components/ui/text/TextTitle1";
 import { TextBody } from "@/components/ui/text/TextBody";
 import ViewToggle from "@/components/Dashboard/ViewToggle";
-import NewApplicationDialog from "@/components/Dashboard/NewApplicationDialog";
+import NewApplicationModal from "@/components/Dashboard/NewApplicationModal";
 import EmptyState from "@/components/common/EmptyState";
 import { type BoardView } from "@/lib/api";
 import GridView from "@/components/Dashboard/GridView";
@@ -48,7 +48,7 @@ export default function ApplicationsSection({
             view={view === "board" ? "start" : "end"}
             onChange={hanldeViewChange}
           />
-          <NewApplicationDialog onCreated={invalidateBoard} />
+          <NewApplicationModal onCreated={invalidateBoard} />
         </HStack>
       </HStack>
 
@@ -57,7 +57,7 @@ export default function ApplicationsSection({
         <EmptyState
           title="No applications yet"
           description="Start tracking your job search by adding your first application. Paste the job description for AI-powered analysis."
-          cta={<NewApplicationDialog onCreated={invalidateBoard} />}
+          cta={<NewApplicationModal onCreated={invalidateBoard} />}
         />
       )}
 

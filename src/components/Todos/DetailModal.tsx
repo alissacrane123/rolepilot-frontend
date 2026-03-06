@@ -1,15 +1,24 @@
 import type { Todo, CreateTodoData, TodoGroup } from "@/lib/types/todos";
 import { Toggle } from "./helpers";
-import { Textarea } from "@/components/ui/textarea";
 import InputField from "../common/InputField";
 import InputLabel from "../common/InputLabel";
 import { useDetailModalForm } from "./hooks/useDetailModalForm";
 import {
-  ModalHeader,
   PriorityPicker,
   GroupSelector,
   ApplicationLinkSelector,
 } from "./components";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import TrashButton from "@/components/common/TrashButton";
 
 interface DetailModalProps {
   todo: Todo;
@@ -29,118 +38,117 @@ export default function DetailModal({
   const form = useDetailModalForm({ todo, groups, onSave, onDelete, onClose });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        onClick={onClose}
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-      />
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent showCloseButton>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            Configure
+            <TrashButton onClick={form.handleDeleteAndClose} size={4} />
+          </DialogTitle>
+          {todo.company_name && (
+            <DialogDescription>
+              {todo.company_name} &middot; {todo.role_title}
+            </DialogDescription>
+          )}
+        </DialogHeader>
 
-      <div className="relative w-[500px] max-h-[88vh] overflow-y-auto bg-[#0f0f1a] border border-[#1e1e2e] rounded-2xl p-7 shadow-2xl z-10">
-        <ModalHeader
-          companyName={todo.company_name}
-          roleTitle={todo.role_title}
-          onDelete={form.handleDeleteAndClose}
-          onClose={onClose}
-        />
-
-        <InputField
-          value={form.title}
-          onChange={form.setTitle}
-          placeholder="Task title"
-          className="mb-2.5"
-          label="Task"
-        />
-
-        <Textarea
-          value={form.description}
-          onChange={(e) => form.setDescription(e.target.value)}
-          placeholder="Add a description... (optional)"
-          rows={2}
-        />
-
-        <div className="h-px bg-white/[0.06] mb-5" />
-
-        <div className="grid grid-cols-2 gap-3 mb-5">
+        <DialogBody>
           <InputField
-            type="date"
-            value={form.dueDate}
-            onChange={form.setDueDate}
-            label="Due Date"
+            value={form.title}
+            onChange={form.setTitle}
+            placeholder="Task title"
+            label="Task"
           />
+
           <InputField
-            type="time"
-            value={form.dueTime}
-            onChange={form.setDueTime}
-            label="Due Time"
+            isTextarea
+            value={form.description}
+            onChange={form.setDescription}
+            placeholder="Add a description... (optional)"
           />
-        </div>
 
-        <PriorityPicker
-          priority={form.priority}
-          onChangePriority={form.setPriority}
-        />
+          <div className="h-px bg-white/[0.06]" />
 
-        <div className="mb-5">
-          <InputLabel label="Group" />
-          <GroupSelector
-            groupId={form.groupId}
-            groups={groups}
-            linkedGroup={form.linkedGroup}
-            isOpen={form.isGroupSelectOpen}
-            setIsOpen={form.setIsGroupSelectOpen}
-            newGroupName={form.newGroupName}
-            setNewGroupName={form.setNewGroupName}
-            selectedColorIndex={form.selectedColorIndex}
-            setSelectedColorIndex={form.setSelectedColorIndex}
-            newGroupInputRef={form.newGroupInputRef}
-            isCreatePending={form.isCreateGroupPending}
-            onSelectGroup={form.handleSelectGroup}
-            onCreateGroup={form.handleCreateGroup}
+          <div className="grid grid-cols-2 gap-3">
+            <InputField
+              type="date"
+              value={form.dueDate}
+              onChange={form.setDueDate}
+              label="Due Date"
+            />
+            <InputField
+              type="time"
+              value={form.dueTime}
+              onChange={form.setDueTime}
+              label="Due Time"
+            />
+          </div>
+
+          <PriorityPicker
+            priority={form.priority}
+            onChangePriority={form.setPriority}
           />
-        </div>
 
-        <div className="mb-5">
-          <InputLabel label="Link to Application">
-            Link to Application{" "}
-            <span className="text-white/15 normal-case font-normal">
-              — optional
-            </span>
-          </InputLabel>
-          <ApplicationLinkSelector
-            linkedApp={form.linkedApp}
-            isOpen={form.isAppSelectOpen}
-            setIsOpen={form.setIsAppSelectOpen}
-            appSearch={form.appSearch}
-            setAppSearch={form.setAppSearch}
-            appSearchRef={form.appSearchRef}
-            filteredApps={form.filteredApps}
-            onSelectApp={form.handleSelectApp}
-            onClearApp={form.handleClearApp}
-          />
-        </div>
+          <div>
+            <InputLabel label="Group" />
+            <GroupSelector
+              groupId={form.groupId}
+              groups={groups}
+              linkedGroup={form.linkedGroup}
+              isOpen={form.isGroupSelectOpen}
+              setIsOpen={form.setIsGroupSelectOpen}
+              newGroupName={form.newGroupName}
+              setNewGroupName={form.setNewGroupName}
+              selectedColorIndex={form.selectedColorIndex}
+              setSelectedColorIndex={form.setSelectedColorIndex}
+              newGroupInputRef={form.newGroupInputRef}
+              isCreatePending={form.isCreateGroupPending}
+              onSelectGroup={form.handleSelectGroup}
+              onCreateGroup={form.handleCreateGroup}
+            />
+          </div>
 
-        <div className="h-px bg-white/[0.06] mb-5" />
+          <div>
+            <InputLabel label="Link to Application">
+              Link to Application{" "}
+              <span className="text-white/15 normal-case font-normal">
+                — optional
+              </span>
+            </InputLabel>
+            <ApplicationLinkSelector
+              linkedApp={form.linkedApp}
+              isOpen={form.isAppSelectOpen}
+              setIsOpen={form.setIsAppSelectOpen}
+              appSearch={form.appSearch}
+              setAppSearch={form.setAppSearch}
+              appSearchRef={form.appSearchRef}
+              filteredApps={form.filteredApps}
+              onSelectApp={form.handleSelectApp}
+              onClearApp={form.handleClearApp}
+            />
+          </div>
 
-        <div className="flex flex-col gap-3.5 mb-5">
+          <div className="h-px bg-white/[0.06]" />
+
           <Toggle
             checked={form.isRecurring}
             onChange={form.setIsRecurring}
             label="Recurring"
           />
-        </div>
+        </DialogBody>
 
-        <button
-          onClick={form.handleSave}
-          aria-label="Save changes"
-          className={`w-full py-3 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-            form.isSaveDisabled
-              ? "bg-white/[0.04] text-white/20 cursor-not-allowed"
-              : "bg-indigo-600 text-white hover:bg-indigo-500"
-          }`}
-        >
-          Save Changes
-        </button>
-      </div>
-    </div>
+        <DialogFooter>
+          <Button
+            variant="primary"
+            className="w-full disabled:opacity-40"
+            onClick={form.handleSave}
+            disabled={form.isSaveDisabled}
+            aria-label="Save changes"
+          >
+            Save Changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

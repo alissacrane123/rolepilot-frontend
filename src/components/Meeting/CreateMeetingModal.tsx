@@ -36,8 +36,8 @@ export default function CreateMeetingModal({
       <DialogTrigger asChild>
         <Button variant="primary">Create Meeting</Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#0f0f1a] border-[#1e1e2e] text-slate-100 ">
-        <DialogHeader className="mb-4">
+      <DialogContent showCloseButton>
+        <DialogHeader>
           <DialogTitle>Create Meeting</DialogTitle>
         </DialogHeader>
         <CreateMeetingForm

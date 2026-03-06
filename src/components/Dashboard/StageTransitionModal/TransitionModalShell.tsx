@@ -7,6 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogBody,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import ErrorMessage from "@/components/common/ErrorMessage";
 
@@ -33,23 +35,22 @@ export default function TransitionModalShell({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-100 ">
+      <DialogContent showCloseButton>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {icon}
             Move to {stage?.label}
           </DialogTitle>
-          <DialogDescription className="text-zinc-400">
-            {appLabel}
-          </DialogDescription>
+          <DialogDescription>{appLabel}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-4 mt-4">
-          {children}
+        <form onSubmit={onSubmit}>
+          <DialogBody>
+            {children}
+            {error && <ErrorMessage message={error.message} />}
+          </DialogBody>
 
-          {error && <ErrorMessage message={error.message} />}
-
-          <div className="flex gap-3">
+          <DialogFooter>
             <Button
               type="button"
               variant="secondary"
@@ -67,7 +68,7 @@ export default function TransitionModalShell({
             >
               {isPending ? "Moving..." : "Confirm Move"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

@@ -28,14 +28,15 @@ export default function InputField({
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
       {label && <InputLabel label={label} />}
-      {isTextarea ? (
+      {isTextarea && !children && (
         <Textarea
           className={`font-normal bg-white/[0.04] border-[#1e1e2e] ${disabled ? "text-white/35" : "text-slate-200"} input-field ${mono ? "input-mono" : ""}`}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
         />
-      ) : (
+      )}
+      {!isTextarea && !children && (
         <Input
           type={type}
           value={value}

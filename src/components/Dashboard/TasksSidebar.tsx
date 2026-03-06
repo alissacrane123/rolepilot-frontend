@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import type { Todo, CreateTodoData, TodoFilters } from "@/lib/types/todos";
 import { useTodosQuery, useTodoGroupsQuery } from "@/hooks/queries/todos";
+import { useApplicationsQuery } from "@/hooks/useApi";
 import {
   useCreateTodoMutation,
   useToggleTodoMutation,
@@ -9,7 +10,8 @@ import {
 } from "@/hooks/mutations/todos";
 import useResizablePanel from "@/hooks/useResizablePanel";
 import ResizeHandle from "@/components/ui/ResizeHandle";
-import TaskRow, { PRIORITY_COLORS } from "./TaskRow";
+import TaskRow from "./TaskRow";
+import FilterPanel from "./FilterPanel";
 import DetailModal from "@/components/Todos/DetailModal";
 import { ChevronRightIcon, ChevronLeftIcon, SlidersHorizontalIcon, ChevronUpIcon } from "lucide-react";
 import { DisclosureChevronIcon } from "./icons";
@@ -20,9 +22,7 @@ import {
   SIDEBAR_MAX,
   COLLAPSE_THRESHOLD,
   COLLAPSED_WIDTH,
-  DAY_FILTER_OPTIONS,
 } from "./constants";
-import type { DayFilterId, TaskFilterState } from "./types";
 
 export default function TasksSidebar() {
   const { width, collapsed, isDragging, handlePointerDown, setCollapsed } =
@@ -48,30 +48,26 @@ export default function TasksSidebar() {
   }, [collapsed]);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filterState, setFilterState] = useState<TaskFilterState>({
-    dayFilter: "today",
-    groupId: null,
-  });
+
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    () => new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+  );
+  const [appFilter, setAppFilter] = useState("all");
+  const [groupFilter, setGroupFilter] = useState("All");
 
   const queryFilters = useMemo((): TodoFilters => {
     const filters: TodoFilters = {};
-    const today = new Date().toISOString().slice(0, 10);
+    const y = selectedDate.getFullYear();
+    const m = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const d = String(selectedDate.getDate()).padStart(2, "0");
+    filters.due_date = `${y}-${m}-${d}`;
 
-    if (filterState.dayFilter === "today") {
-      filters.due_date = today;
-    } else if (filterState.dayFilter === "week") {
-      const weekEnd = new Date();
-      weekEnd.setDate(weekEnd.getDate() + 7);
-      filters.due_after = today;
-      filters.due_before = weekEnd.toISOString().slice(0, 10);
-    }
-
-    if (filterState.groupId) {
-      filters.group_id = filterState.groupId;
+    if (appFilter !== "all") {
+      filters.application_id = appFilter;
     }
 
     return filters;
-  }, [filterState]);
+  }, [selectedDate, appFilter]);
 
   const [newTask, setNewTask] = useState("");
   const [completedOpen, setCompletedOpen] = useState(true);
@@ -80,6 +76,7 @@ export default function TasksSidebar() {
 
   const { data: todos = [] } = useTodosQuery(queryFilters);
   const { data: groups = [] } = useTodoGroupsQuery();
+  const { data: applications = [] } = useApplicationsQuery();
   const createMutation = useCreateTodoMutation();
   const toggleMutation = useToggleTodoMutation();
   const deleteMutation = useDeleteTodoMutation();
@@ -104,14 +101,6 @@ export default function TasksSidebar() {
 
   const handleFilterToggle = useCallback((): void => {
     setIsFilterOpen((prev) => !prev);
-  }, []);
-
-  const handleDayFilterChange = useCallback((day: DayFilterId): void => {
-    setFilterState((prev) => ({ ...prev, dayFilter: day }));
-  }, []);
-
-  const handleGroupFilterChange = useCallback((groupId: string | null): void => {
-    setFilterState((prev) => ({ ...prev, groupId }));
   }, []);
 
   const sidebarWidth = collapsed ? COLLAPSED_WIDTH : width;
@@ -182,103 +171,49 @@ export default function TasksSidebar() {
 
       {/* Filter panel */}
       <div
-        className={`overflow-hidden shrink-0 transition-all duration-200 ease-in-out border-b border-[#1e1e2e] ${
+        className={`shrink-0 overflow-hidden transition-all duration-200 ease-in-out border-b border-[#1e1e2e] ${
           isFilterOpen && !collapsed
-            ? "max-h-[200px] opacity-100"
+            ? "max-h-[400px] opacity-100"
             : "max-h-0 opacity-0 border-b-0"
         }`}
       >
-        <div className="px-4 py-3 flex flex-col gap-2.5">
-          {/* Day filter */}
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
-              Time Range
-            </span>
-            <div className="flex gap-1">
-              {DAY_FILTER_OPTIONS.map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => handleDayFilterChange(opt.id)}
-                  aria-label={`Filter by ${opt.label}`}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 border cursor-pointer ${
-                    filterState.dayFilter === opt.id
-                      ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
-                      : "bg-white/[0.03] text-slate-500 border-[#1e1e2e] hover:text-slate-300 hover:border-slate-700"
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Group filter */}
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
-              Group
-            </span>
-            <div className="flex gap-1 flex-wrap">
-              <button
-                onClick={() => handleGroupFilterChange(null)}
-                aria-label="Show all groups"
-                className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 border cursor-pointer ${
-                  !filterState.groupId
-                    ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
-                    : "bg-white/[0.03] text-slate-500 border-[#1e1e2e] hover:text-slate-300 hover:border-slate-700"
-                }`}
-              >
-                All
-              </button>
-              {groups.map((group) => (
-                <button
-                  key={group.id}
-                  onClick={() => handleGroupFilterChange(group.id)}
-                  aria-label={`Filter by group ${group.name}`}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 border cursor-pointer flex items-center gap-1.5 ${
-                    filterState.groupId === group.id
-                      ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
-                      : "bg-white/[0.03] text-slate-500 border-[#1e1e2e] hover:text-slate-300 hover:border-slate-700"
-                  }`}
-                >
-                  <span
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{ background: group.color }}
-                  />
-                  {group.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        <FilterPanel
+          collapsed={!isFilterOpen}
+          pending={pending}
+          groups={groups}
+          applications={applications}
+          selectedDate={selectedDate}
+          onSelectedDateChange={setSelectedDate}
+          appFilter={appFilter}
+          onAppFilterChange={setAppFilter}
+          groupFilter={groupFilter}
+          onGroupFilterChange={setGroupFilter}
+        />
       </div>
 
       {/* Content area -- both panels stack absolutely so they cross-fade */}
       <div className="flex-1 relative min-h-0 overflow-hidden">
         {/* Collapsed: icon strip */}
-        <div
-          className={`absolute inset-0 flex flex-col items-center gap-1 py-3 overflow-y-auto transition-all duration-200 ease-in-out ${
+        {/* <div
+          className={`absolute inset-0 transition-all duration-200 ease-in-out ${
             collapsed
               ? "opacity-100 translate-x-0 delay-100"
               : "opacity-0 -translate-x-2 pointer-events-none"
           }`}
         >
-          {pending.map((t) => (
-            <div
-              key={t.id}
-              title={t.title}
-              className="w-6 h-1 rounded-sm"
-              style={{
-                background: PRIORITY_COLORS[t.priority] ?? PRIORITY_COLORS[3],
-                opacity: 0.7,
-              }}
-            />
-          ))}
-          {pending.length > 0 && (
-            <span className="mt-2 text-[10px] text-slate-500 font-bold [writing-mode:vertical-lr] tracking-wide">
-              {pending.length}
-            </span>
-          )}
-        </div>
+          <FilterPanel
+            collapsed={!isFilterOpen}
+            pending={pending}
+            groups={groups}
+            applications={applications}
+            selectedDate={selectedDate}
+            onSelectedDateChange={setSelectedDate}
+            appFilter={appFilter}
+            onAppFilterChange={setAppFilter}
+            groupFilter={groupFilter}
+            onGroupFilterChange={setGroupFilter}
+          />
+        </div> */}
 
         {/* Expanded content */}
         {showExpanded && (

@@ -31,7 +31,7 @@ export interface CoverLetterItemProps {
   companyName: string;
 }
 
-export interface MoveStageDialogProps {
+export interface MoveStageModalProps {
   app: JobApplication;
   onMoved: () => void;
 }
