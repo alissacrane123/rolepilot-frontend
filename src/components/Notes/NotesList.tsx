@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileIcon, PlusIcon, Trash2 } from "lucide-react";
+import { FileIcon, PlusIcon } from "lucide-react";
 import type { Note } from "@/lib/api";
 import NewCard from "../common/NewCard";
 import { useDeleteNoteMutation } from "@/hooks/useApi";

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Todo } from "@/lib/types/todos";
+import { CheckmarkIcon, CloseSmallIcon } from "./icons";
 
 const PRIORITY_COLORS: Record<number, string> = {
   1: "#d946ef", // fuchsia
@@ -39,11 +40,7 @@ export default function TaskRow({
             : "bg-transparent border-2 border-slate-700"
         }`}
       >
-        {task.completed && (
-          <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth="2.5">
-            <polyline points="2 6 5 9 10 3" />
-          </svg>
-        )}
+        {task.completed && <CheckmarkIcon />}
       </button>
 
       {/* Title */}
@@ -72,10 +69,7 @@ export default function TaskRow({
           onClick={() => onRemove(task.id)}
           className="bg-transparent border-none text-slate-600 cursor-pointer p-0 px-0.5 flex items-center text-xs leading-none hover:text-slate-400"
         >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <CloseSmallIcon />
         </button>
       )}
     </div>

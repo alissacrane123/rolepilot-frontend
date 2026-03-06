@@ -1,6 +1,8 @@
 import { TextTitle2 } from "@/components/ui/text/TextTitle2";
 import { TextBody } from "@/components/ui/text";
 import TrashButton from "@/components/common/TrashButton";
+import { XIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ModalHeaderProps {
   companyName: string | undefined;
@@ -29,13 +31,9 @@ export function ModalHeader({
         )}
       </div>
       <div className="flex gap-2">
-        <button
-          onClick={onClose}
-          aria-label="Close modal"
-          className="w-7 h-7 rounded-lg border border-white/[0.15] bg-white/[0.04] text-white/40 hover:text-white/70 transition-colors text-lg leading-none flex items-center justify-center cursor-pointer"
-        >
-          ×
-        </button>
+        <Button variant="invisible" onClick={onClose} aria-label="Close modal">
+          <XIcon className="size-4" />
+        </Button>
       </div>
     </div>
   );

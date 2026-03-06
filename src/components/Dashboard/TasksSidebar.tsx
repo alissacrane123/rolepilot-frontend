@@ -12,6 +12,7 @@ import ResizeHandle from "@/components/ui/ResizeHandle";
 import TaskRow, { PRIORITY_COLORS } from "./TaskRow";
 import DetailModal from "@/components/Todos/DetailModal";
 import { ChevronRightIcon, ChevronLeftIcon, SlidersHorizontalIcon, ChevronUpIcon } from "lucide-react";
+import { DisclosureChevronIcon } from "./icons";
 import { Button } from "../ui/button";
 import {
   SIDEBAR_DEFAULT,
@@ -326,17 +327,9 @@ export default function TasksSidebar() {
                   onClick={() => setCompletedOpen((v) => !v)}
                   className="bg-transparent border-none text-slate-600 text-[10px] font-bold tracking-widest cursor-pointer flex items-center gap-1 py-1 mb-1 uppercase"
                 >
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
+                  <DisclosureChevronIcon
                     className={`transition-transform duration-150 ${completedOpen ? "rotate-90" : "rotate-0"}`}
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
+                  />
                   Completed &middot; {done.length}
                 </button>
                 {completedOpen &&
