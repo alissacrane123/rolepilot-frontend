@@ -214,22 +214,7 @@ export default function TasksSidebar() {
             }`}
           >
             {/* Add task input */}
-            <div className="flex gap-1.5 mb-4">
-              <input
-                ref={inputRef}
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addTask()}
-                placeholder="Add a task..."
-                className="flex-1 bg-white/[0.04] border border-[#1e1e2e] rounded-lg px-2.5 py-[7px] text-xs text-slate-200 outline-none transition-colors duration-150 placeholder:text-slate-600 focus:border-indigo-600"
-              />
-              <button
-                onClick={addTask}
-                className="bg-gradient-to-br from-indigo-700 to-indigo-500 border-none rounded-lg text-white px-2.5 text-[11px] font-bold cursor-pointer tracking-wide"
-              >
-                Add
-              </button>
-            </div>
+
 
             {/* Pending tasks */}
             <div className="mb-2">
@@ -242,6 +227,23 @@ export default function TasksSidebar() {
                   onClick={() => setSelected(task)}
                 />
               ))}
+            </div>
+
+            <div className="flex gap-1.5 mt-4 mb-2">
+              <input
+                ref={inputRef}
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addTask()}
+                placeholder="Add a task..."
+                className="flex-1 bg-white/[0.04] border border-[#1e1e2e] rounded-md px-2.5 py-[7px] text-xs text-slate-200 outline-none transition-colors duration-150 placeholder:text-slate-600 focus:border-indigo-600"
+              />
+              <button
+                onClick={addTask}
+                className="bg-gradient-to-br from-indigo-700 to-indigo-500 border-none rounded-md text-white px-2.5 text-[11px] font-bold cursor-pointer tracking-wide"
+              >
+                Add
+              </button>
             </div>
 
             {/* Completed section */}
