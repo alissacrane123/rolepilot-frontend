@@ -36,7 +36,6 @@ export interface FilterPanelProps {
 }
 
 export interface DayNavigatorProps {
-  selectedDate: Date;
   isToday: boolean;
   onSetToday: () => void;
   onNavigateDay: (offset: number) => void;
@@ -53,9 +52,12 @@ export interface FilterDropdownProps<T extends string> {
   label: string;
   isOpen: boolean;
   onToggle: () => void;
-  options: { value: T; label: string; icon?: string; iconBg?: string }[];
+  options: AppFilterOption[];
   selectedValue: T;
   onSelect: (value: T) => void;
+  triggerContent: React.ReactNode;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  menuRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export interface AppIconBadgeProps {

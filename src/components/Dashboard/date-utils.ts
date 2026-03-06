@@ -1,5 +1,6 @@
-import type { FormattedDay } from "./types";
-import { DOW_LABELS, MONTH_LABELS } from "./constants";
+import type { FormattedDay, AppFilterOption } from "./types";
+import type { JobApplication } from "@/lib/types";
+import { DOW_LABELS, MONTH_LABELS, ALL_APPS_VALUE } from "./constants";
 
 export function addDays(date: Date, days: number): Date {
   const result = new Date(date);
@@ -52,4 +53,20 @@ export function stringToColor(str: string): string {
   }
   const h = Math.abs(hash) % 360;
   return `hsl(${h}, 55%, 45%)`;
+}
+
+export function buildAppOptions(applications: JobApplication[]): AppFilterOption[] {
+  const options: AppFilterOption[] = [
+    { value: ALL_APPS_VALUE, label: "All Applications" },
+  ];
+  for (const app of applications) {
+    const initial = (app.company_name ?? "?")[0].toUpperCase();
+    options.push({
+      value: app.id,
+      label: app.company_name ?? app.role_title ?? "Untitled",
+      icon: initial,
+      iconBg: stringToColor(app.company_name ?? app.id),
+    });
+  }
+  return options;
 }
