@@ -13,7 +13,12 @@ import ResizeHandle from "@/components/ui/ResizeHandle";
 import TaskRow from "./TaskRow";
 import FilterPanel from "./FilterPanel";
 import DetailModal from "@/components/Todos/DetailModal";
-import { ChevronRightIcon, ChevronLeftIcon, SlidersHorizontalIcon, ChevronUpIcon } from "lucide-react";
+import {
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  SlidersHorizontalIcon,
+  ChevronUpIcon,
+} from "lucide-react";
 import { DisclosureChevronIcon } from "./icons";
 import { Button } from "../ui/button";
 import {
@@ -50,7 +55,12 @@ export default function TasksSidebar() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState<Date>(
-    () => new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+    () =>
+      new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+      ),
   );
   const [appFilter, setAppFilter] = useState("all");
   const [groupFilter, setGroupFilter] = useState("All");
@@ -134,10 +144,7 @@ export default function TasksSidebar() {
           />
         )}
       </button>
-      <ResizeHandle
-        onPointerDown={handlePointerDown}
-        isDragging={isDragging}
-      />
+      <ResizeHandle onPointerDown={handlePointerDown} isDragging={isDragging} />
       {/* Header */}
       <div
         className={`flex items-center justify-between border-b border-[#1e1e2e] shrink-0 h-[52px] ${
@@ -157,24 +164,28 @@ export default function TasksSidebar() {
           <span className="text-[10px] bg-indigo-500/20 text-indigo-400 px-1.5 py-px rounded-[10px] font-semibold">
             {pending.length} pending
           </span>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          onClick={handleFilterToggle}
-          aria-label="Toggle task filters"
-          className={`ml-auto transition-colors duration-150 text-slate-500 hover:text-slate-300`}
-        >
-          {isFilterOpen ? <ChevronUpIcon width="13" height="13" /> :<SlidersHorizontalIcon width="13" height="13" />}
-        </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={handleFilterToggle}
+            aria-label="Toggle task filters"
+            className={`ml-auto transition-colors duration-150 text-slate-500 hover:text-slate-300`}
+          >
+            {isFilterOpen ? (
+              <ChevronUpIcon width="13" height="13" />
+            ) : (
+              <SlidersHorizontalIcon width="13" height="13" />
+            )}
+          </Button>
         </div>
       </div>
 
       {/* Filter panel */}
       <div
-        className={`shrink-0 overflow-hidden transition-all duration-200 ease-in-out border-b border-[#1e1e2e] ${
+        className={`shrink-0 overflow-hidden  border-b border-[#1e1e2e]   ${
           isFilterOpen && !collapsed
-            ? "max-h-[400px] opacity-100"
-            : "max-h-0 opacity-0 border-b-0"
+            ? "max-h-[400px] opacity-100 transition-all duration-200 ease-in-out "
+            : "max-h-0 opacity-0 border-b-0 "
         }`}
       >
         <FilterPanel
@@ -193,28 +204,6 @@ export default function TasksSidebar() {
 
       {/* Content area -- both panels stack absolutely so they cross-fade */}
       <div className="flex-1 relative min-h-0 overflow-hidden">
-        {/* Collapsed: icon strip */}
-        {/* <div
-          className={`absolute inset-0 transition-all duration-200 ease-in-out ${
-            collapsed
-              ? "opacity-100 translate-x-0 delay-100"
-              : "opacity-0 -translate-x-2 pointer-events-none"
-          }`}
-        >
-          <FilterPanel
-            collapsed={!isFilterOpen}
-            pending={pending}
-            groups={groups}
-            applications={applications}
-            selectedDate={selectedDate}
-            onSelectedDateChange={setSelectedDate}
-            appFilter={appFilter}
-            onAppFilterChange={setAppFilter}
-            groupFilter={groupFilter}
-            onGroupFilterChange={setGroupFilter}
-          />
-        </div> */}
-
         {/* Expanded content */}
         {showExpanded && (
           <div

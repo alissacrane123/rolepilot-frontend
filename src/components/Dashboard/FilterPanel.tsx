@@ -5,7 +5,6 @@ import { addDays, isSameDay, getWeekDays, buildAppOptions } from "./date-utils";
 import type { FilterPanelProps } from "./types";
 import {
   AppIconBadge,
-  CollapsedStrip,
   DayNavigator,
   DayStrip,
   FilterDropdown,
@@ -22,7 +21,7 @@ export function FilterPanel({
   onAppFilterChange,
   groupFilter,
   onGroupFilterChange,
-}: FilterPanelProps): React.JSX.Element {
+}: FilterPanelProps){
   const [isAppOpen, setIsAppOpen] = useState(false);
   const [isGroupOpen, setIsGroupOpen] = useState(false);
   const appRef = useRef<HTMLDivElement>(null);
@@ -116,7 +115,7 @@ export function FilterPanel({
   );
 
   if (collapsed) {
-    return <CollapsedStrip pending={pending} />;
+    return null;
   }
 
   const isAllApps = appFilter === ALL_APPS_VALUE;
