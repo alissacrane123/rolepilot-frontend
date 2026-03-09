@@ -31,6 +31,8 @@ export default function TasksSection() {
   const allQuery = useTodosQuery();
   const groupsQuery = useTodosQuery({ completed: false });
 
+  console.log({view});
+
   const activeQuery =
     view === "Day" ? dayQuery : view === "Groups" ? groupsQuery : allQuery;
   const todos = activeQuery.data ?? [];
