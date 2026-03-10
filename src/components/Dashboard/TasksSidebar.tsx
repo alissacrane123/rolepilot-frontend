@@ -97,8 +97,12 @@ export default function TasksSidebar() {
 
   const addTask = () => {
     const text = newTask.trim();
+    const y = selectedDate.getFullYear();
+    const m = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const d = String(selectedDate.getDate()).padStart(2, "0");
+    const dueDate = `${y}-${m}-${d}`;
     if (!text) return;
-    createMutation.mutate({ title: text, priority: 3 });
+    createMutation.mutate({ title: text, priority: 3, due_date: dueDate });
     setNewTask("");
   };
 

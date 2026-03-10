@@ -10,6 +10,24 @@ import type {
   Note,
 } from "./types";
 
+function toSnakeCase(str: string): string {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
+function normalizeKeys(obj: any): any {
+  if (obj === null || obj === undefined) return obj;
+  if (Array.isArray(obj)) return obj.map(normalizeKeys);
+  if (typeof obj !== "object") return obj;
+  if (obj instanceof Date) return obj;
+
+  const normalized: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const snakeKey = toSnakeCase(key);
+    normalized[snakeKey] = normalizeKeys(value);
+  }
+  return normalized;
+}
+
 export type {
   User,
   JobApplication,
@@ -57,7 +75,6 @@ async function request<T>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  // Only set Content-Type for non-FormData requests
   if (!(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
@@ -73,7 +90,7 @@ async function request<T>(
     throw new Error(data.error || "Something went wrong");
   }
 
-  return data;
+  return normalizeKeys(data);
 }
 
 // ============================================
