@@ -22,7 +22,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/login" />;
-  if (!user.resume_text) return <Navigate to="/onboarding" />;
+  if (!user.resume_text && !user.resume_url) return <Navigate to="/onboarding" />;
 
   return <>{children}</>;
 }
@@ -32,7 +32,7 @@ function OnboardingRoute() {
 
   if (loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/login" />;
-  if (user.resume_text) return <Navigate to="/" />;
+  if (user.resume_text || user.resume_url) return <Navigate to="/" />;
 
   return <OnboardingPage />;
 }
